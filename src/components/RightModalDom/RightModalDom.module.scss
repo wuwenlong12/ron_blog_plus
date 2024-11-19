@@ -1,0 +1,26 @@
+.container{
+    text-align: center;
+    .theme{
+        .text{
+            margin-top: 20px;
+            font-size: 1rem;
+        }
+        .BtnLight {
+             background-color: transparent;
+             color: #000;
+             &:hover {
+                 color: #4096ff !important;
+                 //   border-color: #f59b4c !important;
+             }
+         }
+         .BtnDark {
+             color: #fff;
+             background-color: transparent;
+             &:hover {
+                 color: #4096ff !important;
+                 //   border-color: #f59b4c !important;
+             }
+         }
+    }
+   
+}

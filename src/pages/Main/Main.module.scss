@@ -1,0 +1,33 @@
+.container{
+    padding-top: 60px;
+    .mainInfo{
+        width: 100%;
+        height:calc(100vh - 60px);
+        background-image: url('https://nfassetoss.southcn.com/__asset/e8450061a1/cac6b395d3.jpg');
+        background-size: auto calc(100vh - 60px); /* 宽度自动计算，高度固定为 100% */
+        background-position: center; /* 背景图居中 */
+        background-repeat: no-repeat; /* 防止重复背景 */
+        background-size: cover; /* 背景图保持比例填满容器 */
+        overflow: hidden; /* 避免背景溢出 */
+        padding-top: 20vh;
+        .icon{
+            display: block;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+        }
+        .title{
+           font-weight: 600;
+            font-size: 2rem;
+            margin: auto;
+            text-align: center;
+            color: #fff;
+        }
+        .desc{
+            font-size: 1.25rem;
+            margin: auto;
+            text-align: center;
+            color: #fff;
+        }
+    }
+}

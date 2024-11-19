@@ -1,0 +1,169 @@
+// _variables.scss
+
+// ==============================
+// Colors
+// ==============================
+
+// Primary colors
+$primary-color: #3498db;           // 主色
+$primary-light: #5dade2;           // 主色浅色
+$primary-dark: #2980b9;            // 主色深色
+
+// Secondary colors
+$secondary-color: #2ecc71;         // 辅助色
+$secondary-light: #58d68d;         // 辅助色浅色
+$secondary-dark: #27ae60;          // 辅助色深色
+
+// Neutral colors
+$white: #ffffff;
+$black: #000000;
+$gray-100: #f8f8f8;
+$gray-200: #e0e0e0;
+$gray-300: #bdbdbd;
+$gray-400: #9e9e9e;
+$gray-500: #757575;
+$gray-600: #616161;
+$gray-700: #424242;
+$gray-800: #212121;
+$gray-900: #121212;
+
+// Status colors
+$success: #2ecc71;                 // 成功
+$error: #e74c3c;                   // 错误
+$warning: #f39c12;                 // 警告
+$info: #3498db;                    // 信息
+
+// ==============================
+// Font sizes
+// ==============================
+
+$font-size-base: 16px;              // 基础字体大小
+$font-size-sm: 14px;                // 小字体大小
+$font-size-lg: 18px;                // 大字体大小
+$font-size-xl: 24px;                // 超大字体大小
+$font-size-xxl: 32px;               // 超超大字体大小
+
+// ==============================
+// Font families
+// ==============================
+
+$font-family-primary: 'Roboto', sans-serif; // 主字体
+$font-family-secondary: 'Arial', sans-serif; // 副字体
+
+// ==============================
+// Spacing (Margin & Padding)
+// ==============================
+
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 32px;
+$spacing-xl: 64px;
+
+// ==============================
+// Borders
+// ==============================
+
+$border-radius-sm: 4px;          // 小圆角
+$border-radius-md: 8px;          // 中等圆角
+$border-radius-lg: 16px;         // 大圆角
+$border-width: 1px;              // 边框宽度
+
+// ==============================
+// Box shadows
+// ==============================
+
+$box-shadow-light: 0 2px 4px rgba(0, 0, 0, 0.1);  // 浅阴影
+$box-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.2);     // 中等阴影
+$box-shadow-dark: 0 6px 12px rgba(0, 0, 0, 0.3);   // 深阴影
+
+// ==============================
+// Z-index
+// ==============================
+
+$z-index-low: 1;
+$z-index-normal: 10;
+$z-index-high: 100;
+$z-index-top: 1000;
+
+// ==============================
+// Transitions & Animations
+// ==============================
+
+$transition-base: all 0.3s ease-in-out;  // 基础过渡
+$transition-fast: all 0.2s ease-in-out;  // 快速过渡
+$transition-slow: all 0.5s ease-in-out;  // 慢速过渡
+
+// ==============================
+// Breakpoints for responsive design
+// ==============================
+
+$breakpoint-xs: 320px;  // 手机小屏幕
+$breakpoint-sm: 576px;  // 手机中等屏幕
+$breakpoint-md: 768px;  // 平板屏幕
+$breakpoint-lg: 1024px; // 小型桌面屏幕
+$breakpoint-xl: 1200px; // 大型桌面屏幕
+
+// ==============================
+// Other
+// ==============================
+
+// Line height
+$line-height-base: 1.5;
+$line-height-heading: 1.2;
+
+// Opacity levels
+$opacity-low: 0.3;
+$opacity-medium: 0.6;
+$opacity-high: 0.9;
+
+// ==============================
+// Global Styles (optional)
+// ==============================
+
+$global-font-color: $gray-800;   // 全局字体颜色
+$global-background-color: $white; // 全局背景颜色
+
+
+// ==============================
+// Dark Mode Variables
+// ==============================
+
+// Dark Mode Primary colors
+$primary-color-dark: #9b59b6;           // 主色
+$primary-light-dark: #8e44ad;           // 主色浅色
+$primary-dark-dark: #6c3483;            // 主色深色
+
+// Dark Mode Secondary colors
+$secondary-color-dark: #e74c3c;         // 辅助色
+$secondary-light-dark: #f1948a;         // 辅助色浅色
+$secondary-dark-dark: #c0392b;          // 辅助色深色
+
+// Dark Mode Neutral colors
+$white-dark: #121212;                  // 白色变为深色
+$black-dark: #ffffff;                  // 黑色变为白色
+$gray-100-dark: #212121;
+$gray-200-dark: #424242;
+$gray-300-dark: #616161;
+$gray-400-dark: #757575;
+$gray-500-dark: #9e9e9e;
+$gray-600-dark: #bdbdbd;
+$gray-700-dark: #e0e0e0;
+$gray-800-dark: #f8f8f8;
+$gray-900-dark: #ffffff;               // 深色模式下背景更深，字体变白
+
+// Dark Mode Status colors
+$success-dark: #2ecc71;                 // 成功
+$error-dark: #e74c3c;                   // 错误
+$warning-dark: #f39c12;                 // 警告
+$info-dark: #3498db;                    // 信息
+
+// Dark Mode Background & Text
+$background-color-dark: #141414;        // 深色模式背景
+$text-color-dark: #ffffff;              // 深色模式字体颜色
+$link-color-dark: #8e44ad;              // 深色模式链接颜色
+
+// Dark Mode Box Shadows
+$box-shadow-dark-dark: 0 4px 8px rgba(0, 0, 0, 0.2);   // 深色模式阴影
+$box-shadow-md-dark: 0 8px 16px rgba(0, 0, 0, 0.3);     // 深色模式阴影
+$box-shadow-light-dark: 0 6px 12px rgba(0, 0, 0, 0.4);  // 深色模式阴影

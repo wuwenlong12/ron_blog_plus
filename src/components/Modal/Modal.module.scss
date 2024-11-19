@@ -1,0 +1,13 @@
+.container {
+    padding-top: 60px;
+    width: 100vw;
+    height: 100vh ;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+}
+.content{
+    height: 100%;
+    backdrop-filter: blur(10px); /* 背景模糊 */
+    -webkit-backdrop-filter: blur(10px); /* 兼容 Safari */
+}
