@@ -1,7 +1,7 @@
 import { Input, Typography, Form, Button, Space, message } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './EditFolderInfo.module.scss';
-import { patchFolderInfo } from '../../api/actical/actical';
+import { getDirectoryInfoById, patchFolderInfo } from '../../api/actical/actical';
 import { useSearchParams } from 'react-router-dom';
 
 const EditFolderInfo = () => {
@@ -9,8 +9,27 @@ const EditFolderInfo = () => {
     const [desc, setDesc] = useState('');
     const [searchParams] = useSearchParams();
     const [messageApi, contextHolder] = message.useMessage();
+    useEffect(()=>{
+        init()
+    },[searchParams])
+    const init = async () => {
+        const id = searchParams.get('id');
+        if (!id) return;
+        try {
+            const res = await getDirectoryInfoById(id);
+            console.log(res); // 调试 API 响应
+            if (res.data) {
+                setName(res.data.name);
+                setDesc(res.data.desc);
+            }
+        } catch (error) {
+            console.error("请求失败:", error);
+        }
+    };
     // 为文件名的 onChange 事件处理函数
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        console.log("我执行了");
+        
         setName(e.target.value);
     };
 
@@ -42,6 +61,8 @@ const EditFolderInfo = () => {
             <Form layout="vertical" onFinish={handleSubmit}>
                 <Form.Item label="文件名" name="name" rules={[{ required: true, message: '请输入文件名!' }]}>
                     <Input
+                    defaultValue={name}
+                    key={name}
                         showCount
                         maxLength={20}
                         value={name}
@@ -52,6 +73,8 @@ const EditFolderInfo = () => {
 
                 <Form.Item label="描述" name="desc" rules={[{ required: true, message: '请输入描述!' }]}>
                     <Input.TextArea
+                       defaultValue={desc}
+                      key={desc}
                         showCount
                         maxLength={100}
                         value={desc}
