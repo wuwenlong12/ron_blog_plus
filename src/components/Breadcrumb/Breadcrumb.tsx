@@ -10,27 +10,19 @@ interface AppBreadcrumbProps {
 
 const AppBreadcrumb: React.FC<AppBreadcrumbProps> = ({ isDarkMode }) => {
   const location = useLocation();
+  const locations = location.pathname.split("/").slice(1)
+  const breadcrumbItems = locations.map((item, index) => {
+    const fullPath = `/${locations.slice(0, index + 1).join('/')}`; // 动态拼接完整路径
+    return {
+      key: fullPath,
+      title: <Link to={fullPath} className={styles.breadcrumbLink}>{item}</Link>,
+      className: `${styles.breadcrumbItem} ${isDarkMode ? styles.dark : styles.light}`,
+    };
+  });
 
-  // 根据路径查找对应的路由信息
-  const breadcrumbItems = location.pathname.split('/').filter(Boolean).map((path, index, arr) => {
-    const fullPath = `/${arr.slice(0, index + 1).join('/')}`;
-    const route = routes.find(route => route.path === fullPath);
 
-    if (route) {
-      return {
-        key: fullPath,
-        title: (
-          <Link to={fullPath} className={styles.breadcrumbLink}>
-            {route.meta?.icon && <span style={{ marginRight: 8 }}>{route.meta.icon}</span>}
-            {route.meta?.label}
-          </Link>
-        ),
-        className: `${styles.breadcrumbItem} ${isDarkMode ? styles.dark : styles.light}`,
-      };
-    }
-    return null;
-  }).filter((item): item is NonNullable<typeof item> => item !== null); // 使用类型保护确保不包含 null
 
+  
   // 设置首页的面包屑项
   const items = [
     {

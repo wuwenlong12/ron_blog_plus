@@ -7,7 +7,7 @@ export interface ResponseGetActicalDirectory extends ResponseBase {
 export type acticalDirectory = {
     _id: string,
     name: string,
-    type: "folder" | "actical",
+    type: "folder" | "article",
     children: [],
     order: number
 }

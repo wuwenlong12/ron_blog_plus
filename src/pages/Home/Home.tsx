@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Main.module.scss'
+import styles from './Home.module.scss'
 import ThemeView from '../../themeComponent/themeView';
 import favicon from '../../assets/logo512.png'
 const Main = () => {
