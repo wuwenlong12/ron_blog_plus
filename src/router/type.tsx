@@ -20,7 +20,7 @@ export interface Route {
 }
 export interface RouteMap {
   path: string;
-  element: React.ReactElement;
+  element: React.LazyExoticComponent<React.FC>;
   meta: {
     label: string;
     key: string;

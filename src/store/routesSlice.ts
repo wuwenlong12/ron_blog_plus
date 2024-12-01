@@ -30,7 +30,7 @@ const routesSlice = createSlice({
     },
     updateArticalChildren(state, action: PayloadAction<Route[]>) {
       state.staticRoutes = state.staticRoutes.map((route) =>
-        route.path === "/artical"
+        route.path === "/article"
           ? { ...route, children: action.payload } // 更新 children
           : route
       );
@@ -52,7 +52,7 @@ export default routesSlice.reducer;
 // Selector 获取 `/artical` 的子路由
 export const selectActicalChildren = (state: { routes: RoutesState }): Route[] => {
   const articalRoute = state.routes.staticRoutes.find(
-    (route) =>{ return route.path === "/artical"}
+    (route) =>{ return route.path === "/article"}
   );
   return articalRoute?.children || []; // 如果没有子路由，返回空数组
 };

@@ -1,8 +1,7 @@
 import About from "../../pages/About/About";
-import Actical from "../../pages/Actical/Actical";
+import Actical from "../../pages/Article/Article";
 import Diary from "../../pages/Diary/Diary";
-import EditArticleInfo from "../../pages/EditArticleInfo/EditArticleInfo";
-import EditFolderInfo from "../../pages/EditFolderInfo/EditFolderInfo";
+import ArticleMainContent from "../../pages/ArticleMainContent/ArticleMainContent";
 import Home from "../../pages/Home/Home";
 import {
   HomeOutlined,
@@ -12,14 +11,14 @@ import {
   SettingOutlined,
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
+import React from "react";
 
 export enum ComponentKey {
   Actical = "Actical",
   Home = "Home",
   About = "About",
   Diary = "Diary",
-  EditArticleInfo = "EditArticleInfo",
-  EditFolderInfo = "EditFolderInfo",
+  ArticleMainContent = "ArticleMainContent",
 }
 
 export enum IconKey {
@@ -28,13 +27,12 @@ export enum IconKey {
   NotFound = "NotFound"
 }
 
-export const componentMap: Record<ComponentKey, React.ReactElement> = {
-  [ComponentKey.Actical]: <Actical />,
-  [ComponentKey.Home]: <Home />,
-  [ComponentKey.About]: <About />,
-  [ComponentKey.Diary]: <Diary />,
-  [ComponentKey.EditArticleInfo]: <EditArticleInfo />,
-  [ComponentKey.EditFolderInfo]: <EditFolderInfo />,
+export const componentMap: Record<ComponentKey, React.LazyExoticComponent<React.FC>> = {
+  [ComponentKey.Actical]: React.lazy(() => import("../../pages/Article/Article")),
+  [ComponentKey.Home]:React.lazy(() => import("../../pages/Home/Home")),
+  [ComponentKey.About]: React.lazy(() => import("../../pages/About/About")),
+  [ComponentKey.Diary]: React.lazy(() => import("../../pages/Diary/Diary")),
+  [ComponentKey.ArticleMainContent]: React.lazy(() => import("../../pages/ArticleMainContent/ArticleMainContent")),
 };
 export const iconMap: Record<string, React.ReactNode> = {
   //   MailOutlined: <HomeOutlined />,

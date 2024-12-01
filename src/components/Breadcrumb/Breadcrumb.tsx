@@ -1,7 +1,6 @@
 import React from 'react';
 import { Breadcrumb } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
-import routes from '../../router/index';  // 引入路由配置文件
 import styles from './Breadcrumb.module.scss';  // 导入 SCSS 模块
 
 interface AppBreadcrumbProps {
@@ -15,7 +14,7 @@ const AppBreadcrumb: React.FC<AppBreadcrumbProps> = ({ isDarkMode }) => {
     const fullPath = `/${locations.slice(0, index + 1).join('/')}`; // 动态拼接完整路径
     return {
       key: fullPath,
-      title: <Link to={fullPath} className={styles.breadcrumbLink}>{item}</Link>,
+      title: <Link to={fullPath} className={styles.breadcrumbLink}>{decodeURIComponent(item)}</Link>,
       className: `${styles.breadcrumbItem} ${isDarkMode ? styles.dark : styles.light}`,
     };
   });

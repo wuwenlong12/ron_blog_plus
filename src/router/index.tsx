@@ -1,70 +1,115 @@
-import Home from '../pages/Home/Home';
-import Diary from '../pages/Diary/Diary';
-import { MailOutlined, SettingOutlined } from '@ant-design/icons';
-import Actical from '../pages/Actical/Actical';
-import About from '../pages/About/About';
-import EditArticleInfo from '../pages/EditArticleInfo/EditArticleInfo'; // 引入编辑组件
-import EditFolderInfo from '../pages/EditFolderInfo/EditFolderInfo'; // 引入编辑组件
-import { generateRoutes } from './generaterRoutes';
-import { getActicalDirectory } from '../api/actical/actical';
-import { Route } from './type';
-import { ComponentKey, IconKey } from './utils';
+import Layout from "../layout";
+import { createBrowserRouter, RouteObject } from "react-router-dom";
+import React, { Suspense, useEffect, useState } from "react";
+import { MailOutlined } from "@ant-design/icons";
+import { getActicalDirectory } from "../api/actical/actical";
+import { generateRoutes } from "./generaterRoutes";
 
-
-export const staticRoutes:Route[] = [
-  {
-    path: "/", 
-    element: ComponentKey.Home,
-    meta: {
-      label: 'Ron', 
-      key: 'main', 
-      icon: IconKey.MailOutlined,
-    },
-  },
-  {
-    path: "/diary", 
-    element:ComponentKey.Diary,
-    meta: {
-      label: '日记', 
-      key: 'diary', 
-      icon: IconKey.MailOutlined,
-    },
-  },
-  {
-    path: "/artical",
-    element: ComponentKey.Actical,
-    meta: {
-      label: '文章', 
-      key: 'artical', 
-      icon: IconKey.MailOutlined,
-    },
-    children: [],  //后端返回异步路由
-  },
-  {
-    path: "/about",
-    element: ComponentKey.About,
-    meta: {
-      label: '关于我',
-      key: 'about',
-      icon: IconKey.MailOutlined,
-    },
-  },
-];
-
-// 动态生成路由
-export const buildRoutes = async (): Promise<Route[]> => {
-  const res = await getActicalDirectory();
-  const backendRoutes = res.data
-  const dynamicRoutes = generateRoutes(backendRoutes);
-
-  // 将动态路由注入到 `/artical` 的 `children` 中 
-  const routes = staticRoutes.map((route) => {
-    if (route.path === '/artical') {
-      return { ...route, children: dynamicRoutes };
-    }
-    return route;
-  });
-
-  return routes;
+// 加载动态路由
+const loadArticleRoutes = async () => {
+  try {
+    const res = await getActicalDirectory(); // 获取动态路由数据
+    const backendData = res.data;
+    // 生成动态子路由
+    const articalChildren = generateRoutes(backendData);
+    return articalChildren;
+  } catch (error) {
+    console.error("加载文章动态路由失败:", error);
+    return []; // 如果失败，返回空数组
+  }
 };
-export default buildRoutes;
+
+// 懒加载页面组件
+const Home = React.lazy(() => import("../pages/Home/Home"));
+const Diary = React.lazy(() => import("../pages/Diary/Diary"));
+const Article = React.lazy(() => import("../pages/Article/Article"));
+const About = React.lazy(() => import("../pages/About/About"));
+
+const useRoutes = () => {
+  const [ArticleRoutes, setArticleRoutes] = useState<RouteObject[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const fetchRoutes = async () => {
+      const routes = await loadArticleRoutes();
+      setArticleRoutes(routes); // 更新动态路由
+      setIsLoaded(true);
+    };
+
+    fetchRoutes(); // 异步加载路由数据
+  }, []);
+
+  // 当路由加载完成时，使用 createBrowserRouter 创建路由配置
+  const routes = isLoaded
+    ? [
+        {
+          path: "/",
+          element: <Layout />, // 使用 element 而不是 Component
+          children: [
+            {
+              path: "home",
+              element: (
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Home />
+                </Suspense>
+              ),
+              handle: {
+                key: "Home",
+                label: "主页",
+                Icon: <MailOutlined />,
+                requiresAuth: false,
+              },
+            },
+            {
+              path: "diary",
+              element: (
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Diary />
+                </Suspense>
+              ),
+              handle: {
+                key: "Diary",
+                label: "日记",
+                Icon: <MailOutlined />,
+                requiresAuth: false,
+              },
+            },
+            {
+              path: "article", // :id 是动态路径参数
+              element: (
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Article />
+                </Suspense>
+              ),
+              loader: loadArticleRoutes, // 异步加载子路由
+              children: ArticleRoutes, // 动态加载的子路由
+              handle: {
+                key: "Article",
+                label: "文章",
+                Icon: <MailOutlined />,
+                requiresAuth: false,
+              },
+            },
+            {
+              path: "about",
+              element: (
+                <Suspense fallback={<div>Loading...</div>}>
+                  <About />
+                </Suspense>
+              ),
+              handle: {
+                key: "About",
+                label: "关于",
+                Icon: <MailOutlined />,
+                requiresAuth: false,
+              },
+            },
+          ],
+        },
+      ]
+    : []; // 在加载前返回空数组，避免渲染
+
+  return { routes, isLoaded };
+};
+
+export default useRoutes;

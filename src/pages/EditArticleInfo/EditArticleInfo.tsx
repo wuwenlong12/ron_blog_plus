@@ -3,7 +3,7 @@ import React from 'react';
 const EditArticleInfo = () => {
     return (
         <div>
-            111
+            1112324234234
         </div>
     );
 }

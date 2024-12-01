@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import styles from "./Actical.module.scss";
-import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
+import styles from "./Article.module.scss";
 import useTheme from "../../hook/useTheme";
-import { getActicalDirectory } from "../../api/actical/actical";
 import { Menu, MenuProps, Button, Input } from "antd";
 import {
   RightOutlined,
@@ -11,7 +9,7 @@ import {
   FolderOutlined,
   ReadOutlined,
 } from "@ant-design/icons";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, RouteObject, useLoaderData, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectActicalChildren } from "../../store/routesSlice";
 import { Route } from "../../router/type";
@@ -20,7 +18,7 @@ import { RootState } from "../../store";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
-const Actical = () => {
+const Actical = ({}) => {
   const { isDarkMode } = useTheme();
   const [directory, setDirectory] = useState<MenuItem[] | null>([]);
   const [isOpenMenu, setIsOpenMenu] = useState(true);
@@ -29,39 +27,22 @@ const Actical = () => {
   const [openKeys, setOpenKeys] = useState<string[]>([]); // Manage open keys of SubMenu
   const [currentMenu, setCurrentMenu] = useState<string>(""); // Track the current menu clicked
   const navigate = useNavigate();
-
+  const articalChildren = useLoaderData();
   const staticRoutes = useSelector(
     (state: RootState) => state.routes.staticRoutes
   );
-  const articalChildren = useSelector(selectActicalChildren);
-  useEffect(() => {
-    init();
-  }, []);
-  // const getFullPath = (menu: MenuItem[] | null, key: string): string => {
-
-  // };
 
   useEffect(() => {
-    if (openKeys.length) {
-      // const fullPath = getFullPath(directory, openKeys[0]); // Generate full path from openKeys
-      // console.log(fullPath);
-      // navigate(fullPath);
-    }
-  }, [openKeys]);
-  const init = async () => {};
-  useEffect(() => {
-    const items = transformDataToMenuItems(articalChildren);
-    // console.log(items);
-    
+    const items = transformDataToMenuItems((articalChildren) as RouteObject[]);
     setDirectory(items);
   }, [articalChildren]);
 
   // Transform API data into Antd Menu item format
-  const transformDataToMenuItems = (data: Route[]): MenuItem[] => {
+  const transformDataToMenuItems = (data: RouteObject[]): MenuItem[] => {
     return data.map((item) => ({
-      key: item.meta.key,
+      key: item.handle.key,
       label: item.path,
-      icon: item.meta.type === "folder" ? <FolderOutlined /> : <ReadOutlined />,
+      icon: item.handle.type === "folder" ? <FolderOutlined /> : <ReadOutlined />,
       children: item.children
         ? transformDataToMenuItems(item.children)
         : undefined,
@@ -73,16 +54,12 @@ const Actical = () => {
     console.log("Clicked menu item:", e);
     const { key } = e; // Get clicked item's key
     const path = findFullPathByKey(staticRoutes, key);
-    console.log("path"+ path);
+    console.log("path" + path);
     setCurrentMenu(key); // Set current clicked menu
     navigate(path || ""); // Navigate to specific folder
   };
 
-  // Handle SubMenu open/close state
-  const handleOpenChange = (keys: string[]) => {
-    // If we click the current open SubMenu, it will close. Otherwise, open it
-    setOpenKeys(keys.length === 1 ? keys : [keys[keys.length - 1]]);
-  };
+
 
   // Handle adding a folder
   const handleAddFolder = () => {
@@ -105,7 +82,7 @@ const Actical = () => {
       if (attributeValue) {
         // 分割字符串并获取最后一部分
         const key = attributeValue.split("-").pop();
-        if(!key) return
+        if (!key) return;
         const path = findFullPathByKey(staticRoutes, key);
         navigate(path || ""); // Navigate to specific folder
       }
@@ -153,7 +130,6 @@ const Actical = () => {
           <Menu
             className={styles.menu}
             onClick={handleMenuClick} // Trigger handleMenuClick on item click
-       
             mode="inline"
             inlineCollapsed={!isOpenMenu}
             inlineIndent={24}

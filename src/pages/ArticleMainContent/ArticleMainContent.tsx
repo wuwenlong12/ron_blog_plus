@@ -1,6 +1,6 @@
 import { Input, Form, Button, Space, message } from "antd";
 import React, { useEffect, useState } from "react";
-import styles from "./EditFolderInfo.module.scss";
+import styles from "./ArticleMainContent.module.scss";
 import { getDirectoryInfoById, patchFolderInfo } from "../../api/actical/actical";
 import { useSearchParams } from "react-router-dom";
 import AppBreadcrumb from "../../components/Breadcrumb/Breadcrumb";
@@ -38,7 +38,6 @@ const EditFolderInfo = () => {
   return (
     <div className={styles.container}>
       {contextHolder}
-      <div>111</div>
       <AppBreadcrumb isDarkMode={true}></AppBreadcrumb>
     </div>
   );
