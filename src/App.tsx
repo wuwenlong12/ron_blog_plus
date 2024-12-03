@@ -1,26 +1,62 @@
 // src/App.tsx
 import React, { useEffect, useState } from "react";
-import ThemeDiv from "./themeComponent/themeView";
 import "./App.scss";
-import Header from "./components/Header/Header";
 import { BrowserRouter as Router, Routes, Route, RouterProvider, createBrowserRouter } from "react-router-dom";
-import    useRoutes  from "./router";
-import IndexLayout from "./layout";
-import { useDispatch } from "react-redux";
-import { setStaticRoutes } from "./store/routesSlice";
-import nProgress from "nprogress";
+import useRoutes from "./router";
+import { ConfigProvider, theme, ThemeConfig } from "antd";
+import useTheme from "./hook/useTheme";
+
 
 const App: React.FC = () => {
-  const { routes, isLoaded } = useRoutes(); // 使用 useRoutes 获取路由配置和加载状态
+  const { routes, isloaded } = useRoutes(); // 使用 useRoutes 获取路由配置和加载状态
+  const { isDarkMode } = useTheme();  // 确保在 Provider 内部
+  const [currentTheme, setCurrentTheme] = useState<ThemeConfig>()
 
-  if (!isLoaded) {
-    return <div>Loading routes...</div>; // 如果路由还未加载，展示加载指示器
+  useEffect(() => {
+    if (isDarkMode) {
+      setCurrentTheme({
+        algorithm: theme.darkAlgorithm,
+        token: {
+        },
+        components: {
+          Breadcrumb: {
+            /* 这里是你的组件 token */
+            itemColor: "#fff"
+          },
+          Button:{
+            defaultBg:'#fff'
+          }
+        },
+      })
+    } else {
+      setCurrentTheme({
+        algorithm: theme.defaultAlgorithm,
+        token: {
+
+        },
+        components: {
+          Breadcrumb: {
+            /* 这里是你的组件 token */
+            itemColor: "#fff"
+          },
+          Button:{
+            defaultBg:'#fff'
+          }
+        },
+      })
+    }
+
+  }, [isDarkMode])
+  if (!isloaded) {
+    return <div>loading</div>
   }
   const router = createBrowserRouter(routes);
 
-
   return (
-    <RouterProvider router={router} future={{ v7_startTransition: true }}/>
+    <ConfigProvider theme={currentTheme}>
+      <RouterProvider router={router} future={{ v7_startTransition: true }} />
+    </ConfigProvider>
+
   );
 };
 

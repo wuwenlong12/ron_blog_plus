@@ -1,78 +1,101 @@
 @import "../../setting/variables.scss";
 /* 针对 container 的过渡 */
 .container {
-    padding-top: 60px;
-    display: flex;
-  }
-  
+  padding-top: 60px;
+  display: flex;
+
   .menuContainerOpen,
   .menuContainerClose {
     position: relative;
     transition: all 0.3s ease; /* 过渡所有属性 */
-    .add{
+    .add {
       width: 100%;
       background-color: transparent;
     }
   }
-  
+
   .menuContainerOpen {
-    width: 600px; /* 打开菜单时的宽度 */
+    width: 400px; /* 打开菜单时的宽度 */
+    box-shadow: 5px 0px 10px rgba(0, 0, 0, 0.1);
   }
-  
+
   .menuContainerClose {
-    width: 80px;  /* 关闭菜单时的宽度 */
+    width: 80px; /* 关闭菜单时的宽度 */
+    box-shadow: 2px 0px 12px rgba(0, 0, 0, 0.3);
   }
-  
+
   .menuControlBtn {
-    height: calc(100vh - 120px);
+    height: calc(100vh - 60px);
     position: absolute;
     right: -30px;
     background-color: transparent !important;
     color: #929292 !important;
-    &:hover{
-        background-color: rgba($color: #828080, $alpha: 0.1) !important;
-        color: #6d6d6d !important;
+    &:hover {
+      background-color: rgba($color: #828080, $alpha: 0.1) !important;
+      color: #6d6d6d !important;
     }
   }
-  
+
   /* 菜单展开和关闭的状态 */
   .menuOpen {
-    width: 400px;  /* 菜单展开时的宽度 */
+    width: 400px; /* 菜单展开时的宽度 */
     transition: width 0.3s ease; /* 针对宽度设置过渡 */
   }
-  .menu{
-    height:  calc(100vh - 120px);
+  .menu {
+    height: calc(100vh - 120px);
     overflow: auto;
   }
   .menuClose {
-    width: 80px;  /* 菜单收起时的宽度 */
+    width: 80px; /* 菜单收起时的宽度 */
     transition: width 0.3s ease; /* 过渡宽度 */
   }
-  
+
   /* Webkit 浏览器（Chrome, Safari）滚动条样式 */
   .menu::-webkit-scrollbar {
     width: 2px; /* 设置滚动条宽度 */
   }
-  
+
   .menu::-webkit-scrollbar-track {
     background: #f0f0f0; /* 设置滚动条轨道背景 */
     border-radius: 10px;
   }
-  
+
   .menu::-webkit-scrollbar-thumb {
     background-color: #929292; /* 滚动条滑块颜色 */
     border-radius: 10px; /* 滚动条滑块圆角 */
   }
-  
+
   .menu::-webkit-scrollbar-thumb:hover {
     background-color: #bab9b9; /* 滚动条滑块悬浮时颜色 */
   }
-  
+  .articleMainContent {
+    flex: auto;
+  }
+
+  .BtnLight {
+    background-color: transparent;
+    color: #000;
+    margin-right: 10px;
+    &:hover {
+      color: #4096ff !important;
+      //   border-color: #f59b4c !important;
+    }
+  }
+  .BtnDark {
+    color: #fff;
+    background-color: transparent;
+    margin-right: 10px;
+    &:hover {
+      color: #4096ff !important;
+      //   border-color: #f59b4c !important;
+    }
+  }
+}
 
 /* 移动端样式 */
 @media (max-width: $breakpoint-md) {
   .menuContainerOpen,
-  .menuContainerClose{
+  .menuContainerClose {
     display: none;
   }
 }

@@ -3,6 +3,7 @@ import {
   Route,
   useNavigate,
   Outlet,
+  useLocation,
 } from "react-router-dom";
 import Header from "../components/Header/Header";
 import { MenuProps } from "antd";
@@ -18,10 +19,12 @@ const IndexLayout = () => {
   const [isLeftMenuOpen, setIsLeftMenuOpen] = useState(false);
   const [isRightMenuOpen, setIsRightMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const [current, setCurrent] = useState("main");
-
- 
-
+  const [current, setCurrent] = useState("");
+  const { pathname } = useLocation();
+  useEffect(()=>{
+  
+    setCurrent(pathname.split("/")[1] || "")
+  },[])
   // 递归渲染路由
   const renderRoutes = (routes: any[]) => {
     return routes.map((route, index) => (
@@ -30,40 +33,38 @@ const IndexLayout = () => {
       </Route>
     ));
   };
-  const { routes, isLoaded } = useRoutes();
-
-  // todo
-  const  lables = routes.routes[0]?.children || []
-
+  const { routes } = useRoutes();
+  const lables = routes[0]?.children || []
   const items: MenuProps["items"] = lables.map((item) => {
     return {
-      label:item.handle.label,
-      key:item.handle.key,
+      label: item.handle.label,
+      key: item.handle.key,
       icon: item.handle.Icon, // 映射为图标组件
     };
   });
 
- 
- 
   const handleNavigate = (key: string) => {
     console.log(key);
-    
+
     setCurrent(key);
     navigate(key === "main" ? "/" : `/${key}`);
     setIsRightMenuOpen(false);
   };
+
   const handleLeftMenu = () => {
     if (isRightMenuOpen) {
       setIsRightMenuOpen(false);
     }
     setIsLeftMenuOpen(!isLeftMenuOpen);
   };
+
   const handleRightMenu = () => {
     if (isLeftMenuOpen) {
       setIsLeftMenuOpen(false);
     }
     setIsRightMenuOpen(!isRightMenuOpen);
   };
+
   return (
     <>
       <Header

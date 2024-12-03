@@ -1,47 +1,61 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Article.module.scss";
 import useTheme from "../../hook/useTheme";
-import { Menu, MenuProps, Button, Input } from "antd";
+import { Menu, MenuProps, Button, Input, Modal } from "antd";
 import {
   RightOutlined,
   LeftOutlined,
   FolderAddOutlined,
   FolderOutlined,
   ReadOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
-import { Outlet, RouteObject, useLoaderData, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { selectActicalChildren } from "../../store/routesSlice";
-import { Route } from "../../router/type";
+import { Outlet, RouteObject, useNavigate } from "react-router-dom";
 import { findFullPathByKey } from "../../router/utils";
 import { RootState } from "../../store";
-
+import useRoutes from "../../router";
+import { getDirectoryInfoById } from "../../api/actical/actical";
+import EditModal from "./components/EditModal/EditModal";
 type MenuItem = Required<MenuProps>["items"][number];
 
-const Actical = ({}) => {
+const Actical = ({ }) => {
   const { isDarkMode } = useTheme();
   const [directory, setDirectory] = useState<MenuItem[] | null>([]);
   const [isOpenMenu, setIsOpenMenu] = useState(true);
   const [isOpenAddFolder, setIsOpenAddFolder] = useState(false);
   const [folderName, setFolderName] = useState("");
-  const [openKeys, setOpenKeys] = useState<string[]>([]); // Manage open keys of SubMenu
-  const [currentMenu, setCurrentMenu] = useState<string>(""); // Track the current menu clicked
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const navigate = useNavigate();
-  const articalChildren = useLoaderData();
-  const staticRoutes = useSelector(
-    (state: RootState) => state.routes.staticRoutes
-  );
+
+  const { articleRoutes } = useRoutes();
+  const [isShowfolderOrActicleInfoForm, setIsShowfolderOrActicleInfoForm] = useState<boolean>(false);
+  const [folderOrActicleInfoFormLoading, setFolderOrActicleInfoFormLoading] = useState<boolean>(true);
+  const [EditKey, setEditKey] = useState("")
+  const [EditType, setEditType] = useState<"folder" | "article">("article")
 
   useEffect(() => {
-    const items = transformDataToMenuItems((articalChildren) as RouteObject[]);
-    setDirectory(items);
-  }, [articalChildren]);
+    const savedSelectedKey = localStorage.getItem("selectedMenuKey");
+    if (savedSelectedKey) {
+      setSelectedKeys([savedSelectedKey]);
+    }
+  }, []);
+  useEffect(() => {
+    const items = transformDataToMenuItems((articleRoutes) as RouteObject[]);
+    console.log(items);
 
-  // Transform API data into Antd Menu item format
+    setDirectory(items);
+  }, [articleRoutes]);
+
   const transformDataToMenuItems = (data: RouteObject[]): MenuItem[] => {
     return data.map((item) => ({
       key: item.handle.key,
-      label: item.path,
+      label: <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><div>{item.path}</div>
+        <Button
+          className={isDarkMode ? styles.BtnDark : styles.BtnLight}
+          type="text"
+          onClick={() => setFolderOrArticleInfo(item.handle.type, item.handle.key)}
+          icon={<SettingOutlined />}
+        /></div>,
       icon: item.handle.type === "folder" ? <FolderOutlined /> : <ReadOutlined />,
       children: item.children
         ? transformDataToMenuItems(item.children)
@@ -49,19 +63,40 @@ const Actical = ({}) => {
     }));
   };
 
-  // Handle menu item click
-  const handleMenuClick = (e: any) => {
+  // 文章点击
+  const handleActicleClick = (e: any) => {
     console.log("Clicked menu item:", e);
-    const { key } = e; // Get clicked item's key
-    const path = findFullPathByKey(staticRoutes, key);
+    const { key } = e;
+    setSelectedKeys([key]);
+    localStorage.setItem("selectedMenuKey", key);
+    const path = findFullPathByKey(articleRoutes, key);
     console.log("path" + path);
-    setCurrentMenu(key); // Set current clicked menu
-    navigate(path || ""); // Navigate to specific folder
+    navigate(path || "");
   };
 
+  //文件夹点击
+  // const handleFolderClick = (e: React.MouseEvent<HTMLElement>): void => {
+  //   // 将 e.target 断言为 HTMLElement，以便访问 closest 方法
+  //   const submenu = (e.target as HTMLElement).closest(
+  //     ".ant-menu-submenu-title"
+  //   ) as HTMLElement | null;
+
+  //   if (submenu) {
+  //     // 获取自定义属性 data-menu-id 的值
+  //     const attributeValue = submenu.getAttribute("data-menu-id");
+
+  //     if (attributeValue) {
+  //       // 分割字符串并获取最后一部分
+  //       const key = attributeValue.split("-").pop();
+  //       if (!key) return;
+  //       const path = findFullPathByKey(articleRoutes, key);
+  //       navigate(path || ""); // Navigate to specific folder
+  //     }
+  //   }
+  // };
 
 
-  // Handle adding a folder
+  // 添加最外层文件夹
   const handleAddFolder = () => {
     if (!folderName.trim()) return;
     setIsOpenAddFolder(false);
@@ -69,25 +104,11 @@ const Actical = ({}) => {
     console.log("New folder name:", folderName);
   };
 
-  const test = (e: React.MouseEvent<HTMLElement>): void => {
-    // 将 e.target 断言为 HTMLElement，以便访问 closest 方法
-    const submenu = (e.target as HTMLElement).closest(
-      ".ant-menu-submenu-title"
-    ) as HTMLElement | null;
-
-    if (submenu) {
-      // 获取自定义属性 data-menu-id 的值
-      const attributeValue = submenu.getAttribute("data-menu-id");
-
-      if (attributeValue) {
-        // 分割字符串并获取最后一部分
-        const key = attributeValue.split("-").pop();
-        if (!key) return;
-        const path = findFullPathByKey(staticRoutes, key);
-        navigate(path || ""); // Navigate to specific folder
-      }
-    }
-  };
+  const setFolderOrArticleInfo = async (type: "folder" | "article", key: string) => {
+    setEditKey(key)
+    setEditType(type)
+    setIsShowfolderOrActicleInfoForm(true)
+  }
 
   return (
     <div className={styles.container}>
@@ -126,10 +147,12 @@ const Actical = ({}) => {
             onPressEnter={handleAddFolder}
           />
         ) : null}
-        <div onClick={test}>
+        <div>
           <Menu
+            style={{ background: 'transparent', border: 'none' }}
             className={styles.menu}
-            onClick={handleMenuClick} // Trigger handleMenuClick on item click
+            onClick={handleActicleClick}
+            selectedKeys={selectedKeys}
             mode="inline"
             inlineCollapsed={!isOpenMenu}
             inlineIndent={24}
@@ -137,7 +160,15 @@ const Actical = ({}) => {
           />
         </div>
       </div>
-      <Outlet />
+      <div className={styles.articleMainContent}>
+        <Outlet />
+      </div>
+      <EditModal
+        id={EditKey}
+        type={EditType}
+        isShowfolderOrActicleInfoForm={isShowfolderOrActicleInfoForm}
+        setIsShowfolderOrActicleInfoForm={setIsShowfolderOrActicleInfoForm}
+      ></EditModal>
     </div>
   );
 };
