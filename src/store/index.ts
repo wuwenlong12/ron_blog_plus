@@ -2,10 +2,11 @@
 
 import { configureStore } from '@reduxjs/toolkit';
 import themeReducer from './themeSlice';
-
+import articleRoutesReducer from './articleRoutesSlice';
 const store = configureStore({
   reducer: {
     theme: themeReducer,
+    articleRoutes: articleRoutesReducer,
   },
 });
 

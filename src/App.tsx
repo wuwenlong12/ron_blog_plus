@@ -47,11 +47,17 @@ const App: React.FC = () => {
     }
 
   }, [isDarkMode])
-  if (!isloaded) {
+  if (!isloaded ) {
     return <div>loading</div>
   }
-  const router = createBrowserRouter(routes);
 
+  //todo： 视图可以响应式但是路由没有添加上
+  useEffect(()=>{
+    const router = createBrowserRouter(routes);
+    console.log(router);
+  })
+  
+  
   return (
     <ConfigProvider theme={currentTheme}>
       <RouterProvider router={router} future={{ v7_startTransition: true }} />

@@ -16,6 +16,7 @@ import { RootState } from "../../store";
 import useRoutes from "../../router";
 import { getDirectoryInfoById } from "../../api/actical/actical";
 import EditModal from "./components/EditModal/EditModal";
+import { useSelector } from "react-redux";
 type MenuItem = Required<MenuProps>["items"][number];
 
 const Actical = ({ }) => {
@@ -27,7 +28,8 @@ const Actical = ({ }) => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const navigate = useNavigate();
 
-  const { articleRoutes } = useRoutes();
+  // const { articleRoutes } = useRoutes();
+  const articleRoutesMap = useSelector((state: RootState) => state.articleRoutes.articleRoutesMap);
   const [isShowfolderOrActicleInfoForm, setIsShowfolderOrActicleInfoForm] = useState<boolean>(false);
   const [folderOrActicleInfoFormLoading, setFolderOrActicleInfoFormLoading] = useState<boolean>(true);
   const [EditKey, setEditKey] = useState("")
@@ -40,20 +42,23 @@ const Actical = ({ }) => {
     }
   }, []);
   useEffect(() => {
-    const items = transformDataToMenuItems((articleRoutes) as RouteObject[]);
-    console.log(items);
-
+    console.log("已更新");
+    console.log(articleRoutesMap+"articleRoutesMap");
+    
+    const items = transformDataToMenuItems((articleRoutesMap) as RouteObject[]);
     setDirectory(items);
-  }, [articleRoutes]);
+  }, [articleRoutesMap]);
 
   const transformDataToMenuItems = (data: RouteObject[]): MenuItem[] => {
+    console.log("data"+data);
+    
     return data.map((item) => ({
       key: item.handle.key,
       label: <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><div>{item.path}</div>
         <Button
           className={isDarkMode ? styles.BtnDark : styles.BtnLight}
           type="text"
-          onClick={() => setFolderOrArticleInfo(item.handle.type, item.handle.key)}
+          onClick={(e: React.MouseEvent<HTMLButtonElement>) => setFolderOrArticleInfo(e,item.handle.type, item.handle.key)}
           icon={<SettingOutlined />}
         /></div>,
       icon: item.handle.type === "folder" ? <FolderOutlined /> : <ReadOutlined />,
@@ -69,7 +74,7 @@ const Actical = ({ }) => {
     const { key } = e;
     setSelectedKeys([key]);
     localStorage.setItem("selectedMenuKey", key);
-    const path = findFullPathByKey(articleRoutes, key);
+    const path = findFullPathByKey(articleRoutesMap, key);
     console.log("path" + path);
     navigate(path || "");
   };
@@ -104,7 +109,8 @@ const Actical = ({ }) => {
     console.log("New folder name:", folderName);
   };
 
-  const setFolderOrArticleInfo = async (type: "folder" | "article", key: string) => {
+  const setFolderOrArticleInfo = async (e: React.MouseEvent<HTMLButtonElement>,type: "folder" | "article", key: string) => {
+    e.stopPropagation(); // 阻止事件冒泡
     setEditKey(key)
     setEditType(type)
     setIsShowfolderOrActicleInfoForm(true)

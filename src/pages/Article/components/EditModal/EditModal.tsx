@@ -24,7 +24,7 @@ const EditModal: React.FC<EditModalProps> = ({
   const [name, setName] = useState('');
   const [desc, setDesc] = useState('');
   const [messageApi, contextHolder] = message.useMessage();
-  const { setArticleRoutes } = useRoutes();
+  const { loadArticleRoutes } = useRoutes();
 
   useEffect(() => {
     if (id) {
@@ -45,29 +45,7 @@ const EditModal: React.FC<EditModalProps> = ({
       console.error('Failed to fetch directory info:', error);
     }
   };
-//todo BUG 无法无感刷新
-  const updateRouteByKey = (
-    routes: RouteObject[], // 假设这就是你的动态路由数组
-    key: string,
-    newInfo: { name: string; desc: string }
-  ) => {
-    return routes.map(route => {
-      // 如果路由的 handle.key 匹配，更新该路由的 handle
-      if (route.handle?.key === key) {
-        return {
-          ...route,
-          handle: { ...route.handle, label: newInfo.name, desc: newInfo.desc } // 假设你需要更新的是 label 和 desc
-        };
-      }
 
-      // 如果有子路由，递归处理
-      if (route.children) {
-        return { ...route, children: updateRouteByKey(route.children, key, newInfo) };
-      }
-
-      return route;
-    });
-  };
 
   const handleSave = async () => {
     try {
@@ -76,9 +54,7 @@ const EditModal: React.FC<EditModalProps> = ({
 
       if (res.code === 0) {
         // 更新路由配置
-        setArticleRoutes(prevRoutes => {
-          return updateRouteByKey(prevRoutes, id, { name, desc }); // 更新与当前 id 相关的路由
-        });
+          loadArticleRoutes()
         messageApi.success('保存成功！');
       } else {
         messageApi.error('保存失败，请稍后重试');
