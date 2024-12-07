@@ -5,13 +5,14 @@ import { BrowserRouter as Router, Routes, Route, RouterProvider, createBrowserRo
 import useRoutes from "./router";
 import { ConfigProvider, theme, ThemeConfig } from "antd";
 import useTheme from "./hook/useTheme";
+import Loading from "./components/loading/loading";
 
 
 const App: React.FC = () => {
-  const { routes, isloaded } = useRoutes(); // 使用 useRoutes 获取路由配置和加载状态
+  const {isloaded, routes } = useRoutes(); // 使用 useRoutes 获取路由配置和加载状态
   const { isDarkMode } = useTheme();  // 确保在 Provider 内部
   const [currentTheme, setCurrentTheme] = useState<ThemeConfig>()
-
+  // const [router, setRouter] = useState<any>([]);
   useEffect(() => {
     if (isDarkMode) {
       setCurrentTheme({
@@ -47,15 +48,27 @@ const App: React.FC = () => {
     }
 
   }, [isDarkMode])
+
+    // 创建 router 实例，仅在 routes 或 isloaded 变化时触发
+    // useEffect(() => {
+    //   if (isloaded) {
+    //     const newRouter = createBrowserRouter(routes);
+    //     console.log(newRouter);
+        
+    //     setRouter(newRouter);
+    //   }
+    // }, [routes, isloaded]);
+
+
+   
+ 
+   
+  
   if (!isloaded ) {
-    return <div>loading</div>
+    return <Loading />;
   }
 
-  //todo： 视图可以响应式但是路由没有添加上
-  useEffect(()=>{
-    const router = createBrowserRouter(routes);
-    console.log(router);
-  })
+  const router = createBrowserRouter(routes);
   
   
   return (

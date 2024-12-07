@@ -15,9 +15,6 @@ import React from "react";
 import { RouteObject } from "react-router-dom";
 
 
-
-
-
 // 递归查找路径并拼接父路径的函数
 export const findFullPathByKey = (routes: RouteObject[], key: string, parentPath: string = ''): string | undefined => {
   for (const route of routes) {

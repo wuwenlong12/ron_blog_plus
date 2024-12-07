@@ -1,54 +1,60 @@
 import Layout from "../layout";
 import { createBrowserRouter, RouteObject } from "react-router-dom";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useMemo, useState } from "react";
 import { MailOutlined } from "@ant-design/icons";
 import { getActicalDirectory } from "../api/actical/actical";
-import { componentKey, componentMap, generateRoutes, generateRoutesMap } from "./generaterRoutes";
+import { generateRoutes, generateRoutesMap } from "./generaterRoutes";
 import Loading from "../components/loading/loading";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store";
-import {  setArticleRoutesMap } from "../store/articleRoutesSlice";
+import { setArticleRoutesMap } from "../store/articleRoutesSlice";
 
 // 懒加载页面组件
 const Home = React.lazy(() => import("../pages/Home/Home"));
 const Diary = React.lazy(() => import("../pages/Diary/Diary"));
 const Article = React.lazy(() => import("../pages/Article/Article"));
 const About = React.lazy(() => import("../pages/About/About"));
-const ArticleMainContent = React.lazy(() => import("../pages/ArticleMainContent/ArticleMainContent"));
-
+const ArticleMainContent = React.lazy(() =>
+  import("../pages/ArticleMainContent/ArticleMainContent")
+);
 
 const useRoutes = () => {
   const dispatch: AppDispatch = useDispatch();
-  const articleRoutesMap = useSelector((state: RootState) => state.articleRoutes.articleRoutesMap);
-  const [articleRoutes,setArticleRoutes] = useState<RouteObject[]>([])
+  const articleRoutesMap = useSelector(
+    (state: RootState) => state.articleRoutes.articleRoutesMap
+  );
+  const [articleRoutes, setArticleRoutes] = useState<RouteObject[]>([]);
   const [isloaded, setIsloaded] = useState(false);
-  const [routes,setRoutes] =useState<RouteObject[]>()
+
+
   // 加载动态路由
-
-
-
   useEffect(() => {
-    loadArticleRoutes()
-  }, [])
+    loadArticleRoutes();
+  }, []);
 
   const loadArticleRoutes = async () => {
     try {
       const res = await getActicalDirectory(); // 获取动态路由数据
       const backendData = res.data;
+
       // 生成动态子路由
       const articalChildren = generateRoutesMap(backendData);
-      const articleRoutes = generateRoutes(articalChildren)
-      setArticleRoutes(articleRoutes)
-      dispatch(setArticleRoutesMap(articalChildren))
-      setIsloaded(true);
+      const newArticleRoutes = generateRoutes(articalChildren);
+
+      setArticleRoutes(newArticleRoutes);
+      dispatch(setArticleRoutesMap(articalChildren));
+      setTimeout(() => {
+        setIsloaded(true)
+      }, 1000);
     } catch (error) {
       console.error("加载文章动态路由失败:", error);
-      dispatch(setArticleRoutesMap([])) // 如果失败，设置空数组
+      dispatch(setArticleRoutesMap([])); // 如果失败，设置空数组
     }
   };
-  // 当路由加载完成时，使用 createBrowserRouter 创建路由配置
- 
-  const routesObj: RouteObject[] =  [
+
+  // 缓存 routes，只有在 `articleRoutes` 变化时重新生成
+  const routes: RouteObject[] = useMemo(() => {
+    return [
       {
         path: "/",
         element: <Layout />,
@@ -129,11 +135,11 @@ const useRoutes = () => {
         ],
       },
     ];
-    setRoutes(routesObj)
+  }, [articleRoutes]);
+
+
 
   return { isloaded, routes, articleRoutes, loadArticleRoutes };
 };
 
 export default useRoutes;
-
-
