@@ -4,6 +4,7 @@ import {
   useNavigate,
   Outlet,
   useLocation,
+  useMatches,
 } from "react-router-dom";
 import Header from "../components/Header/Header";
 import { MenuProps } from "antd";
@@ -11,8 +12,10 @@ import useTheme from "../hook/useTheme";
 import { setting } from "../setting";
 import Modal from "../components/Modal/Modal";
 import LeftModalDom from "../components/RightModalDom/RightModalDom";
-import useRoutes from "../router";
-
+import useRoutes from "../router/useArticleRoutes";
+import { useDispatch, useSelector } from "react-redux";
+import { selectRoutes, setCurrentPath } from "../store/routersMapSlice";
+import { RootState } from "../store";
 
 const IndexLayout = () => {
   const { isDarkMode, handleToggleTheme } = useTheme();
@@ -21,10 +24,17 @@ const IndexLayout = () => {
   const navigate = useNavigate();
   const [current, setCurrent] = useState("");
   const { pathname } = useLocation();
-  useEffect(()=>{
-  
-    setCurrent(pathname.split("/")[1] || "")
-  },[])
+  const dispatch = useDispatch();
+  const location = useLocation();
+  // 路由持久化
+  useEffect(() => {
+    const currentPath = location.pathname;
+    dispatch(setCurrentPath(currentPath));
+    setCurrent(pathname.split("/")[1] || "");
+    // 持久化到 localStorage
+    localStorage.setItem("currentPath", currentPath);
+  }, [location, dispatch]);
+
   // 递归渲染路由
   const renderRoutes = (routes: any[]) => {
     return routes.map((route, index) => (
@@ -33,8 +43,8 @@ const IndexLayout = () => {
       </Route>
     ));
   };
-  const { routes } = useRoutes();
-  const lables = routes[0]?.children || []
+  const routes = useSelector(selectRoutes);
+  const lables = routes[0]?.children || [];
   const items: MenuProps["items"] = lables.map((item) => {
     return {
       label: item.handle.label,

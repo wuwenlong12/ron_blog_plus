@@ -1,14 +1,17 @@
-import { Button, Input, message, Modal } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { getDirectoryInfoById, patchFolderInfo } from '../../../../api/actical/actical';
-import { DirectoryInfoById } from '../../../../api/actical/type';
-import TextArea from 'antd/es/input/TextArea';
-import useRoutes from '../../../../router';
-import { RouteObject } from 'react-router-dom';
+import { Button, Input, message, Modal } from "antd";
+import React, { useEffect, useState } from "react";
+import {
+  getDirectoryInfoById,
+  patchFolderInfo,
+} from "../../../../api/actical/actical";
+import { DirectoryInfoById } from "../../../../api/actical/type";
+import TextArea from "antd/es/input/TextArea";
+import useRoutes from "../../../../router/useArticleRoutes";
+import { RouteObject } from "react-router-dom";
 
 interface EditModalProps {
   id: string;
-  type: 'article' | 'folder';
+  type: "article" | "folder";
   isShowfolderOrActicleInfoForm: boolean;
   setIsShowfolderOrActicleInfoForm: (value: boolean) => void;
 }
@@ -17,12 +20,12 @@ const EditModal: React.FC<EditModalProps> = ({
   id,
   type,
   isShowfolderOrActicleInfoForm,
-  setIsShowfolderOrActicleInfoForm
+  setIsShowfolderOrActicleInfoForm,
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [initInfo, setInitInfo] = useState<DirectoryInfoById | null>(null);
-  const [name, setName] = useState('');
-  const [desc, setDesc] = useState('');
+  const [name, setName] = useState("");
+  const [desc, setDesc] = useState("");
   const [messageApi, contextHolder] = message.useMessage();
   const { loadArticleRoutes } = useRoutes();
 
@@ -39,13 +42,12 @@ const EditModal: React.FC<EditModalProps> = ({
       setIsLoading(false);
       setInitInfo(res.data);
       setName(res.data.name); // 初始化名称
-      setDesc(res.data.desc || ''); // 初始化描述
+      setDesc(res.data.desc || ""); // 初始化描述
     } catch (error) {
       setIsLoading(false);
-      console.error('Failed to fetch directory info:', error);
+      console.error("Failed to fetch directory info:", error);
     }
   };
-
 
   const handleSave = async () => {
     try {
@@ -54,14 +56,14 @@ const EditModal: React.FC<EditModalProps> = ({
 
       if (res.code === 0) {
         // 更新路由配置
-          loadArticleRoutes()
-        messageApi.success('保存成功！');
+        loadArticleRoutes();
+        messageApi.success("保存成功！");
       } else {
-        messageApi.error('保存失败，请稍后重试');
+        messageApi.error("保存失败，请稍后重试");
       }
     } catch (error) {
-      console.error('保存失败:', error);
-      messageApi.error('保存失败，请稍后重试');
+      console.error("保存失败:", error);
+      messageApi.error("保存失败，请稍后重试");
     }
 
     // 假设我们保存成功后关闭 modal

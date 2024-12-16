@@ -1,81 +1,87 @@
 // src/App.tsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "./App.scss";
-import { BrowserRouter as Router, Routes, Route, RouterProvider, createBrowserRouter } from "react-router-dom";
-import useRoutes from "./router";
+import {
+  RouteObject,
+  BrowserRouter as Router,
+  RouterProvider,
+  createBrowserRouter,
+  useLocation,
+  useMatches,
+} from "react-router-dom";
 import { ConfigProvider, theme, ThemeConfig } from "antd";
 import useTheme from "./hook/useTheme";
 import Loading from "./components/loading/loading";
-
+import { useDispatch, useSelector } from "react-redux";
+import { setRoutesMap, setCurrentPath } from "./store/routersMapSlice";
+import { StaticRoutesMap } from "./router";
+import { RootState } from "./store";
+import { selectRoutes } from "./store/routersMapSlice";
+import useArticleRoutes from "./router/useArticleRoutes";
 
 const App: React.FC = () => {
-  const {isloaded, routes } = useRoutes(); // 使用 useRoutes 获取路由配置和加载状态
-  const { isDarkMode } = useTheme();  // 确保在 Provider 内部
-  const [currentTheme, setCurrentTheme] = useState<ThemeConfig>()
-  // const [router, setRouter] = useState<any>([]);
+  const { isDarkMode } = useTheme(); // 确保在 Provider 内部
+  const [currentTheme, setCurrentTheme] = useState<ThemeConfig>();
+  const dispatch = useDispatch();
+  const Routes: RouteObject[] = useSelector(selectRoutes);
+  const { isLoaded, loadArticleRoutes } = useArticleRoutes();
   useEffect(() => {
     if (isDarkMode) {
       setCurrentTheme({
         algorithm: theme.darkAlgorithm,
-        token: {
-        },
+        token: {},
         components: {
           Breadcrumb: {
             /* 这里是你的组件 token */
-            itemColor: "#fff"
+            itemColor: "#fff",
           },
-          Button:{
-            defaultBg:'#fff'
-          }
+          Button: {
+            defaultBg: "#fff",
+          },
         },
-      })
+      });
     } else {
       setCurrentTheme({
         algorithm: theme.defaultAlgorithm,
-        token: {
-
-        },
+        token: {},
         components: {
           Breadcrumb: {
             /* 这里是你的组件 token */
-            itemColor: "#fff"
+            itemColor: "#fff",
           },
-          Button:{
-            defaultBg:'#fff'
-          }
+          Button: {
+            defaultBg: "#fff",
+          },
         },
-      })
+      });
     }
+  }, [isDarkMode]);
 
-  }, [isDarkMode])
+  // 创建静态路由
+  useEffect(() => {
+    dispatch(setRoutesMap(StaticRoutesMap));
+  }, []);
 
-    // 创建 router 实例，仅在 routes 或 isloaded 变化时触发
-    // useEffect(() => {
-    //   if (isloaded) {
-    //     const newRouter = createBrowserRouter(routes);
-    //     console.log(newRouter);
-        
-    //     setRouter(newRouter);
-    //   }
-    // }, [routes, isloaded]);
+  // 缓冲路由结果
+  const router = useMemo(() => {
+    if (Routes.length === 0) return null;
+    console.log(Routes);
 
+    return createBrowserRouter(Routes);
+  }, [Routes]);
 
-   
- 
-   
-  
-  if (!isloaded ) {
+  useEffect(() => {
+    loadArticleRoutes();
+  }, []);
+
+  if (!isLoaded) {
     return <Loading />;
   }
 
-  const router = createBrowserRouter(routes);
-  
-  
   return (
     <ConfigProvider theme={currentTheme}>
       <RouterProvider router={router} future={{ v7_startTransition: true }} />
     </ConfigProvider>
-
   );
 };
 

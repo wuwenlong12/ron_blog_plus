@@ -1,21 +1,5 @@
-import About from "../../pages/About/About";
-import Actical from "../../pages/Article/Article";
-import Diary from "../../pages/Diary/Diary";
-import ArticleMainContent from "../../pages/ArticleMainContent/ArticleMainContent";
-import Home from "../../pages/Home/Home";
-import {
-  HomeOutlined,
-  ReadOutlined,
-  FolderOutlined,
-  MailOutlined,
-  SettingOutlined,
-  ExclamationCircleOutlined,
-} from "@ant-design/icons";
-import React from "react";
 import { RouteObject } from "react-router-dom";
 
-
-// 递归查找路径并拼接父路径的函数
 export const findFullPathByKey = (routes: RouteObject[], key: string, parentPath: string = ''): string | undefined => {
   for (const route of routes) {
     // 确保路径拼接时使用 /，避免重复或遗漏 /
