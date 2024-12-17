@@ -32,7 +32,7 @@ export const generateRoutesMap = (
 ): RouteObject[] => {
   const routes = nodes.map((node) => {
     const route: RouteObject = {
-      path: node.name, // 路由路径
+      path: node._id, // 路由路径
       element: componentKey.ArticleMainContent,
       handle: {
         label: node.name,

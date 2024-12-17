@@ -6,6 +6,12 @@ export const StaticRoutesMap: RouteObject[] = [
   {
     path: "/",
     element: componentKey.Layout, // 用字符串表示组件
+    handle: {
+      key: "Home",
+      label: "主页",
+      Icon: iconKey.HomeOutlined, // 用字符串表示图标
+      requiresAuth: false,
+    },
     children: [
       {
         index: true,
@@ -32,7 +38,7 @@ export const StaticRoutesMap: RouteObject[] = [
         element: "Article", // 用字符串表示组件
         children: [
           {
-            path: "",
+            path: ":id",
             element: componentKey.ArticleMainContent, // 用字符串表示组件
             handle: {
               key: "MainPage",

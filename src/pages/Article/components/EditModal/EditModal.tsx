@@ -2,7 +2,7 @@ import { Button, Input, message, Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import {
   getDirectoryInfoById,
-  patchFolderInfo,
+  patchFolderName,
 } from "../../../../api/actical/actical";
 import { DirectoryInfoById } from "../../../../api/actical/type";
 import TextArea from "antd/es/input/TextArea";
@@ -14,6 +14,7 @@ interface EditModalProps {
   type: "article" | "folder";
   isShowfolderOrActicleInfoForm: boolean;
   setIsShowfolderOrActicleInfoForm: (value: boolean) => void;
+  onSuccess: (name: string) => void;
 }
 
 const EditModal: React.FC<EditModalProps> = ({
@@ -21,6 +22,7 @@ const EditModal: React.FC<EditModalProps> = ({
   type,
   isShowfolderOrActicleInfoForm,
   setIsShowfolderOrActicleInfoForm,
+  onSuccess,
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [initInfo, setInitInfo] = useState<DirectoryInfoById | null>(null);
@@ -51,13 +53,14 @@ const EditModal: React.FC<EditModalProps> = ({
 
   const handleSave = async () => {
     try {
-      const res = await patchFolderInfo(id, name, desc);
+      const res = await patchFolderName(id, name);
       console.log(res);
 
       if (res.code === 0) {
         // 更新路由配置
-        loadArticleRoutes();
+        await loadArticleRoutes();
         messageApi.success("保存成功！");
+        onSuccess(name);
       } else {
         messageApi.error("保存失败，请稍后重试");
       }

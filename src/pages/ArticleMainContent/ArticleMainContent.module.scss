@@ -1,7 +1,46 @@
-.container{
-    padding: 20px 50px;
-    // background-color: aqua;
-    // width: 100%;
-    overflow: auto;
-    height: calc(100vh - 60px);
+@import "../../setting/variables.scss";
+.container {
+  padding: 20px 50px;
+  // background-color: aqua;
+  // width: 100%;
+  overflow: auto;
+  height: calc(100vh - 60px);
+  .title {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: $font-size-xxl;
+    font-weight: bold;
+  }
+  .editIcon {
+    color: #0068cd;
+  }
+  .Btn {
+    color: #fff;
+    background-color: transparent;
+    margin-right: 10px;
+    &:hover {
+      color: #4096ff !important;
+      //   border-color: #f59b4c !important;
+    }
+  }
+  .desc {
+    margin-top: 10px;
+    border: none;
+    padding: 10px 20px 20px 20px;
+    border-radius: 10px;
+    // color:$gray-600 ;
+    background-color: rgba($color: #ffffff, $alpha: 0.1);
+  }
+  .catalTitle {
+    margin-top: 20px;
+    font-size: 1.75rem;
+    font-weight: 400;
+  }
+  .hr {
+    border-color: rgba($color: #6e6e6e, $alpha: 0.1);
+    border-width: 1px;
+    margin-bottom: 20px;
+  }
 }

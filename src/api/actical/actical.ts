@@ -7,6 +7,8 @@ import {
 
 enum API {
   ACTICAL_DIRECTORY = "/artical/directory",
+  ACTICAL_DIRECTORY_NAME = "/artical/directory/name",
+  ACTICAL_DIRECTORY_DESC = "/artical/directory/desc",
 }
 
 //获取目录
@@ -26,13 +28,14 @@ export const getDirectoryInfoById = (id: string) =>
   });
 
 //修改目录信息
-export const patchFolderInfo = (
-  folderId: string,
-  newName: string,
-  newDesc: string
-) =>
-  http.patch<any, ResponseBase>(API.ACTICAL_DIRECTORY, {
+export const patchFolderName = (folderId: string, newName: string) =>
+  http.patch<any, ResponseBase>(API.ACTICAL_DIRECTORY_NAME, {
     folderId,
     newName,
+  });
+
+export const patchFolderDesc = (folderId: string, newDesc: string) =>
+  http.patch<any, ResponseBase>(API.ACTICAL_DIRECTORY_DESC, {
+    folderId,
     newDesc,
   });

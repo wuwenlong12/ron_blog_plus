@@ -71,7 +71,7 @@ const Actical = ({}) => {
             alignItems: "center",
           }}
         >
-          <div>{item.path}</div>
+          <div>{item.handle.label}</div>
           <Button
             className={isDarkMode ? styles.BtnDark : styles.BtnLight}
             type="text"
@@ -122,6 +122,11 @@ const Actical = ({}) => {
     }
   };
 
+  const SaveFolderInfoSuccessfully = (name: string) => {
+    setTimeout(() => {
+      handleActicleClick({ key: EditKey });
+    }, 200);
+  };
   // 添加最外层文件夹
   const handleAddFolder = () => {
     if (!folderName.trim()) return;
@@ -199,7 +204,7 @@ const Actical = ({}) => {
         type={EditType}
         isShowfolderOrActicleInfoForm={isShowfolderOrActicleInfoForm}
         setIsShowfolderOrActicleInfoForm={setIsShowfolderOrActicleInfoForm}
-        // onSuccess={SaveFolderInfoSuccessfully}
+        onSuccess={SaveFolderInfoSuccessfully}
       ></EditModal>
     </div>
   );

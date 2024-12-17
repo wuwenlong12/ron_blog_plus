@@ -1,51 +1,50 @@
-import React, { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
-import { Breadcrumb } from 'antd';
-import { Link, useLocation } from 'react-router-dom';
-import styles from './Breadcrumb.module.scss';  // 导入 SCSS 模块
-import { BreadcrumbItemType } from 'antd/es/breadcrumb/Breadcrumb';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
+import React, { useState, useEffect } from "react";
+import { Breadcrumb } from "antd";
+import { Link, useMatches } from "react-router-dom";
+import styles from "./Breadcrumb.module.scss"; // 导入 SCSS 模块
+import { BreadcrumbItemType } from "antd/es/breadcrumb/Breadcrumb";
+import { UIMatch } from "react-router-dom";
 
-interface AppBreadcrumbProps {
-  isDarkMode: boolean;  // 新增的 isDarkMode 参数
+interface CustomHandle {
+  label?: string; // 定义 handle.label
 }
 
-const AppBreadcrumb = forwardRef((props: AppBreadcrumbProps, ref) => {
-  const { isDarkMode } = props;
-  const location = useLocation();
-  const [breadcrumbItems, setBreadcrumbItems] = useState<BreadcrumbItemType[]>([]);
-  const articleRoutesMap = useSelector((state: RootState) => state.articleRoutes.articleRoutesMap);
-  // 父组件通过 ref 调用该方法
-  useImperativeHandle(ref, () => ({
-    updateInfo,
-  }));
+type CustomRouteMatch = UIMatch<string, CustomHandle>;
+interface AppBreadcrumbProps {
+  isDarkMode: boolean; // 是否使用深色模式
+}
 
-  // 更新 breadcrumb 信息
-  function updateInfo() {
-    const locations = location.pathname.split("/").slice(1);
-    const breadcrumbItems = [{
-      key: 'home',
-      title: <Link to="/" className={styles.breadcrumbLink}>首页</Link>,
-      className: `${styles.breadcrumbItem} ${isDarkMode ? styles.dark : styles.light}`,
-    }, ...locations.map((item, index) => {
-      const fullPath = `/${locations.slice(0, index + 1).join('/')}`; // 动态拼接完整路径
-      return {
-        key: fullPath,
-        title: <Link to={fullPath} className={styles.breadcrumbLink}>{decodeURIComponent(item)}</Link>,
-        className: `${styles.breadcrumbItem} ${isDarkMode ? styles.dark : styles.light}`,
-      };
-    })];
-    setBreadcrumbItems(breadcrumbItems);
-  }
+const AppBreadcrumb: React.FC<AppBreadcrumbProps> = ({ isDarkMode }) => {
+  const matches = useMatches() as CustomRouteMatch[];
+  const [breadcrumbItems, setBreadcrumbItems] = useState<BreadcrumbItemType[]>(
+    []
+  );
 
-  // 页面路径变化时更新 breadcrumb
+  // 当路由匹配项变化时更新 breadcrumb
   useEffect(() => {
-    updateInfo();
-  }, []);
+    updateBreadcrumb();
+  }, [matches]);
+
+  const updateBreadcrumb = () => {
+    const items = matches
+      .filter((item) => item.handle?.label) // 仅对定义了 handle.label 的路由生成面包屑
+      .map((item) => ({
+        // key: item.id, // 唯一标识
+        title: (
+          <Link to={item.pathname || ""} className={`${styles.breadcrumbLink}`}>
+            {item.handle?.label}
+          </Link>
+        ), // 显示面包屑文字，并添加链接
+      }));
+    setBreadcrumbItems(items);
+  };
 
   return (
-    <Breadcrumb  items={breadcrumbItems} className={styles.breadcrumbContainer} />
+    <Breadcrumb
+      items={breadcrumbItems}
+      className={`${styles.breadcrumbContainer}`} // 根据模式动态设置样式
+    />
   );
-});
+};
 
 export default AppBreadcrumb;
