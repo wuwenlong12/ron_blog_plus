@@ -6,6 +6,7 @@
 
   .menuContainerOpen,
   .menuContainerClose {
+    // overflow: hidden;
     position: relative;
     transition: all 0.3s ease; /* 过渡所有属性 */
     .add {
@@ -20,7 +21,7 @@
   }
 
   .menuContainerClose {
-    width: 80px; /* 关闭菜单时的宽度 */
+    width: 0px; /* 关闭菜单时的宽度 */
     box-shadow: 2px 0px 12px rgba(0, 0, 0, 0.3);
   }
 
@@ -36,18 +37,16 @@
     }
   }
 
-  /* 菜单展开和关闭的状态 */
-  .menuOpen {
-    width: 400px; /* 菜单展开时的宽度 */
-    transition: width 0.3s ease; /* 针对宽度设置过渡 */
-  }
   .menu {
     height: calc(100vh - 120px);
-    overflow: auto;
-  }
-  .menuClose {
-    width: 80px; /* 菜单收起时的宽度 */
-    transition: width 0.3s ease; /* 过渡宽度 */
+    overflow: hidden;
+    overflow-y: auto;
+    font-size: 1rem;
+    font-family: inherit;
+    color: #2c3e50;
+    // min-width: 400px;
+    white-space: nowrap; /* 禁止文本换行 */
+    padding: 20px 20px;
   }
 
   /* Webkit 浏览器（Chrome, Safari）滚动条样式 */
@@ -69,7 +68,7 @@
     background-color: #bab9b9; /* 滚动条滑块悬浮时颜色 */
   }
   .articleMainContent {
-    flex: auto;
+    width: calc(100vw - 400px);
   }
 
   .BtnLight {
@@ -97,5 +96,8 @@
   .menuContainerOpen,
   .menuContainerClose {
     display: none;
+  }
+  .articleMainContent {
+    width: 100% !important;
   }
 }

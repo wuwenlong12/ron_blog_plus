@@ -38,6 +38,12 @@ const App: React.FC = () => {
           Button: {
             defaultBg: "#fff",
           },
+          Tree: {
+            /* 这里是你的组件 token */
+            directoryNodeSelectedBg: "rgba(9, 109, 217, .15)",
+            directoryNodeSelectedColor: "#0a7bf4",
+            nodeHoverColor: "#0a7bf4",
+          },
         },
       });
     } else {
@@ -51,6 +57,12 @@ const App: React.FC = () => {
           },
           Button: {
             defaultBg: "#fff",
+          },
+          Tree: {
+            /* 这里是你的组件 token */
+            directoryNodeSelectedBg: "rgba(9, 109, 217, .15)",
+            directoryNodeSelectedColor: "#0a7bf4",
+            nodeHoverColor: "#0a7bf4",
           },
         },
       });

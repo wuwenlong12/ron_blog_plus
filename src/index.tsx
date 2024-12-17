@@ -1,33 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { setRem } from './utils/setRem';
-import { Provider } from 'react-redux';
-import store from './store/index';
-import { ConfigProvider, ThemeConfig } from 'antd';
-import useTheme from './hook/useTheme';
-import { theme } from 'antd';
-import 'remixicon/fonts/remixicon.css';
+import React, { useEffect, useState } from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { setRem } from "./utils/setRem";
+import { Provider } from "react-redux";
+import store from "./store/index";
+
+import "remixicon/fonts/remixicon.css";
 import "@blocknote/mantine/style.css";
 import "@blocknote/core/fonts/inter.css";
-import "@blocknote/mantine/style.css"
+import "@blocknote/mantine/style.css";
 // 适配移动端
 setRem();
 
 const Root = () => {
- 
-
-
-  return (
-   
-      <App />
-   
-  );
+  return <App />;
 };
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement
+);
 
 root.render(
   <Provider store={store}>

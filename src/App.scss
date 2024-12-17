@@ -1,13 +1,15 @@
-@import './setting/variables.scss';
+@import "./setting/variables.scss";
 
 @font-face {
-  font-family: Almm;  /* 字体名称 */
-  src: url('../public//fonts/almm/AlimamaFangYuanTiVF-Thin.woff2') format('woff2'),  /* woff2 格式 */
-       url('../public/fonts/almm/AlimamaFangYuanTiVF-Thin.woff') format('woff'),
-       url('../public/fonts/almm/AlimamaFangYuanTiVF-Thin.ttf') format('ttf'),
+  font-family: Almm; /* 字体名称 */
+  src: url("../public//fonts/almm/AlimamaFangYuanTiVF-Thin.woff2")
+      format("woff2"),
+    /* woff2 格式 */ url("../public/fonts/almm/AlimamaFangYuanTiVF-Thin.woff")
+      format("woff"),
+    url("../public/fonts/almm/AlimamaFangYuanTiVF-Thin.ttf") format("ttf");
 }
 
-*{
+* {
   padding: 0;
   margin: 0;
   -webkit-margin-before: 0;
@@ -15,26 +17,36 @@
   box-sizing: border-box;
   // font-family: Almm;
   // font-size: 0.5rem;
-
 }
 /* 在全局 CSS 文件（例如 index.css）中 */
 html {
   font-size: 16px !important; /* 1rem = 16px */
 }
 
-//组件库的过渡效果
-.ant-btn, .ant-card, .ant-layout, .ant-menu {
-    transition: background-color 0.3s ease, color 0.3s ease,width 0.3s ease !important;
+/* 覆盖 Ant Design 选中节点背景色 */
+.ant-tree .ant-tree-treenode-selected {
+  background-color: #e6f7ff !important; /* 自定义背景颜色 */
+  color: #1890ff !important; /* 自定义字体颜色 */
 }
 
+/* 鼠标悬停在选中节点时的背景色 */
+.ant-tree .ant-tree-treenode-selected:hover {
+  background-color: #bae7ff !important;
+}
+//组件库的过渡效果
+.ant-btn,
+.ant-card,
+.ant-layout,
+.ant-menu {
+  transition: background-color 0.3s ease, color 0.3s ease, width 0.3s ease !important;
+}
 
 // 默认样式（浅色模式）
 body {
   background-color: $global-background-color;
   color: $global-font-color;
-  transition: background-color 0,3s ease, color 0.3s ease;
+  transition: background-color 0, 3s ease, color 0.3s ease;
 }
-
 
 // 深色模式样式
 .dark-mode {
@@ -57,5 +69,3 @@ body {
   background-color: $primary-color;
   color: $white;
 }
-
-
