@@ -12,14 +12,14 @@ importers:
         specifier: ^5.5.1
         version: 5.5.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@blocknote/core':
-        specifier: ^0.19.0
-        version: 0.19.0(@types/hast@3.0.4)
+        specifier: ^0.21.0
+        version: 0.21.0(@types/hast@3.0.4)
       '@blocknote/mantine':
-        specifier: ^0.19.0
-        version: 0.19.0(@tiptap/pm@2.9.1)(@types/hast@3.0.4)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^0.21.0
+        version: 0.21.0(@tiptap/pm@2.9.1)(@types/hast@3.0.4)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@blocknote/react':
-        specifier: ^0.19.0
-        version: 0.19.0(@tiptap/pm@2.9.1)(@types/hast@3.0.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^0.21.0
+        version: 0.21.0(@tiptap/pm@2.9.1)(@types/hast@3.0.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@reduxjs/toolkit':
         specifier: ^2.3.0
         version: 2.3.0(react-redux@9.1.2(@types/react@18.3.12)(react@18.3.1)(redux@5.0.1))(react@18.3.1)
@@ -859,17 +859,17 @@ packages:
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  '@blocknote/core@0.19.0':
-    resolution: {integrity: sha512-GSPTSL3ecMZlpOIHXDXzeLcGHGUYdwAiAUV79BFpl3F8Gx9CP8cjO5bDGml+b5MhmqEEcxZ2cDXqPIO5LxWl1Q==}
+  '@blocknote/core@0.21.0':
+    resolution: {integrity: sha512-TQAN0qRCkXpz5AwfdxjuFvIKWsU4bBI5d/e5iX7PEkhwf4PFgPHsMUl2uuGw5o/hhjzoU54YKaAjlJlWyw4goA==}
 
-  '@blocknote/mantine@0.19.0':
-    resolution: {integrity: sha512-E8CGID6QcutjpVGxcpjID/q2SEuGsrqv8s5j4yU+Vt6loi81+faQbZyS+aPPW9ifusqxNqW0mZ5Okyj4f8kVZA==}
+  '@blocknote/mantine@0.21.0':
+    resolution: {integrity: sha512-GAxgvn/87wDyE8qdkystTkEbqE8AFO81gaMJ6df0P6ZAdfIH3sFYUf9MffVOjtq7T6NSCM9vHNnhHsC9K8m/fg==}
     peerDependencies:
       react: ^18.0 || ^19.0 || >= 19.0.0-rc
       react-dom: ^18.0 || ^19.0 || >= 19.0.0-rc
 
-  '@blocknote/react@0.19.0':
-    resolution: {integrity: sha512-r/vyMatB7Jm+cvZ+2VnlGeZyD1AKNjTGaxpj/fBmjBGJKLkA5EVhEcDUK2CU/Sb+3olV+sNHWYpgCAuzRZjYGw==}
+  '@blocknote/react@0.21.0':
+    resolution: {integrity: sha512-eBKe3hihGNeO4G/qKKJ/B5uuEmWm8XMbT8SxJ2zpNTjHx5lLP45vhtjAM+HCzQqz4xYacc2NphUIdjPPH5eXrQ==}
     peerDependencies:
       react: ^18.0 || ^19.0 || >= 19.0.0-rc
       react-dom: ^18.0 || ^19.0 || >= 19.0.0-rc
@@ -6987,8 +6987,8 @@ packages:
   xmlchars@2.2.0:
     resolution: {integrity: sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==}
 
-  y-prosemirror@1.2.12:
-    resolution: {integrity: sha512-UMnUIR5ppVn30n2kzeeBQEaesWGe4fsbnlch1HnNa3/snJMoOn7M7dieuS+o1OQwKs1dqx2eT3gFfGF2aOaQdw==}
+  y-prosemirror@1.2.13:
+    resolution: {integrity: sha512-eW5/rJcYhqlrqyPLTaGIaPSt7YS6f2wwbV5wXlUkY8rERY0tSJPoumsPD7UWwtXk9C5TdTsvwaIrdOoD1QLbYA==}
     engines: {node: '>=16.0.0', npm: '>=8.0.0'}
     peerDependencies:
       prosemirror-model: ^1.7.1
@@ -8014,14 +8014,14 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@blocknote/core@0.19.0(@types/hast@3.0.4)':
+  '@blocknote/core@0.21.0(@types/hast@3.0.4)':
     dependencies:
       '@emoji-mart/data': 1.2.1
       '@tiptap/core': 2.9.1(@tiptap/pm@2.9.1)
       '@tiptap/extension-bold': 2.9.1(@tiptap/core@2.9.1(@tiptap/pm@2.9.1))
       '@tiptap/extension-code': 2.9.1(@tiptap/core@2.9.1(@tiptap/pm@2.9.1))
-      '@tiptap/extension-collaboration': 2.9.1(@tiptap/core@2.9.1(@tiptap/pm@2.9.1))(@tiptap/pm@2.9.1)(y-prosemirror@1.2.12(prosemirror-model@1.23.0)(prosemirror-state@1.4.3)(prosemirror-view@1.36.0)(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20))
-      '@tiptap/extension-collaboration-cursor': 2.9.1(@tiptap/core@2.9.1(@tiptap/pm@2.9.1))(y-prosemirror@1.2.12(prosemirror-model@1.23.0)(prosemirror-state@1.4.3)(prosemirror-view@1.36.0)(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20))
+      '@tiptap/extension-collaboration': 2.9.1(@tiptap/core@2.9.1(@tiptap/pm@2.9.1))(@tiptap/pm@2.9.1)(y-prosemirror@1.2.13(prosemirror-model@1.23.0)(prosemirror-state@1.4.3)(prosemirror-view@1.36.0)(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20))
+      '@tiptap/extension-collaboration-cursor': 2.9.1(@tiptap/core@2.9.1(@tiptap/pm@2.9.1))(y-prosemirror@1.2.13(prosemirror-model@1.23.0)(prosemirror-state@1.4.3)(prosemirror-view@1.36.0)(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20))
       '@tiptap/extension-gapcursor': 2.9.1(@tiptap/core@2.9.1(@tiptap/pm@2.9.1))(@tiptap/pm@2.9.1)
       '@tiptap/extension-hard-break': 2.9.1(@tiptap/core@2.9.1(@tiptap/pm@2.9.1))
       '@tiptap/extension-history': 2.9.1(@tiptap/core@2.9.1(@tiptap/pm@2.9.1))(@tiptap/pm@2.9.1)
@@ -8056,7 +8056,7 @@ snapshots:
       shiki: 1.22.2
       unified: 10.1.2
       uuid: 8.3.2
-      y-prosemirror: 1.2.12(prosemirror-model@1.23.0)(prosemirror-state@1.4.3)(prosemirror-view@1.36.0)(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20)
+      y-prosemirror: 1.2.13(prosemirror-model@1.23.0)(prosemirror-state@1.4.3)(prosemirror-view@1.36.0)(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20)
       y-protocols: 1.0.6(yjs@13.6.20)
       yjs: 13.6.20
     transitivePeerDependencies:
@@ -8067,10 +8067,10 @@ snapshots:
       - sugar-high
       - supports-color
 
-  '@blocknote/mantine@0.19.0(@tiptap/pm@2.9.1)(@types/hast@3.0.4)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@blocknote/mantine@0.21.0(@tiptap/pm@2.9.1)(@types/hast@3.0.4)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@blocknote/core': 0.19.0(@types/hast@3.0.4)
-      '@blocknote/react': 0.19.0(@tiptap/pm@2.9.1)(@types/hast@3.0.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@blocknote/core': 0.21.0(@types/hast@3.0.4)
+      '@blocknote/react': 0.21.0(@tiptap/pm@2.9.1)(@types/hast@3.0.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/core': 7.13.5(@mantine/hooks@7.13.5(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/hooks': 7.13.5(react@18.3.1)
       '@mantine/utils': 6.0.22(react@18.3.1)
@@ -8087,9 +8087,9 @@ snapshots:
       - sugar-high
       - supports-color
 
-  '@blocknote/react@0.19.0(@tiptap/pm@2.9.1)(@types/hast@3.0.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@blocknote/react@0.21.0(@tiptap/pm@2.9.1)(@types/hast@3.0.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@blocknote/core': 0.19.0(@types/hast@3.0.4)
+      '@blocknote/core': 0.21.0(@types/hast@3.0.4)
       '@floating-ui/react': 0.26.27(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tiptap/core': 2.9.1(@tiptap/pm@2.9.1)
       '@tiptap/react': 2.9.1(@tiptap/core@2.9.1(@tiptap/pm@2.9.1))(@tiptap/pm@2.9.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -8877,16 +8877,16 @@ snapshots:
     dependencies:
       '@tiptap/core': 2.9.1(@tiptap/pm@2.9.1)
 
-  '@tiptap/extension-collaboration-cursor@2.9.1(@tiptap/core@2.9.1(@tiptap/pm@2.9.1))(y-prosemirror@1.2.12(prosemirror-model@1.23.0)(prosemirror-state@1.4.3)(prosemirror-view@1.36.0)(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20))':
+  '@tiptap/extension-collaboration-cursor@2.9.1(@tiptap/core@2.9.1(@tiptap/pm@2.9.1))(y-prosemirror@1.2.13(prosemirror-model@1.23.0)(prosemirror-state@1.4.3)(prosemirror-view@1.36.0)(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20))':
     dependencies:
       '@tiptap/core': 2.9.1(@tiptap/pm@2.9.1)
-      y-prosemirror: 1.2.12(prosemirror-model@1.23.0)(prosemirror-state@1.4.3)(prosemirror-view@1.36.0)(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20)
+      y-prosemirror: 1.2.13(prosemirror-model@1.23.0)(prosemirror-state@1.4.3)(prosemirror-view@1.36.0)(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20)
 
-  '@tiptap/extension-collaboration@2.9.1(@tiptap/core@2.9.1(@tiptap/pm@2.9.1))(@tiptap/pm@2.9.1)(y-prosemirror@1.2.12(prosemirror-model@1.23.0)(prosemirror-state@1.4.3)(prosemirror-view@1.36.0)(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20))':
+  '@tiptap/extension-collaboration@2.9.1(@tiptap/core@2.9.1(@tiptap/pm@2.9.1))(@tiptap/pm@2.9.1)(y-prosemirror@1.2.13(prosemirror-model@1.23.0)(prosemirror-state@1.4.3)(prosemirror-view@1.36.0)(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20))':
     dependencies:
       '@tiptap/core': 2.9.1(@tiptap/pm@2.9.1)
       '@tiptap/pm': 2.9.1
-      y-prosemirror: 1.2.12(prosemirror-model@1.23.0)(prosemirror-state@1.4.3)(prosemirror-view@1.36.0)(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20)
+      y-prosemirror: 1.2.13(prosemirror-model@1.23.0)(prosemirror-state@1.4.3)(prosemirror-view@1.36.0)(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20)
 
   '@tiptap/extension-floating-menu@2.9.1(@tiptap/core@2.9.1(@tiptap/pm@2.9.1))(@tiptap/pm@2.9.1)':
     dependencies:
@@ -15673,7 +15673,7 @@ snapshots:
 
   xmlchars@2.2.0: {}
 
-  y-prosemirror@1.2.12(prosemirror-model@1.23.0)(prosemirror-state@1.4.3)(prosemirror-view@1.36.0)(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20):
+  y-prosemirror@1.2.13(prosemirror-model@1.23.0)(prosemirror-state@1.4.3)(prosemirror-view@1.36.0)(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20):
     dependencies:
       lib0: 0.2.98
       prosemirror-model: 1.23.0

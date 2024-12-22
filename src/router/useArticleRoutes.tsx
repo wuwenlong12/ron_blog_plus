@@ -2,7 +2,7 @@ import Layout from "../layout";
 import { createBrowserRouter, RouteObject } from "react-router-dom";
 import React, { Suspense, useEffect, useMemo, useState } from "react";
 import { MailOutlined } from "@ant-design/icons";
-import { getActicalDirectory } from "../api/actical/actical";
+import { getActicalDirectory } from "../api/folder";
 import { generateRoutesMap } from "./generaterRoutes";
 import Loading from "../components/loading/loading";
 import { useDispatch, useSelector } from "react-redux";

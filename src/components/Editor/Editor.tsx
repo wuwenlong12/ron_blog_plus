@@ -1,40 +1,47 @@
-// Editor.tsx
-import React, { useState } from 'react';
-import styles from './Editor.module.scss';
-import { useCreateBlockNote } from '@blocknote/react';
-import { BlockNoteView } from '@blocknote/mantine';
-import useTheme from '../../hook/useTheme';
-import { locales } from '@blocknote/core';
+import React, { useEffect, useState } from "react";
+import styles from "./Editor.module.scss";
+import { useCreateBlockNote } from "@blocknote/react";
+import { BlockNoteView } from "@blocknote/mantine";
+import useTheme from "../../hook/useTheme";
+import { PartialBlock, locales } from "@blocknote/core";
+import { debounce } from "../../utils/debounce";
 
+interface EditorProps {
+  initialContent: PartialBlock[] | undefined;
+  editable: boolean;
+  onChange: (document: unknown) => void;
+}
 
-const Editor: React.FC = () => {
-    const editor = useCreateBlockNote({
-        dictionary: locales.zh,
-    });
-    const [editable,setEditable] = useState(true)
-    const { isDarkMode, handleToggleTheme } = useTheme();
-    const onChange = ()=>{
+const Editor: React.FC<EditorProps> = ({
+  initialContent,
+  editable = false,
+  onChange,
+}) => {
+  const { isDarkMode } = useTheme(); // 获取当前主题状态
 
-    }
-    return (
-        
-        <div className={styles.container}>
-           <BlockNoteView 
-           style={{fontSize:'150px'}}
-           editor={editor} 
-           editable={editable} 
-           onChange={onChange} 
-           theme={isDarkMode?'dark':'light'}
-           formattingToolbar={true}
-           linkToolbar={true}
-           sideMenu={true}
-           slashMenu={true}
-           emojiPicker={true}
-           filePanel={true}
-           tableHandles={true}
-           />
-        </div>
-    );
+  const editor = useCreateBlockNote({
+    dictionary: locales.zh,
+    initialContent,
+  });
+
+  return (
+    <div className={styles.container}>
+      <BlockNoteView
+        style={{ fontSize: "1rem" }}
+        editor={editor}
+        editable={editable}
+        onChange={debounce(() => onChange(editor.document))}
+        theme={isDarkMode ? "dark" : "light"}
+        formattingToolbar
+        linkToolbar
+        sideMenu
+        slashMenu
+        emojiPicker
+        filePanel
+        tableHandles
+      />
+    </div>
+  );
 };
 
 export default Editor;

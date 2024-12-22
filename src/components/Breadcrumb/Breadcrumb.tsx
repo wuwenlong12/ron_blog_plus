@@ -23,7 +23,7 @@ const AppBreadcrumb: React.FC<AppBreadcrumbProps> = ({ isDarkMode }) => {
   // 当路由匹配项变化时更新 breadcrumb
   useEffect(() => {
     updateBreadcrumb();
-  }, [matches]);
+  }, []);
 
   const updateBreadcrumb = () => {
     const items = matches

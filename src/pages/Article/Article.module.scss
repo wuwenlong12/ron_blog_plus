@@ -26,6 +26,7 @@
   }
 
   .menuControlBtn {
+    z-index: 10;
     height: calc(100vh - 60px);
     position: absolute;
     right: -30px;
@@ -38,8 +39,8 @@
   }
 
   .menu {
-    height: calc(100vh - 120px);
-    overflow: hidden;
+    height: calc(100vh - 60px);
+    // overflow: hidden;
     overflow-y: auto;
     font-size: 1rem;
     font-family: inherit;

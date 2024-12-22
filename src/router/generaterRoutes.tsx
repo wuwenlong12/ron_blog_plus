@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { RouteObject } from "react-router-dom";
-import { ArticleDirectory } from "../api/actical/type";
+import { ArticleDirectory } from "../api/folder/type";
 import Loading from "../components/loading/loading";
 
 // 懒加载组件的映射

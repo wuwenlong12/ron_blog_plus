@@ -16,6 +16,7 @@ import useRoutes from "../router/useArticleRoutes";
 import { useDispatch, useSelector } from "react-redux";
 import { selectRoutes, setCurrentPath } from "../store/routersMapSlice";
 import { RootState } from "../store";
+import { AnimatePresence, motion } from "framer-motion";
 
 const IndexLayout = () => {
   const { isDarkMode, handleToggleTheme } = useTheme();
@@ -57,7 +58,7 @@ const IndexLayout = () => {
     console.log(key);
 
     setCurrent(key);
-    navigate(key === "main" ? "/" : `/${key}`);
+    navigate(key === "Home" ? "/" : `/${key}`);
     setIsRightMenuOpen(false);
   };
 
@@ -90,6 +91,7 @@ const IndexLayout = () => {
         onClickRightMenu={handleRightMenu}
         current={current} // 传递当前选中的菜单项
       ></Header>
+
       <Outlet />
       <Modal
         transition={{

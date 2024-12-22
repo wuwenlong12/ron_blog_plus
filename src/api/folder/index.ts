@@ -6,9 +6,10 @@ import {
 } from "./type";
 
 enum API {
-  ACTICAL_DIRECTORY = "/artical/directory",
-  ACTICAL_DIRECTORY_NAME = "/artical/directory/name",
-  ACTICAL_DIRECTORY_DESC = "/artical/directory/desc",
+  ACTICAL_DIRECTORY = "/folder",
+  ACTICAL_DIRECTORY_NAME = "/folder/name",
+  ACTICAL_DIRECTORY_DESC = "/folder/desc",
+  ACTICAL_DIRECTORY_ORDER = "/folder/order",
 }
 
 //获取目录
@@ -38,4 +39,16 @@ export const patchFolderDesc = (folderId: string, newDesc: string) =>
   http.patch<any, ResponseBase>(API.ACTICAL_DIRECTORY_DESC, {
     folderId,
     newDesc,
+  });
+export const patchFolderOrder = (
+  itemId: string,
+  type: string,
+  newOrder: number,
+  newParentFolderId: string
+) =>
+  http.patch<any, ResponseBase>(API.ACTICAL_DIRECTORY_ORDER, {
+    itemId,
+    type,
+    newOrder,
+    newParentFolderId,
   });

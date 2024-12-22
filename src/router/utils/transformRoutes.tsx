@@ -13,11 +13,10 @@ export const transformRoutes = (routes: RouteObject[]): RouteObject[] => {
       ...route,
       element:
         typeof element === "string" && componentMap[element] ? (
-          <Suspense key={key} fallback={<Loading />}>
+          <Suspense fallback={<Loading />}>
             {React.createElement(componentMap[element], {
-              id: key,
+              // key: key,
             })}
-            {<div>{111}</div>}
           </Suspense>
         ) : (
           (element as ReactNode)

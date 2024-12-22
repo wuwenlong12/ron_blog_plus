@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RouteObject } from "react-router-dom";
 import { transformRoutes } from "../router/utils/transformRoutes";
+import { Key } from "react";
 
 // 定义状态的类型
 interface RoutesState {
@@ -8,6 +9,7 @@ interface RoutesState {
   routesMap: RouteObject[]; // 静态路由映射
   articleRoutesMap: RouteObject[]; // 动态路由映射
   currentPath: string;
+  selectedKey: Key;
 }
 
 // 初始化状态
@@ -16,6 +18,7 @@ const initialState: RoutesState = {
   routesMap: [],
   articleRoutesMap: [],
   currentPath: "/", // 默认首页路径
+  selectedKey: "",
 };
 
 // 创建 slice，确保 state 的类型被正确推断
@@ -59,7 +62,9 @@ const RoutesSlice = createSlice({
     setCurrentPath(state, action: PayloadAction<string>) {
       state.currentPath = action.payload;
     },
-
+    setSelectedKey(state, action: PayloadAction<Key>) {
+      state.selectedKey = action.payload;
+    },
     //  // 重置状态
     //  resetRoutesState(state) {
     //   state.isLoaded = false;
@@ -77,6 +82,7 @@ export const {
   setIsLoaded,
   // resetRoutesState,
   setCurrentPath,
+  setSelectedKey,
 } = RoutesSlice.actions;
 
 // 导出 reducer

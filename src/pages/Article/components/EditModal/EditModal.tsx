@@ -1,10 +1,7 @@
 import { Button, Input, message, Modal } from "antd";
 import React, { useEffect, useState } from "react";
-import {
-  getDirectoryInfoById,
-  patchFolderName,
-} from "../../../../api/actical/actical";
-import { DirectoryInfoById } from "../../../../api/actical/type";
+import { getDirectoryInfoById, patchFolderName } from "../../../../api/folder";
+import { DirectoryInfoById } from "../../../../api/folder/type";
 import TextArea from "antd/es/input/TextArea";
 import useRoutes from "../../../../router/useArticleRoutes";
 import { RouteObject } from "react-router-dom";

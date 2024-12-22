@@ -77,8 +77,6 @@ const App: React.FC = () => {
   // 缓冲路由结果
   const router = useMemo(() => {
     if (Routes.length === 0) return null;
-    console.log(Routes);
-
     return createBrowserRouter(Routes);
   }, [Routes]);
 

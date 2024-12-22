@@ -13,6 +13,7 @@ import {
   Navigate,
   RouteObject,
   useLocation,
+  useMatch,
   useMatches,
   useNavigate,
   useSearchParams,
@@ -23,19 +24,30 @@ import {
   getDirectoryInfoById,
   patchFolderDesc,
   patchFolderName,
-} from "../../api/actical/actical";
+} from "../../api/folder";
 import AppBreadcrumb from "../../components/Breadcrumb/Breadcrumb";
-import { log } from "console";
 import useTheme from "../../hook/useTheme";
-import { EditFilled, EditOutlined, FolderAddOutlined } from "@ant-design/icons";
+import {
+  EditFilled,
+  EditOutlined,
+  FolderAddOutlined,
+  HomeOutlined,
+} from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
 import useArticleRoutes from "../../router/useArticleRoutes";
 import { findFullPathByKey } from "../../router/utils/findFullPathByKey";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 
 import { Tree } from "antd";
 import type { GetProps, TreeDataNode } from "antd";
+import { setSelectedKey } from "../../store/routersMapSlice";
+import {
+  getArticleContentById,
+  updateArticleContentById,
+} from "../../api/article";
+import Editor from "../../components/Editor/Editor";
+import { PartialBlock } from "@blocknote/core";
 
 type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
 
@@ -45,35 +57,26 @@ interface ArticleMainContentProps {
   id: string; // 使用 motionKey 来避免与 React 内置的 key 属性冲突
 }
 
-const treeData: TreeDataNode[] = [
-  {
-    title: "parent 0",
-    key: "0-0",
-    children: [
-      { title: "leaf 0-0", key: "0-0-0", isLeaf: true },
-      { title: "leaf 0-1", key: "0-0-1", isLeaf: true },
-    ],
-  },
-  {
-    title: "parent 1",
-    key: "0-1",
-    children: [
-      { title: "leaf 1-0", key: "0-1-0", isLeaf: true },
-      { title: "leaf 1-1", key: "0-1-1", isLeaf: true },
-    ],
-  },
-];
-
 const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
   const [messageApi, contextHolder] = message.useMessage();
   const breadcrumbRef = useRef<any>(null);
   const matches = useMatches();
   const [currentId, setCurrentId] = useState("");
+  const [currentType, setCurrentType] = useState<"article" | "folder">(
+    "folder"
+  );
   const [isEditNameing, setIsEditNameing] = useState(false);
   const [isEditDescing, setIsEditDescing] = useState(false);
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
+  const [isLoadingContent, setIsLoadingContent] = useState(true);
+  const [isEditable, setIsEditable] = useState(false);
+  const [initContent, setInitContent] = useState<PartialBlock[] | undefined>(
+    undefined
+  );
+  const [content, setContent] = useState<PartialBlock[] | undefined>(undefined);
   const { loadArticleRoutes } = useArticleRoutes();
+  const dispatch = useDispatch();
   const articleRoutesMap = useSelector(
     (state: RootState) => state.routesMap.articleRoutesMap
   );
@@ -82,15 +85,30 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
   useEffect(() => {
     const cur: any = matches[matches.length - 1];
     setCurrentId(cur.handle.key);
+    setCurrentType(cur.handle.type);
   }, [matches]);
   // 当searchParams变化时，重新加载数据
   useEffect(() => {
-    init(currentId);
+    if (currentId) {
+      setInitContent(undefined);
+      init(currentId);
+    }
   }, [currentId]);
 
   const folderTree: TreeDataNode[] | undefined = useMemo(() => {
     // 递归查找目标节点
     const findNode = (nodes: RouteObject[]): RouteObject | null => {
+      if (currentId === "default-index")
+        return {
+          path: "/",
+          handle: {
+            key: "default-index",
+            label: "index",
+            Icon: <HomeOutlined />, // 用字符串表示图标
+            requiresAuth: false,
+          },
+          children: nodes,
+        };
       for (const node of nodes) {
         if (node.handle?.key === currentId) {
           return node;
@@ -115,7 +133,6 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
       };
     };
 
-    // 调用查找函数
     const targetNode = findNode(articleRoutesMap);
 
     // 如果找到节点，将其转换为 TreeDataNode 格式
@@ -130,19 +147,58 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
 
   // 初始化目录信息
   const init = async (id: string) => {
-    try {
+    if (id === "default-index") {
+      setName("首页");
+      setDesc("描述");
+      return;
+    }
+    if (currentType === "folder") {
       const res = await getDirectoryInfoById(id);
       if (res.code === 0) {
-        console.log(res);
         setName(res.data.name);
         setDesc(res.data.desc);
+        setIsLoadingContent(false);
       } else {
         messageApi.error("加载数据失败，请稍后重试");
       }
-    } catch (error) {
-      messageApi.error("网络错误，请稍后再试");
+    } else {
+      setIsEditable(false);
+      const curJson = localStorage.getItem(currentId);
+      if (curJson) {
+        const obj = JSON.parse(curJson);
+
+        setContent(obj.content);
+      }
+
+      const res = await getArticleContentById(id);
+      if (res.code === 0) {
+        setName(res.data.title);
+        const content = fixStyles(res.data.content);
+
+        setInitContent(content);
+      } else {
+        messageApi.error("加载数据失败，请稍后重试");
+      }
     }
   };
+  // 修复后端序列号空styles丢失问题
+  function fixStyles(content: any) {
+    // 遍历每个 item
+    return content.map((item: any) => {
+      // 如果 item 有 content 字段且是数组
+      if (Array.isArray(item.content)) {
+        // 遍历每个 content 项
+        item.content = item.content.map((cur: any) => {
+          // 如果 type 为 text 且没有 styles 字段（即 undefined 或 null），则补全
+          if (cur.type === "text" && !cur.hasOwnProperty("styles")) {
+            cur.styles = {}; // 补全空的 styles
+          }
+          return cur;
+        });
+      }
+      return item;
+    });
+  }
 
   // 结束后更新数据
   const handleAnimationComplete = () => {
@@ -154,8 +210,6 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
   const saveFoldName = async () => {
     try {
       const res = await patchFolderName(id, name);
-      console.log(res);
-
       if (res.code === 0) {
         // 更新路由配置
         await loadArticleRoutes();
@@ -174,7 +228,6 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
   const saveFoldDesc = async () => {
     try {
       const res = await patchFolderDesc(id, desc);
-      console.log(res);
 
       if (res.code === 0) {
         // 更新路由配置
@@ -193,11 +246,32 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
   };
 
   const onSelect: DirectoryTreeProps["onSelect"] = (keys, info) => {
-    console.log("Trigger Select", keys, info);
+    dispatch(setSelectedKey(info.node.key));
+    localStorage.setItem("selectedMenuKey", info.node.key as string);
+    const path = findFullPathByKey(articleRoutesMap, info.node.key as string);
+    navigate("/Article/" + path || "");
   };
-
   const onExpand: DirectoryTreeProps["onExpand"] = (keys, info) => {
     console.log("Trigger Expand", keys, info);
+  };
+
+  const EditorChange = (content: any) => {
+    if (isEditable) {
+      setContent(content);
+      localStorage.setItem(currentId, JSON.stringify({ content }));
+    }
+  };
+
+  const deleteFolderOrArticle = () => {};
+  const publishArticle = async () => {
+    const res = await updateArticleContentById(currentId, content);
+    if (res.code === 0) {
+      console.log("发布成功");
+      setIsEditable(false);
+      setInitContent(content);
+    } else {
+      console.log("发布失败");
+    }
   };
   return (
     <AnimatePresence>
@@ -236,51 +310,128 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
                 placeholder="请输入名称"
               />
             ) : (
-              <span> {name}</span>
+              <span> {name ? name : "未命名"}</span>
             )}
           </div>
-          <Button color="danger" variant="solid">
-            删除
-          </Button>
+          <div>
+            {isEditable ? (
+              <Button
+                onClick={publishArticle}
+                style={{ marginRight: 20 }}
+                color="primary"
+                variant="solid"
+              >
+                发布
+              </Button>
+            ) : (
+              <Button
+                onClick={() => setIsEditable(true)}
+                style={{ marginRight: 20 }}
+                color="default"
+                variant="solid"
+              >
+                编辑
+              </Button>
+            )}
+            <Button
+              onClick={deleteFolderOrArticle}
+              color="danger"
+              variant="solid"
+            >
+              删除
+            </Button>
+          </div>
         </div>
 
-        <div className={styles.desc}>
-          <Button
-            type="text"
-            className={styles.Btn}
-            onClick={() => setIsEditDescing(true)}
-            icon={
-              <EditFilled
-                className={styles.editIcon}
-                style={{ fontSize: 22 }}
-              />
-            }
-          />
-          {isEditDescing ? (
-            <TextArea
-              showCount
-              maxLength={100}
-              value={desc}
-              onBlur={saveFoldDesc}
-              onChange={(e) => setDesc(e.target.value)}
-              placeholder="请输入描述"
-              autoSize={{ minRows: 3, maxRows: 5 }}
+        {currentType === "folder" ? (
+          <div className={styles.desc}>
+            <Button
+              type="text"
+              className={styles.Btn}
+              onClick={() => setIsEditDescing(true)}
+              icon={
+                <EditFilled
+                  className={styles.editIcon}
+                  style={{ fontSize: 22 }}
+                />
+              }
             />
-          ) : (
-            <span> {desc ? desc : "此文档没有描述"}</span>
-          )}
-        </div>
-        <div className={styles.catalTitle}>目录</div>
-        <hr className={styles.hr} />
-        <DirectoryTree
-          multiple
-          draggable
-          defaultExpandAll
-          onSelect={onSelect}
-          onExpand={onExpand}
-          treeData={folderTree}
-          rootStyle={{ fontSize: 20 }}
-        />
+            {isEditDescing ? (
+              <TextArea
+                showCount
+                maxLength={100}
+                value={desc}
+                onBlur={saveFoldDesc}
+                onChange={(e) => setDesc(e.target.value)}
+                placeholder="请输入描述"
+                autoSize={{ minRows: 3, maxRows: 5 }}
+              />
+            ) : (
+              <span> {desc ? desc : "此文档没有描述"}</span>
+            )}
+          </div>
+        ) : null}
+
+        {currentType === "folder" ? (
+          <>
+            <div className={styles.catalTitle}>目录</div>
+            <hr className={styles.hr} />
+            <DirectoryTree
+              multiple
+              draggable
+              defaultExpandAll
+              onSelect={onSelect}
+              onExpand={onExpand}
+              treeData={folderTree}
+              rootStyle={{ fontSize: 20 }}
+            />
+          </>
+        ) : null}
+
+        {/* 编辑器部分，包裹进 AnimatePresence 和 motion.div */}
+        {currentType === "article" &&
+        isLoadingContent === false &&
+        initContent !== undefined &&
+        !isEditable ? (
+          <AnimatePresence>
+            <motion.div
+              key="editor-view-only"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Editor
+                key={222}
+                initialContent={initContent}
+                onChange={EditorChange}
+                editable={false}
+              />
+            </motion.div>
+          </AnimatePresence>
+        ) : null}
+
+        {currentType === "article" &&
+        isLoadingContent === false &&
+        content !== undefined &&
+        isEditable ? (
+          <AnimatePresence>
+            <motion.div
+              key="editor-editing"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Editor
+                key={111}
+                initialContent={content}
+                onChange={EditorChange}
+                editable={isEditable}
+              />
+            </motion.div>
+          </AnimatePresence>
+        ) : null}
       </motion.div>
     </AnimatePresence>
   );
