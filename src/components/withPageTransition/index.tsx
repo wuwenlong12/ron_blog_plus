@@ -15,7 +15,7 @@ export const withPageTransition = (Component: React.FC<any>) => {
       exit="exit"
       variants={pageVariants}
       transition={{ duration: 0.3 }}
-      style={{ position: "absolute", width: "100%" }}
+      // style={{ position: "absolute" }}
     >
       <Component {...props} />
     </motion.div>

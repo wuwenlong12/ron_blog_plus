@@ -2,7 +2,8 @@ import http from "..";
 import { ResponseBase } from "../type";
 import {
   ResponseGetArticleDirectory,
-  ResponsegetDirectoryInfoById,
+  ResponseGetDirectoryInfoById,
+  ResponsePostDirectoryInfoById,
 } from "./type";
 
 enum API {
@@ -22,9 +23,33 @@ export const getActicalDirectory = (parentFolderId?: string) =>
 
 //根据目录id获取目录信息
 export const getDirectoryInfoById = (id: string) =>
-  http.get<any, ResponsegetDirectoryInfoById>(API.ACTICAL_DIRECTORY, {
+  http.get<any, ResponseGetDirectoryInfoById>(API.ACTICAL_DIRECTORY, {
     params: {
       id,
+    },
+  });
+
+//根据目录id添加文章或文件夹
+export const postDirectoryInfoById = (
+  name: string,
+  parentFolderId: string | null,
+  type: "folder" | "article"
+) =>
+  http.post<any, ResponsePostDirectoryInfoById>(API.ACTICAL_DIRECTORY, {
+    name,
+    parentFolderId,
+    type,
+  });
+
+//根据目录id添加文章或文件夹
+export const deleteDirectoryInfoById = (
+  itemId: string,
+  type: "folder" | "article"
+) =>
+  http.delete<any, ResponseBase>(API.ACTICAL_DIRECTORY, {
+    params: {
+      itemId,
+      type,
     },
   });
 
@@ -40,15 +65,16 @@ export const patchFolderDesc = (folderId: string, newDesc: string) =>
     folderId,
     newDesc,
   });
+
 export const patchFolderOrder = (
   itemId: string,
   type: string,
-  newOrder: number,
-  newParentFolderId: string
+  dropOrder: number,
+  newParentFolderId: string | null
 ) =>
   http.patch<any, ResponseBase>(API.ACTICAL_DIRECTORY_ORDER, {
     itemId,
     type,
-    newOrder,
+    dropOrder,
     newParentFolderId,
   });

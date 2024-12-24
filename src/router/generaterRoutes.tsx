@@ -57,7 +57,7 @@ export const generateRoutesMap = (
       handle: {
         label: "默认首页",
         key: "default-index",
-        type: "index",
+        type: "folder",
       } as RouteHandle,
     };
 

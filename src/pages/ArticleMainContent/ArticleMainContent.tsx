@@ -7,6 +7,7 @@ import {
   Breadcrumb,
   Card,
   Flex,
+  App,
 } from "antd";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -31,7 +32,9 @@ import {
   EditFilled,
   EditOutlined,
   FolderAddOutlined,
+  FolderOutlined,
   HomeOutlined,
+  ReadOutlined,
 } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
 import useArticleRoutes from "../../router/useArticleRoutes";
@@ -58,7 +61,7 @@ interface ArticleMainContentProps {
 }
 
 const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
-  const [messageApi, contextHolder] = message.useMessage();
+  const { message } = App.useApp();
   const breadcrumbRef = useRef<any>(null);
   const matches = useMatches();
   const [currentId, setCurrentId] = useState("");
@@ -104,6 +107,7 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
           handle: {
             key: "default-index",
             label: "index",
+            type: "folder",
             Icon: <HomeOutlined />, // 用字符串表示图标
             requiresAuth: false,
           },
@@ -124,7 +128,20 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
     // 将 RouteObject 转换为 TreeDataNode 格式
     const transformToTreeData = (node: RouteObject): TreeDataNode => {
       return {
-        title: node.handle?.label || "未命名节点",
+        title: (
+          <div
+            style={{
+              display: "flex",
+            }}
+          >
+            {node.handle.type === "folder" ? (
+              <FolderOutlined style={{ marginRight: 10 }} />
+            ) : (
+              <ReadOutlined style={{ marginRight: 10 }} />
+            )}
+            <div>{node.handle.label}</div>
+          </div>
+        ),
         key: node.handle?.key || "",
         isLeaf: !node.children || node.children.length === 0,
         children: node.children
@@ -134,6 +151,7 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
     };
 
     const targetNode = findNode(articleRoutesMap);
+    console.log(targetNode);
 
     // 如果找到节点，将其转换为 TreeDataNode 格式
     if (targetNode) {
@@ -159,7 +177,7 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
         setDesc(res.data.desc);
         setIsLoadingContent(false);
       } else {
-        messageApi.error("加载数据失败，请稍后重试");
+        message.error("加载数据失败，请稍后重试");
       }
     } else {
       setIsEditable(false);
@@ -176,8 +194,9 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
         const content = fixStyles(res.data.content);
 
         setInitContent(content);
+        if (!curJson) setContent(content);
       } else {
-        messageApi.error("加载数据失败，请稍后重试");
+        message.error("加载数据失败，请稍后重试");
       }
     }
   };
@@ -209,38 +228,38 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
 
   const saveFoldName = async () => {
     try {
-      const res = await patchFolderName(id, name);
+      const res = await patchFolderName(currentId, name);
       if (res.code === 0) {
         // 更新路由配置
         await loadArticleRoutes();
 
         // navigate(path || "");
-        messageApi.success("保存成功！");
+        message.success("保存成功！");
       } else {
-        messageApi.error("保存失败，请稍后重试");
+        message.error("保存失败，请稍后重试");
       }
     } catch (error) {
       console.error("保存失败:", error);
-      messageApi.error("保存失败，请稍后重试");
+      message.error("保存失败，请稍后重试");
     }
     setIsEditNameing(false);
   };
   const saveFoldDesc = async () => {
     try {
-      const res = await patchFolderDesc(id, desc);
+      const res = await patchFolderDesc(currentId, desc);
 
       if (res.code === 0) {
         // 更新路由配置
         await loadArticleRoutes();
 
         // navigate(path || "");
-        messageApi.success("保存成功！");
+        message.success("保存成功！");
       } else {
-        messageApi.error("保存失败，请稍后重试");
+        message.error("保存失败，请稍后重试");
       }
     } catch (error) {
       console.error("保存失败:", error);
-      messageApi.error("保存失败，请稍后重试");
+      message.error("保存失败，请稍后重试");
     }
     setIsEditDescing(false);
   };
@@ -259,16 +278,20 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
     if (isEditable) {
       setContent(content);
       localStorage.setItem(currentId, JSON.stringify({ content }));
+      message.success("自动保存成功！");
     }
   };
 
   const deleteFolderOrArticle = () => {};
   const publishArticle = async () => {
     const res = await updateArticleContentById(currentId, content);
+    console.log(res);
+
     if (res.code === 0) {
       console.log("发布成功");
       setIsEditable(false);
       setInitContent(content);
+      localStorage.removeItem(currentId);
     } else {
       console.log("发布失败");
     }
@@ -285,7 +308,6 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
         transition={{ duration: 0.5 }}
         onAnimationComplete={handleAnimationComplete}
       >
-        {contextHolder}
         <AppBreadcrumb isDarkMode={true}></AppBreadcrumb>
         <div className={styles.title}>
           <div style={{ display: "flex" }}>
@@ -376,10 +398,12 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
           <>
             <div className={styles.catalTitle}>目录</div>
             <hr className={styles.hr} />
+
             <DirectoryTree
               multiple
-              draggable
+              // draggable
               defaultExpandAll
+              showIcon={false}
               onSelect={onSelect}
               onExpand={onExpand}
               treeData={folderTree}

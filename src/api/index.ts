@@ -1,73 +1,57 @@
-import axios from 'axios';
+import axios from "axios";
+import { message } from "antd";
 
-// 创建axios实例
+// 创建 axios 实例
 const http = axios.create({
-  baseURL: 'http://127.0.0.1:3000',
-  timeout: 3000,
-  headers: {'Content-Type': 'application/json'}
+  baseURL: "http://127.0.0.1:3000", // 替换为你的 API 地址
+  timeout: 3000, // 请求超时时间
+  headers: { "Content-Type": "application/json" },
 });
 
-// 添加请求拦截器
-http.interceptors.request.use(
-  function(config) {
-    // 在发送请求之前做一些事情
-    // 例如添加认证头
-    // 注意：这里不需要直接使用 token，因为 token 会通过默认 header 动态更新
-    
-    return config;
-  },
-  function(error) {
-    // 对请求错误做些什么
-    return Promise.reject(error);
-  }
-);
-
-// 添加响应拦截器
+// 响应拦截器
 http.interceptors.response.use(
-  function(response) {
-    // 对响应数据做点什么
+  (response) => {
+    // 请求成功，直接返回数据
     return response.data;
   },
-  function(error) {
-    // 对响应错误做点什么
+  (error) => {
+    // 处理响应错误，错误不会向外抛出
     if (error.response) {
-      // 请求已发出，并且服务器也响应了状态码，
-      // 但它可能不是预期的成功的状态码
-      if (error.response.status === 401) {
-        // 处理未授权错误
-        // 可能需要刷新令牌或重定向到登录页面
-        // AsyncStorage.removeItem('token');
-        // Toast.show({
-        //   type: 'error',
-        //   text1: '登录已失效,请重新登录！',
-        //   text2: 'Please login again.'
-        // });
-        // router.replace('/user/login');
-      } else {
-        // Toast.show({
-        //   type: 'error',
-        //   text1: '请求失败！',
-        //   text2: `Status code: ${error.response.status}`
-        // });
-        
+      const { status, data } = error.response;
+      let errorMessage = data?.message || "请求失败";
+
+      // 根据 HTTP 状态码不同，做不同的提示
+      switch (status) {
+        case 400:
+          message.error(`请求错误：${errorMessage}`);
+          break;
+        case 401:
+          message.error("未授权，请登录");
+          break;
+        case 403:
+          message.error("没有权限访问");
+          break;
+        case 404:
+          message.error("请求资源未找到");
+          break;
+        case 500:
+          message.error("服务器内部错误");
+          break;
+        default:
+          message.error(`请求失败，状态码：${status}`);
+          break;
       }
     } else if (error.request) {
-      // 发出了请求，但没有收到响应
-      // `error.request` 在底层响应对象上
-    //   Toast.show({
-    //     type: 'error',
-    //     text1: '请求超时！',
-    //     text2: 'Check your internet connection.'
-    //   });
+      // 请求已经发出，但没有收到响应
+      message.error("请求超时，请检查网络");
     } else {
-      // 发生了一些设置请求时触发的错误
-    //   Toast.show({
-    //     type: 'error',
-    //     text1: 'Error setting up request.',
-    //     text2: error.message
-    //   });
+      // 发生在设置请求时的错误
+      message.error(`请求配置错误：${error.message}`);
     }
-    // return Promise.reject(error);
+    console.log(error);
+
+    // 阻止错误继续传播，避免触发 React 错误边界
+    return Promise.resolve(error.response.data); // 这里返回一个 resolved promise，避免抛出错误
   }
 );
 

@@ -30,7 +30,7 @@ const Editor: React.FC<EditorProps> = ({
         style={{ fontSize: "1rem" }}
         editor={editor}
         editable={editable}
-        onChange={debounce(() => onChange(editor.document))}
+        onChange={debounce(() => onChange(editor.document), 3000)}
         theme={isDarkMode ? "dark" : "light"}
         formattingToolbar
         linkToolbar

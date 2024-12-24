@@ -77,7 +77,7 @@ const IndexLayout = () => {
   };
 
   return (
-    <>
+    <div style={{ overflow: "hidden" }}>
       <Header
         logoUrl={setting.BLOG_HERO_LOGO_URL}
         siteName="Ron 个人博客"
@@ -91,8 +91,8 @@ const IndexLayout = () => {
         onClickRightMenu={handleRightMenu}
         current={current} // 传递当前选中的菜单项
       ></Header>
-
       <Outlet />
+
       <Modal
         transition={{
           type: "spring",
@@ -122,7 +122,7 @@ const IndexLayout = () => {
       >
         left
       </Modal>
-    </>
+    </div>
   );
 };
 

@@ -1,7 +1,7 @@
 import { Button, Input, message, Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import { getDirectoryInfoById, patchFolderName } from "../../../../api/folder";
-import { DirectoryInfoById } from "../../../../api/folder/type";
+import { GetDirectoryInfoById } from "../../../../api/folder/type";
 import TextArea from "antd/es/input/TextArea";
 import useRoutes from "../../../../router/useArticleRoutes";
 import { RouteObject } from "react-router-dom";
@@ -22,7 +22,7 @@ const EditModal: React.FC<EditModalProps> = ({
   onSuccess,
 }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [initInfo, setInitInfo] = useState<DirectoryInfoById | null>(null);
+  const [initInfo, setInitInfo] = useState<GetDirectoryInfoById | null>(null);
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
   const [messageApi, contextHolder] = message.useMessage();

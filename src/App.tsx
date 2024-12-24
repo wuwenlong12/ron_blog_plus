@@ -18,6 +18,7 @@ import { StaticRoutesMap } from "./router";
 import { RootState } from "./store";
 import { selectRoutes } from "./store/routersMapSlice";
 import useArticleRoutes from "./router/useArticleRoutes";
+import { App as AntdApp } from "antd"; // 引入 Ant Design 的 App
 
 const App: React.FC = () => {
   const { isDarkMode } = useTheme(); // 确保在 Provider 内部
@@ -35,9 +36,9 @@ const App: React.FC = () => {
             /* 这里是你的组件 token */
             itemColor: "#fff",
           },
-          Button: {
-            defaultBg: "#fff",
-          },
+          // Button: {
+          //   defaultBg: "#fff",
+          // },
           Tree: {
             /* 这里是你的组件 token */
             directoryNodeSelectedBg: "rgba(9, 109, 217, .15)",
@@ -49,15 +50,14 @@ const App: React.FC = () => {
     } else {
       setCurrentTheme({
         algorithm: theme.defaultAlgorithm,
-        token: {},
         components: {
           Breadcrumb: {
             /* 这里是你的组件 token */
             itemColor: "#fff",
           },
-          Button: {
-            defaultBg: "#fff",
-          },
+          // Button: {
+          //   defaultBg: "#fff",
+          // },
           Tree: {
             /* 这里是你的组件 token */
             directoryNodeSelectedBg: "rgba(9, 109, 217, .15)",
@@ -90,7 +90,9 @@ const App: React.FC = () => {
 
   return (
     <ConfigProvider theme={currentTheme}>
-      <RouterProvider router={router} future={{ v7_startTransition: true }} />
+      <AntdApp>
+        <RouterProvider router={router} future={{ v7_startTransition: true }} />
+      </AntdApp>
     </ConfigProvider>
   );
 };

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { Key, useEffect, useState } from "react";
 import styles from "./Article.module.scss";
 import useTheme from "../../hook/useTheme";
-import { MenuProps, Button, Input } from "antd";
+import { MenuProps, Button, Input, Menu } from "antd";
 import {
   RightOutlined,
   LeftOutlined,
@@ -16,8 +16,8 @@ import { Tree } from "antd";
 import type { GetProps, TreeDataNode, TreeProps } from "antd";
 import { setSelectedKey } from "../../store/routersMapSlice";
 import { patchFolderOrder } from "../../api/folder";
-import { DataNode } from "antd/es/tree";
 import useArticleRoutes from "../../router/useArticleRoutes";
+import RightMenu from "./components/RightMenu/RightMenu";
 
 type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
 
@@ -31,7 +31,6 @@ const Actical = ({}) => {
   const [folderName, setFolderName] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const { articleRoutes } = useRoutes();
   const articleRoutesMap = useSelector(
     (state: RootState) => state.routesMap.articleRoutesMap
   );
@@ -40,6 +39,19 @@ const Actical = ({}) => {
   );
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const { loadArticleRoutes } = useArticleRoutes();
+
+  const [contextMenu, setContextMenu] = useState<{
+    visible: boolean;
+    x: number;
+    y: number;
+    node: any | null;
+  }>({
+    visible: false,
+    x: 0,
+    y: 0,
+    node: null,
+  });
+
   useEffect(() => {
     const savedSelectedKey = localStorage.getItem("selectedMenuKey");
     if (savedSelectedKey) {
@@ -55,10 +67,14 @@ const Actical = ({}) => {
     setDirectory(updatedItems);
   }, [articleRoutesMap]);
 
+  interface CustomTreeDataNode extends TreeDataNode {
+    type: string; // 添加自定义属性
+    parentId: string | null;
+  }
   const transformDataToMenuItems = (
     data: RouteObject[],
     parentId: string | null = null // 新增 parentId 参数，根节点默认为 null
-  ): TreeDataNode[] => {
+  ): CustomTreeDataNode[] => {
     return data.map((item) => ({
       key: item.handle.key,
       type: item.handle.type,
@@ -109,44 +125,61 @@ const Actical = ({}) => {
     setExpandedKeys(keys);
   };
 
-  interface TreeNode extends DataNode {
-    type: "folder" | "article"; // 定义 type
-  }
-
-  // 定义自定义的 TreeNode 类型
-  interface TreeNode extends DataNode {
-    type: "folder" | "article";
-  }
-
   const onDrop: TreeProps["onDrop"] = async (info) => {
     const { dropPosition, dropToGap, dragNode, node } = info;
 
-    const itemId = dragNode.key as string; // 拖动节点的 ID
-    const type = (dragNode as unknown as TreeNode).type; // 拖动节点的类型
+    const dragNodeId = dragNode.key as string; // 拖动节点的 ID
+    const dragNodeType = (dragNode as unknown as CustomTreeDataNode).type; // 拖动节点的类型
+    let newParentFolderId: string | null;
+    let gapPosition: number;
 
-    let newParentFolderId: string;
-    let newOrder: number;
-
+    if (dragNodeId === selectedKey) {
+      navigate("/Article");
+    }
     if (dropToGap) {
       // 放到上下间隙，需要获取目标节点的父节点 ID
-      newParentFolderId = (node as any).parentId || null; // 如果树节点没有 parentId 属性，请确保在初始化时生成它
-      newOrder = dropPosition; // 按间隙顺序
+      console.log("放到上下间隙");
+      console.log(node);
+
+      newParentFolderId =
+        (node as unknown as CustomTreeDataNode).parentId || null; // 如果树节点没有 parentId 属性，请确保在初始化时生成它
+      gapPosition = dropPosition; // 按间隙顺序
     } else {
       // 放到目标节点内部
+      console.log(" 放到目标节点内部");
+
       newParentFolderId = node.key as string;
-      newOrder = node.children ? node.children.length : 0; // 插入到子节点的末尾
+      console.log(node);
+
+      if (
+        (dragNode as unknown as CustomTreeDataNode).parentId ===
+        newParentFolderId
+      ) {
+        gapPosition = 0; // 插入到子节点的末尾
+        // return;
+      } else {
+        gapPosition = node.children ? node.children.length : 0; // 插入到子节点的末尾
+      }
     }
 
     console.log("New Parent Folder ID:", newParentFolderId);
-    console.log("Item ID:", itemId);
-    console.log("New Order:", newOrder);
+    console.log("Item ID:", dragNodeId);
+    console.log("dropPosition", dropPosition);
 
-    // 调用更新 API
-    await patchFolderOrder(itemId, type, newOrder, newParentFolderId);
+    console.log("New Order:", gapPosition);
+
+    //  调用更新 API
+    await patchFolderOrder(
+      dragNodeId,
+      dragNodeType,
+      gapPosition,
+      newParentFolderId
+    );
 
     // 重新加载
     loadArticleRoutes();
   };
+
   const allowDrop = ({
     dropNode,
     dropPosition,
@@ -158,15 +191,43 @@ const Actical = ({}) => {
     if (dropNode.type === "article" && dropPosition === 0) {
       return false;
     }
+
     // 允许放置到间隙 (上方或下方)
     return true;
   };
+
+  const onRightClick: TreeProps["onRightClick"] = ({ event, node }) => {
+    event.preventDefault();
+    event.stopPropagation(); // 阻止事件冒泡
+    console.log(111);
+
+    setContextMenu({
+      visible: true,
+      x: event.pageX, // 使用全局坐标
+      y: event.pageY - 60,
+      node,
+    });
+  };
+
+  const onContextMenu = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    console.log(222);
+
+    setContextMenu({
+      visible: true,
+      x: event.pageX, // 使用全局坐标
+      y: event.pageY - 60,
+      node: null,
+    });
+  };
+
   return (
     <div className={styles.container}>
       <div
         className={
           isOpenMenu ? styles.menuContainerOpen : styles.menuContainerClose
         }
+        onContextMenu={onContextMenu}
       >
         {isOpenMenu ? (
           <Button
@@ -200,6 +261,7 @@ const Actical = ({}) => {
           selectedKeys={[selectedKey]}
           onExpand={onExpand}
           showIcon={false}
+          onRightClick={onRightClick}
           expandedKeys={expandedKeys} // 受控展开的节点
           draggable={{
             icon: false, // 关闭拖拽图标
@@ -208,6 +270,11 @@ const Actical = ({}) => {
           treeData={directory}
           onDrop={onDrop}
         />
+
+        <RightMenu
+          contextMenu={contextMenu}
+          setContextMenu={setContextMenu}
+        ></RightMenu>
       </div>
       <div className={styles.articleMainContent}>
         <Outlet />

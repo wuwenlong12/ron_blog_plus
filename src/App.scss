@@ -54,10 +54,10 @@ body {
   color: $text-color-dark;
 }
 
-.dark-mode button {
-  background-color: $primary-dark-dark;
-  color: $white-dark;
-}
+// .dark-mode button {
+//   background-color: $primary-dark-dark;
+//   color: $white-dark;
+// }
 
 // 浅色模式样式
 .light-mode {
@@ -65,7 +65,7 @@ body {
   color: $global-font-color;
 }
 
-.light-mode button {
-  background-color: $primary-color;
-  color: $white;
-}
+// .light-mode button {
+//   background-color: $primary-color;
+//   color: $white;
+// }
