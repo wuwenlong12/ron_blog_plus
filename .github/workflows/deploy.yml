@@ -59,10 +59,10 @@ jobs:
           ssh $SERVER_USER@$SERVER_HOST "cd $DEPLOY_DIR && tar -xzf build.tar.gz && rm -f build.tar.gz"  # 在服务器上解压并部署构建文件
 
       # 9. 构建 Docker 镜像并运行
-    - name: Build and run Docker container
-       run: |
+      - name: Build and run Docker container
+        run: |
           ssh $SERVER_USER@$SERVER_HOST << EOF
-          cd $DEPLOY_DIR
-          docker build -t ron-blob .
-          docker run -d -p 8080:80 --name ron-blob ron-blob
+            cd $DEPLOY_DIR
+            docker build -t ron-blob .
+            docker run -d -p 8080:80 --name ron-blob ron-blob
           EOF
