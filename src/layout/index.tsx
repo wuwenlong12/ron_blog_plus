@@ -120,7 +120,7 @@ const IndexLayout = () => {
         direction="left"
         style={{ width: "50%" }}
       >
-        leftt
+        left
       </Modal>
     </div>
   );
