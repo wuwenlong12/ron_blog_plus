@@ -64,5 +64,5 @@ jobs:
           ssh $SERVER_USER@$SERVER_HOST << EOF
           cd $DEPLOY_DIR
           docker build -t ron-blob .
-          docker run -d -p 80:8080 --name ron-blob ron-blob
+          docker run -d -p 8080:80 --name ron-blob ron-blob
           EOF
