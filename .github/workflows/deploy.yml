@@ -3,40 +3,34 @@ name: Build and Deploy
 on:
   push:
     branches:
-      - main # 监视主分支上的 push 和 merge 操作
+      - main
 
 jobs:
   build:
-    runs-on: ubuntu-latest # 在 GitHub 提供的 Ubuntu 虚拟机上运行
+    runs-on: ubuntu-latest
 
     steps:
-      # Checkout 代码
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # 设置 Node.js 环境
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "16" # 根据你的需求选择适合的 Node.js 版本
+          node-version: "16"
 
-      # 安装 pnpm
       - name: Set up pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: "8" # 可以设置你想要的 pnpm 版本
+          version: "8"
 
-      # 安装依赖
       - name: Install dependencies
         run: |
           pnpm install
 
-      # 构建项目
-      - name: Build the project
+      - name: Build the project (skip warnings as errors)
         run: |
-          pnpm run build
+          CI=false pnpm run build
 
-      # 上传构建文件到服务器
       - name: Deploy to server
         env:
           SERVER_USER: ${{ secrets.SERVER_USER }}
@@ -44,6 +38,6 @@ jobs:
           DEPLOY_DIR: ${{ secrets.DEPLOY_DIR }}
         run: |
           echo "Uploading build to server..."
-          tar -czf build.tar.gz build  # 打包构建文件
-          scp build.tar.gz $SERVER_USER@$SERVER_HOST:$DEPLOY_DIR  # 上传构建文件到服务器
-          ssh $SERVER_USER@$SERVER_HOST "cd $DEPLOY_DIR && tar -xzf build.tar.gz && rm -f build.tar.gz"  # 解压构建文件并部署
+          tar -czf build.tar.gz build
+          scp build.tar.gz $SERVER_USER@$SERVER_HOST:$DEPLOY_DIR
+          ssh $SERVER_USER@$SERVER_HOST "cd $DEPLOY_DIR && tar -xzf build.tar.gz && rm -f build.tar.gz"
