@@ -68,12 +68,12 @@ jobs:
           ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST "bash -c '
             cd $DEPLOY_DIR &&
             # 停止并删除之前的容器
-            docker stop ron-blob-container || true &&
-            docker rm ron-blob-container || true &&
+            docker stop ron-blog-container || true &&
+            docker rm ron-blog-container || true &&
             
             # 构建新的 Docker 镜像
-            docker build -t ron-blob-image . &&
+            docker build -t ron-blog-image . &&
             
             # 启动新的容器
-            docker run -d -p 8080:80 --name ron-blob-container ron-blob-image
+            docker run -d -p 8080:80 --name ron-blog-container ron-blog-image
           '"
