@@ -18,17 +18,23 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "22" # 你可以根据需要选择合适的 Node.js 版本
+          node-version: "16" # 根据你的需求选择适合的 Node.js 版本
+
+      # 安装 pnpm
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: "8" # 可以设置你想要的 pnpm 版本
 
       # 安装依赖
       - name: Install dependencies
         run: |
-          pnpm install # 如果你使用 pnpm，请改成 pnpm install
+          pnpm install
 
       # 构建项目
       - name: Build the project
         run: |
-          pnpm run build # 如果你使用 pnpm，请改成 pnpm run build
+          pnpm run build
 
       # 上传构建文件到服务器
       - name: Deploy to server
