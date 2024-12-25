@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Build and Deploy Backend
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "16" # 设置 Node.js 版本，可以根据需要更改
+          node-version: "16" # 设置 Node.js 版本
 
       # 3. 设置 pnpm
       - name: Set up pnpm
@@ -32,7 +32,7 @@ jobs:
 
       # 5. 构建项目
       - name: Build the project
-        run: CI=false pnpm run build # 关闭 CI 环境变量，避免警告作为错误，使用 pnpm 构建
+        run: pnpm run build # 使用 pnpm 构建 TypeScript 项目
 
       # 6. 设置 SSH 密钥
       - name: Set up SSH
@@ -46,34 +46,27 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts  # 获取并添加服务器公钥
 
-      # 8. 上传构建文件到服务器
+      # 8. 上传项目文件到服务器
       - name: Deploy to server
         env:
           SERVER_USER: ${{ secrets.SERVER_USER }} # 从 GitHub Secrets 中获取服务器用户名
           SERVER_HOST: ${{ secrets.SERVER_HOST }} # 从 GitHub Secrets 中获取服务器 IP 地址
           DEPLOY_DIR: ${{ secrets.DEPLOY_DIR }} # 从 GitHub Secrets 中获取部署目标目录
         run: |
-          echo "Uploading build to server..."
-          tar -czf build.tar.gz build  # 将构建文件打包成 tar.gz 文件
-          scp build.tar.gz $SERVER_USER@$SERVER_HOST:$DEPLOY_DIR  # 使用 SCP 上传文件到服务器
-          ssh $SERVER_USER@$SERVER_HOST "cd $DEPLOY_DIR && tar -xzf build.tar.gz && rm -f build.tar.gz"  # 在服务器上解压并部署构建文件
+          echo "Uploading project to server..."
+          rsync -avz --exclude=".git" --exclude="node_modules" --exclude="dist" ./ $SERVER_USER@$SERVER_HOST:$DEPLOY_DIR
 
-      # 9. 构建 Docker 镜像并运行
+      # 9. 构建并运行后端服务的 Docker 容器
       - name: Build and run Docker container
         env:
-          SERVER_USER: ${{ secrets.SERVER_USER }} # 从 GitHub Secrets 中获取服务器用户名
-          SERVER_HOST: ${{ secrets.SERVER_HOST }} # 从 GitHub Secrets 中获取服务器 IP 地址
-          DEPLOY_DIR: ${{ secrets.DEPLOY_DIR }} # 从 GitHub Secrets 中获取部署目标目录
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          DEPLOY_DIR: ${{ secrets.DEPLOY_DIR }}
         run: |
-          ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST "bash -c '
+          ssh $SERVER_USER@$SERVER_HOST "bash -c '
             cd $DEPLOY_DIR &&
             # 停止并删除之前的容器
-            docker stop ron-blog-container || true &&
-            docker rm ron-blog-container || true &&
-            
-            # 构建新的 Docker 镜像
-            docker build -t ron-blog-image . &&
-            
-            # 启动新的容器
-            docker run -d -p 8080:80 --name ron-blog-container ron-blog-image
+            docker-compose down &&
+            # 启动新服务
+            docker-compose up -d --build
           '"
