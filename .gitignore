@@ -10,7 +10,8 @@
 
 # production
 /build
-
+/build.tar.gz
+/deploy.log
 # misc
 .DS_Store
 .env.local

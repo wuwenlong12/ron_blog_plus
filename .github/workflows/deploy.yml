@@ -1,0 +1,43 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main # 监视主分支上的 push 和 merge 操作
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # 在 GitHub 提供的 Ubuntu 虚拟机上运行
+
+    steps:
+      # Checkout 代码
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # 设置 Node.js 环境
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16" # 你可以根据需要选择合适的 Node.js 版本
+
+      # 安装依赖
+      - name: Install dependencies
+        run: |
+          npm install # 如果你使用 pnpm，请改成 pnpm install
+
+      # 构建项目
+      - name: Build the project
+        run: |
+          npm run build # 如果你使用 pnpm，请改成 pnpm run build
+
+      # 上传构建文件到服务器
+      - name: Deploy to server
+        env:
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          DEPLOY_DIR: ${{ secrets.DEPLOY_DIR }}
+        run: |
+          echo "Uploading build to server..."
+          tar -czf build.tar.gz build  # 打包构建文件
+          scp build.tar.gz $SERVER_USER@$SERVER_HOST:$DEPLOY_DIR  # 上传构建文件到服务器
+          ssh $SERVER_USER@$SERVER_HOST "cd $DEPLOY_DIR && tar -xzf build.tar.gz && rm -f build.tar.gz"  # 解压构建文件并部署
