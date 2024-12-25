@@ -34,7 +34,7 @@ jobs:
       - name: Build the project
         run: CI=false pnpm run build # 关闭 CI 环境变量，避免警告作为错误，使用 pnpm 构建
 
-      # 6. 设置 SSH 密钥，生成私匙.
+      # 6. 设置 SSH 密钥，生成私匙..
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
