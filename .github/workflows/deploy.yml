@@ -60,6 +60,10 @@ jobs:
 
       # 9. 构建 Docker 镜像并运行
       - name: Build and run Docker container
+        env:
+          SERVER_USER: ${{ secrets.SERVER_USER }} # 从 GitHub Secrets 中获取服务器用户名
+          SERVER_HOST: ${{ secrets.SERVER_HOST }} # 从 GitHub Secrets 中获取服务器 IP 地址
+          DEPLOY_DIR: ${{ secrets.DEPLOY_DIR }} # 从 GitHub Secrets 中获取部署目标目录
         run: |
           ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST "bash -c '
             cd $DEPLOY_DIR && 
