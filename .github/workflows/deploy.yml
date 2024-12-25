@@ -58,15 +58,22 @@ jobs:
           scp build.tar.gz $SERVER_USER@$SERVER_HOST:$DEPLOY_DIR  # 使用 SCP 上传文件到服务器
           ssh $SERVER_USER@$SERVER_HOST "cd $DEPLOY_DIR && tar -xzf build.tar.gz && rm -f build.tar.gz"  # 在服务器上解压并部署构建文件
 
-      # 9. 构建 Docker 镜像并运行
-      - name: Build and run Docker container
-        env:
-          SERVER_USER: ${{ secrets.SERVER_USER }} # 从 GitHub Secrets 中获取服务器用户名
-          SERVER_HOST: ${{ secrets.SERVER_HOST }} # 从 GitHub Secrets 中获取服务器 IP 地址
-          DEPLOY_DIR: ${{ secrets.DEPLOY_DIR }} # 从 GitHub Secrets 中获取部署目标目录
-        run: |
-          ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST "bash -c '
-            cd $DEPLOY_DIR && 
-            docker build -t ron-blob . && 
-            docker run -d -p 8080:80 --name ron-blob ron-blob
-          '"
+# 9. 构建 Docker 镜像并运行
+- name: Build and run Docker container
+  env:
+    SERVER_USER: ${{ secrets.SERVER_USER }} # 从 GitHub Secrets 中获取服务器用户名
+    SERVER_HOST: ${{ secrets.SERVER_HOST }} # 从 GitHub Secrets 中获取服务器 IP 地址
+    DEPLOY_DIR: ${{ secrets.DEPLOY_DIR }} # 从 GitHub Secrets 中获取部署目标目录
+  run: |
+    ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST "bash -c '
+      cd $DEPLOY_DIR &&
+      # 停止并删除之前的容器
+      docker stop ron-blob-container|| true &&
+      docker rm ron-blob-container || true &&
+      
+      # 构建新的 Docker 镜像
+      docker build -t ron-blob-images . &&
+      
+      # 启动新的容器
+      docker run -d -p 8080:80 --name ron-blob-container ron-blob-image
+    '"
