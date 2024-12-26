@@ -1,5 +1,5 @@
 # 使用 Nginx 官方镜像作为基础镜像
-FROM docker pull crpi-995uocus6og9mdf4.cn-beijing.personal.cr.aliyuncs.com/wuwenlong797/nginx:alpine
+FROM nginx:alpine
 
 # 复制本地构建好的静态文件到 Nginx 的 HTML 目录
 COPY ./build /usr/share/nginx/html
