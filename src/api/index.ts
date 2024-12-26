@@ -3,7 +3,7 @@ import { message } from "antd";
 
 // 创建 axios 实例
 const http = axios.create({
-  baseURL: "process.env.BASE_URL", // 替换为你的 API 地址
+  baseURL: process.env.BASE_URL, // 替换为你的 API 地址
   timeout: 3000, // 请求超时时间
   headers: { "Content-Type": "application/json" },
 });
