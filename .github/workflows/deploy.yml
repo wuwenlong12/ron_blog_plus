@@ -27,7 +27,7 @@ jobs:
           version: "8" # 设置 pnpm 版本
 
       # 4. 安装依赖
-      - name: Install dependencies
+      - name: Install dependencies.
         run: pnpm install # 使用 pnpm 安装依赖
 
       # 5. 构建项目
