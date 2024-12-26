@@ -61,7 +61,7 @@ jobs:
           scp ./Dockerfile $SERVER_USER@$SERVER_HOST:$DEPLOY_DIR  # 上传 Dockerfile
           ssh $SERVER_USER@$SERVER_HOST "cd $DEPLOY_DIR && tar -xzf build.tar.gz && rm -f build.tar.gz"  # 解压构建文件
 
-      # 9. 使用 Docker Compose 构建并启动容器
+      # 9. 使用 Docker Compose 构建并启动容器。
       - name: Deploy with Docker Compose
         env:
           SERVER_USER: ${{ secrets.SERVER_USER }} # 从 GitHub Secrets 获取服务器用户名
