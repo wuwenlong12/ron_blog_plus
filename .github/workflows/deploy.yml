@@ -51,7 +51,7 @@ jobs:
         env:
           SERVER_USER: ${{ secrets.SERVER_USER }} # 从 GitHub Secrets 获取服务器用户名
           SERVER_HOST: ${{ secrets.SERVER_HOST }} # 从 GitHub Secrets 获取服务器 IP 地址
-          DEPLOY_DIR: ${{ secrets.DEPLOY_DIR }} # 从 GitHub Secrets 获取部署目标目录
+          DEPLOY_DIR: "/ron-blog" # 直接硬编码目录路径
         run: |
           echo "Checking and creating deploy directory..."
           ssh $SERVER_USER@$SERVER_HOST "mkdir -p $DEPLOY_DIR"
