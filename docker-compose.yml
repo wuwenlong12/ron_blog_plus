@@ -1,9 +1,11 @@
+version: '3.8'
+
 services:
-  frontend:
-    image: nginx:latest  # 使用官方的 nginx 镜像
-    container_name:  ron-blog-container
+  nginx:
+    build: .  # 使用当前目录下的 Dockerfile 构建镜像
     ports:
-      - "8080:80"  # 将容器的 80 端口映射到主机的 8080 端口
+      - "80:80"  # 将容器的 80 端口映射到主机的 80 端口
     volumes:
-      - ./build:/usr/share/nginx/html  # 将本地的 build 目录挂载到 nginx 容器的 html 目录
-    restart: always
+      - ./dist:/usr/share/nginx/html  # 将构建后的文件挂载到容器中
+      - ./nginx.conf:/etc/nginx/nginx.conf  # 将自定义的 Nginx 配置挂载到容器中
+    restart: always  # 容器崩溃时自动重启
