@@ -51,17 +51,17 @@ jobs:
         env:
           SERVER_USER: ${{ secrets.SERVER_USER }} # 从 GitHub Secrets 获取服务器用户名
           SERVER_HOST: ${{ secrets.SERVER_HOST }} # 从 GitHub Secrets 获取服务器 IP 地址
-          DEPLOY_DIR: "ron-blog" # 直接硬编码目录路径
+          DEPLOY_DIR: "ron_blog" # 直接硬编码目录路径
         run: |
           echo "Checking and creating deploy directory..."
-          ssh $SERVER_USER@$SERVER_HOST "mkdir -p $DEPLOY_DIR"
+          ssh $SERVER_USER@$SERVER_HOST "cd ~ && sudo mkdir -p $DEPLOY_DIR"
           echo "Uploading build to server..."
           tar -czf build.tar.gz build  # 将构建文件打包成 tar.gz 文件
           scp build.tar.gz $SERVER_USER@$SERVER_HOST:$DEPLOY_DIR  # 上传文件到服务器
           scp ./nginx.conf $SERVER_USER@$SERVER_HOST:$DEPLOY_DIR  # 上传 Nginx 配置文件
           scp ./docker-compose.yml $SERVER_USER@$SERVER_HOST:$DEPLOY_DIR  # 上传 Docker Compose 文件
           scp ./Dockerfile $SERVER_USER@$SERVER_HOST:$DEPLOY_DIR  # 上传 Dockerfile
-          ssh $SERVER_USER@$SERVER_HOST "cd /$DEPLOY_DIR && tar -xzf build.tar.gz && rm -f build.tar.gz"  # 解压构建文件
+          ssh $SERVER_USER@$SERVER_HOST "cd ~/$DEPLOY_DIR && tar -xzf build.tar.gz && rm -f build.tar.gz"  # 解压构建文件
 
       # 9. 使用 Docker Compose 构建并启动容器。
       - name: Deploy with Docker Compose
