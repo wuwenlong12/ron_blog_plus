@@ -6,6 +6,6 @@ services:
     ports:
       - "8080:80"  # 将容器的 80 端口映射到主机的 8080 端口
     volumes:
-      - ./dist:/usr/share/nginx/html  # 将构建后的文件挂载到容器中
+      - ./build:/usr/share/nginx/html  # 将构建后的文件挂载到容器中
       - ./nginx.conf:/etc/nginx/nginx.conf  # 将自定义的 Nginx 配置挂载到容器中
     restart: always  # 容器崩溃时自动重启
