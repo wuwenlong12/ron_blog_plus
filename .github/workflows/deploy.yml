@@ -53,6 +53,8 @@ jobs:
           SERVER_HOST: ${{ secrets.SERVER_HOST }} # 从 GitHub Secrets 获取服务器 IP 地址
           DEPLOY_DIR: ${{ secrets.DEPLOY_DIR }} # 从 GitHub Secrets 获取部署目标目录
         run: |
+          echo "Checking and creating deploy directory..."
+          ssh $SERVER_USER@$SERVER_HOST "mkdir -p $DEPLOY_DIR"
           echo "Uploading build to server..."
           tar -czf build.tar.gz build  # 将构建文件打包成 tar.gz 文件
           scp build.tar.gz $SERVER_USER@$SERVER_HOST:$DEPLOY_DIR  # 上传文件到服务器
