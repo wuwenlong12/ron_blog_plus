@@ -1,0 +1,9 @@
+services:
+  frontend:
+    image: nginx:latest  # 使用官方的 nginx 镜像
+    container_name:  ron-blog-container
+    ports:
+      - "8080:80"  # 将容器的 80 端口映射到主机的 8080 端口
+    volumes:
+      - ./build:/usr/share/nginx/html  # 将本地的 build 目录挂载到 nginx 容器的 html 目录
+    restart: always
