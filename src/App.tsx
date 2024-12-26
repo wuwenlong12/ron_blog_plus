@@ -3,19 +3,15 @@ import React, { useEffect, useMemo, useState } from "react";
 import "./App.scss";
 import {
   RouteObject,
-  BrowserRouter as Router,
   RouterProvider,
   createBrowserRouter,
-  useLocation,
-  useMatches,
 } from "react-router-dom";
 import { ConfigProvider, theme, ThemeConfig } from "antd";
 import useTheme from "./hook/useTheme";
 import Loading from "./components/loading/loading";
 import { useDispatch, useSelector } from "react-redux";
-import { setRoutesMap, setCurrentPath } from "./store/routersMapSlice";
+import { setRoutesMap } from "./store/routersMapSlice";
 import { StaticRoutesMap } from "./router";
-import { RootState } from "./store";
 import { selectRoutes } from "./store/routersMapSlice";
 import useArticleRoutes from "./router/useArticleRoutes";
 import { App as AntdApp } from "antd"; // 引入 Ant Design 的 App
@@ -72,7 +68,7 @@ const App: React.FC = () => {
   // 创建静态路由
   useEffect(() => {
     dispatch(setRoutesMap(StaticRoutesMap));
-  }, []);
+  }, [dispatch]);
 
   // 缓冲路由结果
   const router = useMemo(() => {

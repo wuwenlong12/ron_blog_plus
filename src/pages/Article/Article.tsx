@@ -1,7 +1,7 @@
-import React, { Key, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Article.module.scss";
 import useTheme from "../../hook/useTheme";
-import { MenuProps, Button, Input, Menu } from "antd";
+import { Button, Input } from "antd";
 import {
   RightOutlined,
   LeftOutlined,
@@ -24,7 +24,6 @@ type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
 const { DirectoryTree } = Tree;
 
 const Actical = ({}) => {
-  const { isDarkMode } = useTheme();
   const [directory, setDirectory] = useState<TreeDataNode[] | undefined>([]);
   const [isOpenMenu, setIsOpenMenu] = useState(true);
   const [isOpenAddFolder, setIsOpenAddFolder] = useState(false);

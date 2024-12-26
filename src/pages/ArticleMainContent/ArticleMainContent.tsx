@@ -1,24 +1,6 @@
-import {
-  Input,
-  Form,
-  Button,
-  Space,
-  message,
-  Breadcrumb,
-  Card,
-  Flex,
-  App,
-} from "antd";
+import { Input, Button, App } from "antd";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import {
-  Navigate,
-  RouteObject,
-  useLocation,
-  useMatch,
-  useMatches,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
+import { RouteObject, useMatches, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import styles from "./ArticleMainContent.module.scss";
 import {
@@ -27,11 +9,8 @@ import {
   patchFolderName,
 } from "../../api/folder";
 import AppBreadcrumb from "../../components/Breadcrumb/Breadcrumb";
-import useTheme from "../../hook/useTheme";
 import {
   EditFilled,
-  EditOutlined,
-  FolderAddOutlined,
   FolderOutlined,
   HomeOutlined,
   ReadOutlined,

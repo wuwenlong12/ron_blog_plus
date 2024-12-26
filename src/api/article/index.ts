@@ -1,5 +1,4 @@
 import http from "..";
-import { ResponseBase } from "../type";
 import {
   ResponseGetArticleContent,
   ResponseUpdateArticleContent,

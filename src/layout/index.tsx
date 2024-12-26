@@ -12,11 +12,8 @@ import useTheme from "../hook/useTheme";
 import { setting } from "../setting";
 import Modal from "../components/Modal/Modal";
 import LeftModalDom from "../components/RightModalDom/RightModalDom";
-import useRoutes from "../router/useArticleRoutes";
 import { useDispatch, useSelector } from "react-redux";
 import { selectRoutes, setCurrentPath } from "../store/routersMapSlice";
-import { RootState } from "../store";
-import { AnimatePresence, motion } from "framer-motion";
 
 const IndexLayout = () => {
   const { isDarkMode, handleToggleTheme } = useTheme();

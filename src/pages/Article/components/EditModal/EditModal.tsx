@@ -4,7 +4,6 @@ import { getDirectoryInfoById, patchFolderName } from "../../../../api/folder";
 import { GetDirectoryInfoById } from "../../../../api/folder/type";
 import TextArea from "antd/es/input/TextArea";
 import useRoutes from "../../../../router/useArticleRoutes";
-import { RouteObject } from "react-router-dom";
 
 interface EditModalProps {
   id: string;
