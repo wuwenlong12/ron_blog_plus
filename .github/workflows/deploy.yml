@@ -41,7 +41,7 @@ jobs:
           ssh-private-key: ${{ secrets.SERVER_SSH_PRIVATE_KEY }} # 从 GitHub Secrets 中获取 SSH 私钥
 
       # 7. 添加服务器的 SSH 公钥到 known_hosts
-      - name: Add server to known hosts
+      - name: Add server to known hosts。
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts  # 获取并添加服务器公钥
