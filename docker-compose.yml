@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   nginx:
-    image: crpi-995uocus6og9mdf4.cn-beijing.personal.cr.aliyuncs.com/your-repo-name/your-project-name:latest  # 使用阿里云镜像
+    image: crpi-995uocus6og9mdf4.cn-beijing.personal.cr.aliyuncs.com/wuwenlong797/mongo:alpine
     ports:
       - "8080:80"  # 将容器的 80 端口映射到主机的 8080 端口
     volumes:
