@@ -22,7 +22,7 @@ type content = {
 
 interface RightMenuProps {
   contextMenu: content;
-  setContextMenu: (content: content) => void;
+  setContextMenu: React.Dispatch<React.SetStateAction<content>>;
 }
 
 const RightMenu: React.FC<RightMenuProps> = ({
@@ -32,11 +32,9 @@ const RightMenu: React.FC<RightMenuProps> = ({
   const [isAddFolderModalOpen, setIsAddFolderModalOpen] = useState(false);
   const [isAddFileModalOpen, setIsAddFileModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   const [newFolderName, setNewFolderName] = useState("");
   const [newFileName, setNewFileName] = useState("");
-  const [QRurl, setQRurl] = useState("234243");
   const { loadArticleRoutes } = useArticleRoutes();
   const { message } = App.useApp();
   const menuItems = [
@@ -55,15 +53,10 @@ const RightMenu: React.FC<RightMenuProps> = ({
       label: "删除",
       icon: <DeleteOutlined />,
     },
-    {
-      key: "share",
-      label: "分享",
-      icon: <ShareAltOutlined />,
-    },
   ];
 
   const handleMenuClick: MenuProps["onClick"] = (e) => {
-    setContextMenu({ ...contextMenu, visible: false });
+    setContextMenu((prev) => ({ ...prev, visible: false }));
 
     switch (e.key) {
       case "create-folder":
@@ -74,9 +67,6 @@ const RightMenu: React.FC<RightMenuProps> = ({
         break;
       case "delete":
         handleDelete();
-        break;
-      case "share":
-        handleShare();
         break;
       default:
         break;
@@ -93,10 +83,6 @@ const RightMenu: React.FC<RightMenuProps> = ({
 
   const handleDelete = () => {
     setIsDeleteModalOpen(true); // 打开删除确认弹出框
-  };
-
-  const handleShare = () => {
-    setIsShareModalOpen(true); // 打开分享弹出框
   };
 
   const handleAddFolderOk = async () => {
@@ -161,16 +147,10 @@ const RightMenu: React.FC<RightMenuProps> = ({
     }
   };
 
-  const handleShareOk = () => {
-    setIsShareModalOpen(false);
-    message.success("分享成功");
-  };
-
   const closeAllModals = () => {
     setIsAddFolderModalOpen(false);
     setIsAddFileModalOpen(false);
     setIsDeleteModalOpen(false);
-    setIsShareModalOpen(false);
   };
 
   const menuRef = useRef<HTMLDivElement>(null);
@@ -178,7 +158,7 @@ const RightMenu: React.FC<RightMenuProps> = ({
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setContextMenu({ ...contextMenu, visible: false });
+        setContextMenu((prev) => ({ ...prev, visible: false }));
       }
     };
 
@@ -251,23 +231,6 @@ const RightMenu: React.FC<RightMenuProps> = ({
         cancelText="取消"
       >
         <p>你确定要删除这个项目吗？</p>
-      </Modal>
-
-      {/* 分享弹出框 */}
-      <Modal
-        title="分享"
-        open={isShareModalOpen}
-        onOk={handleShareOk}
-        onCancel={closeAllModals}
-        okText="分享"
-        cancelText="取消"
-      >
-        <p>请输入分享链接或进行其他分享操作</p>
-        <QRCode
-          errorLevel="H"
-          value={QRurl}
-          icon="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
-        />
       </Modal>
     </div>
   );

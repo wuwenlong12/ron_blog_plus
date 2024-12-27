@@ -1,9 +1,13 @@
-import { Input, Button, App } from "antd";
+import { Input, Button, App, Tooltip, Modal, QRCode } from "antd";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { RouteObject, useMatches, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import { BiSolidMessageSquareEdit } from "react-icons/bi";
+import { MdDelete } from "react-icons/md";
+import { RiSendPlaneFill } from "react-icons/ri";
 import styles from "./ArticleMainContent.module.scss";
 import {
+  deleteDirectoryInfoById,
   getDirectoryInfoById,
   patchFolderDesc,
   patchFolderName,
@@ -28,8 +32,10 @@ import {
   getArticleContentById,
   updateArticleContentById,
 } from "../../api/article";
-import Editor from "../../components/Editor/Editor";
+import Editor, { EditorRef } from "../../components/Editor/Editor";
 import { PartialBlock } from "@blocknote/core";
+import { FaMarkdown, FaTags } from "react-icons/fa";
+import { downloadMarkdown } from "../../utils/downloadMarkdown";
 
 type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
 
@@ -57,6 +63,11 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
     undefined
   );
   const [content, setContent] = useState<PartialBlock[] | undefined>(undefined);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+
+  const editorRef = useRef<EditorRef>(null);
+
   const { loadArticleRoutes } = useArticleRoutes();
   const dispatch = useDispatch();
   const articleRoutesMap = useSelector(
@@ -168,33 +179,14 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
       const res = await getArticleContentById(id);
       if (res.code === 0) {
         setName(res.data.title);
-        const content = fixStyles(res.data.content);
-        setInitContent(content);
+        setInitContent(res.data.content);
         setIsLoadingContent(false);
-        if (!curJson) setContent(content);
+        if (!curJson) setContent(res.data.content);
       } else {
         message.error("加载数据失败，请稍后重试");
       }
     }
   };
-  // 修复后端序列号空styles丢失问题
-  function fixStyles(content: any) {
-    // 遍历每个 item
-    return content.map((item: any) => {
-      // 如果 item 有 content 字段且是数组
-      if (Array.isArray(item.content)) {
-        // 遍历每个 content 项
-        item.content = item.content.map((cur: any) => {
-          // 如果 type 为 text 且没有 styles 字段（即 undefined 或 null），则补全
-          if (cur.type === "text" && !cur.hasOwnProperty("styles")) {
-            cur.styles = {}; // 补全空的 styles
-          }
-          return cur;
-        });
-      }
-      return item;
-    });
-  }
 
   // 结束后更新数据
   const handleAnimationComplete = () => {
@@ -273,6 +265,41 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
       console.log("发布失败");
     }
   };
+  const blocksToMarkdown = () => {
+    if (editorRef.current) {
+      editorRef.current.blocksToMarkdown(name); // 调用 Editor 中暴露的方法
+    }
+  };
+  const handleDelete = () => {
+    setIsDeleteModalOpen(true); // 打开删除确认弹出框
+  };
+
+  const handleShare = () => {
+    setIsShareModalOpen(true); // 打开分享弹出框
+  };
+  const handleDeleteOk = async () => {
+    const res = await deleteDirectoryInfoById(currentId, currentType);
+    if (res.code === 0) {
+      setIsDeleteModalOpen(false);
+      message.success("删除成功");
+      loadArticleRoutes();
+    } else {
+      message.error("删除失败");
+    }
+  };
+
+  const handleShareOk = () => {
+    navigator.clipboard
+      .writeText(window.location.href)
+      .then(() => {
+        message.success("URL已复制到剪贴板");
+      })
+      .catch((err) => {
+        message.error("复制失败：" + err);
+      });
+    setIsShareModalOpen(false);
+  };
+
   return (
     <AnimatePresence>
       <motion.div
@@ -313,35 +340,60 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
             )}
           </div>
           <div>
-            {isEditable ? (
+            <Tooltip title="下载markdown文件">
               <Button
-                onClick={publishArticle}
-                style={{ marginRight: 20 }}
-                color="primary"
-                variant="solid"
+                type="primary"
+                style={{ marginRight: 10, backgroundColor: "#52c41a" }}
+                icon={<FaMarkdown />}
+                onClick={blocksToMarkdown}
               >
-                发布
+                下载
               </Button>
-            ) : (
+            </Tooltip>
+            <Tooltip title="下载markdown文件">
               <Button
-                onClick={() => setIsEditable(true)}
-                style={{ marginRight: 20 }}
-                color="default"
-                variant="solid"
+                type="primary"
+                style={{ marginRight: 10 }}
+                icon={<FaMarkdown />}
+                onClick={handleShare}
               >
-                编辑
+                分享
               </Button>
-            )}
+            </Tooltip>
+            {currentType === "article" ? (
+              isEditable ? (
+                <Button
+                  onClick={publishArticle}
+                  style={{ marginRight: 10 }}
+                  color="primary"
+                  variant="solid"
+                  icon={<RiSendPlaneFill />}
+                >
+                  发布
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => setIsEditable(true)}
+                  style={{ marginRight: 10 }}
+                  color="default"
+                  variant="solid"
+                  icon={<BiSolidMessageSquareEdit />}
+                >
+                  编辑
+                </Button>
+              )
+            ) : null}
             <Button
-              onClick={deleteFolderOrArticle}
+              onClick={handleDelete}
               color="danger"
               variant="solid"
+              icon={<MdDelete />}
             >
               删除
             </Button>
           </div>
         </div>
-
+        <div>{/* <Button type="link" icon={<FaTags />}></Button> */}</div>
         {currentType === "folder" ? (
           <div className={styles.desc}>
             <Button
@@ -403,7 +455,7 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
               transition={{ duration: 0.3 }}
             >
               <Editor
-                key={222}
+                ref={editorRef}
                 initialContent={initContent}
                 onChange={EditorChange}
                 editable={false}
@@ -424,7 +476,7 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
               transition={{ duration: 0.3 }}
             >
               <Editor
-                key={111}
+                ref={editorRef}
                 initialContent={content}
                 onChange={EditorChange}
                 editable={isEditable}
@@ -432,7 +484,44 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
             </motion.div>
           </AnimatePresence>
         ) : null}
+        <Modal
+          title="确认删除"
+          open={isDeleteModalOpen}
+          onOk={handleDeleteOk}
+          onCancel={() => setIsDeleteModalOpen(false)}
+          okType="danger"
+          okText="删除"
+          cancelText="取消"
+        >
+          <p>你确定要删除这个项目吗？</p>
+        </Modal>
+
+        {/* 分享弹出框 */}
+        <Modal
+          title="分享"
+          open={isShareModalOpen}
+          onOk={handleShareOk}
+          onCancel={() => setIsShareModalOpen(false)}
+          okText="分享"
+          cancelText="取消"
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <p>扫码或者点击分享复制链接</p>
+            <QRCode
+              errorLevel="H"
+              value={window.location.href}
+              icon="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
+            />
+          </div>
+        </Modal>
       </motion.div>
+      {/* 删除确认弹出框 */}
     </AnimatePresence>
   );
 };
