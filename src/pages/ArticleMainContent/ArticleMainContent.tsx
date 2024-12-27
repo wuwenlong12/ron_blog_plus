@@ -130,7 +130,6 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
     };
 
     const targetNode = findNode(articleRoutesMap);
-    console.log(targetNode);
 
     // 如果找到节点，将其转换为 TreeDataNode 格式
     if (targetNode) {
@@ -154,7 +153,6 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
       if (res.code === 0) {
         setName(res.data.name);
         setDesc(res.data.desc);
-        setIsLoadingContent(false);
       } else {
         message.error("加载数据失败，请稍后重试");
       }
@@ -171,8 +169,8 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
       if (res.code === 0) {
         setName(res.data.title);
         const content = fixStyles(res.data.content);
-
         setInitContent(content);
+        setIsLoadingContent(false);
         if (!curJson) setContent(content);
       } else {
         message.error("加载数据失败，请稍后重试");
@@ -413,7 +411,6 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
             </motion.div>
           </AnimatePresence>
         ) : null}
-
         {currentType === "article" &&
         isLoadingContent === false &&
         content !== undefined &&

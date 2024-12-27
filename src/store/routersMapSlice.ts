@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RouteObject } from "react-router-dom";
 import { transformRoutes } from "../router/utils/transformRoutes";
 import { Key } from "react";
@@ -88,8 +88,12 @@ export const {
 // 导出 reducer
 export default RoutesSlice.reducer;
 
-export const selectRoutes = (state: { routesMap: RoutesState }) => {
-  // console.log(state.routesMap);
+export const selectRoutes = createSelector(
+  // 第一个参数是依赖项，这里是 routesMap
+  (state: { routesMap: RoutesState }) => state.routesMap.routesMap,
 
-  return transformRoutes(state.routesMap.routesMap);
-};
+  // 第二个参数是计算函数，只有在 routesMap.routesMap 变化时才会重新执行
+  (routesMap) => {
+    return transformRoutes(routesMap); // 返回处理后的结果
+  }
+);

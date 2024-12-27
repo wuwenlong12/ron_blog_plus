@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { RouteObject } from "react-router-dom";
 import { ArticleDirectory } from "../api/folder/type";
 import Loading from "../components/loading/loading";

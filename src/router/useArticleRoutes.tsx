@@ -8,10 +8,7 @@ import { setArticleRoutesMap } from "../store/routersMapSlice";
 
 const useArticleRoutes = () => {
   const dispatch: AppDispatch = useDispatch();
-
-  const [articleRoutes, setArticleRoutes] = useState<RouteObject[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
-
   const loadArticleRoutes = async () => {
     try {
       const res = await getActicalDirectory(); // 获取动态路由数据
@@ -27,7 +24,7 @@ const useArticleRoutes = () => {
     }
   };
 
-  return { isLoaded, articleRoutes, loadArticleRoutes };
+  return { isLoaded, loadArticleRoutes };
 };
 
 export default useArticleRoutes;

@@ -8,7 +8,6 @@ import Loading from "../../components/loading/loading";
 export const transformRoutes = (routes: RouteObject[]): RouteObject[] => {
   return routes.map((route) => {
     const element = route.element;
-    const key = route.handle ? route.handle.key : "";
     const transformedRoute: RouteObject = {
       ...route,
       element:
