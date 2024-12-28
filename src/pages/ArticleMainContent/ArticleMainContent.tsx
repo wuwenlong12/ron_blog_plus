@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { RouteObject, useMatches, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { BiSolidMessageSquareEdit } from "react-icons/bi";
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdOutlineAccessTimeFilled } from "react-icons/md";
 import { RiSendPlaneFill } from "react-icons/ri";
 import styles from "./ArticleMainContent.module.scss";
 import {
@@ -36,6 +36,9 @@ import Editor, { EditorRef } from "../../components/Editor/Editor";
 import { PartialBlock } from "@blocknote/core";
 import { FaMarkdown, FaTags } from "react-icons/fa";
 import { downloadMarkdown } from "../../utils/downloadMarkdown";
+import ChooseTag, {
+  tag,
+} from "../Article/components/RightMenu/componets/ChooseTag";
 
 type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
 
@@ -57,6 +60,7 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
   const [isEditDescing, setIsEditDescing] = useState(false);
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
+  const [tags, setTags] = useState<tag[]>([]);
   const [isLoadingContent, setIsLoadingContent] = useState(true);
   const [isEditable, setIsEditable] = useState(false);
   const [initContent, setInitContent] = useState<PartialBlock[] | undefined>(
@@ -180,6 +184,7 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
       if (res.code === 0) {
         setName(res.data.title);
         setInitContent(res.data.content);
+        setTags(res.data.tags);
         setIsLoadingContent(false);
         if (!curJson) setContent(res.data.content);
       } else {
@@ -299,7 +304,9 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
       });
     setIsShareModalOpen(false);
   };
-
+  const tagsChange = (tags: tag[]) => {
+    setTags(tags);
+  };
   return (
     <AnimatePresence>
       <motion.div
@@ -393,7 +400,19 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
             </Button>
           </div>
         </div>
-        <div>{/* <Button type="link" icon={<FaTags />}></Button> */}</div>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Button
+              type="link"
+              icon={<MdOutlineAccessTimeFilled color="#383a42" />}
+            ></Button>
+          </div>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Button type="link" icon={<FaTags color="#383a42" />}></Button>
+            <ChooseTag initTag={tags} onChange={tagsChange}></ChooseTag>
+          </div>
+        </div>
+        <hr />
         {currentType === "folder" ? (
           <div className={styles.desc}>
             <Button

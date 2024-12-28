@@ -1,4 +1,5 @@
 import http from "..";
+import { tag } from "../../pages/Article/components/RightMenu/componets/ChooseTag";
 import { ResponseBase } from "../type";
 import {
   ResponseGetArticleDirectory,
@@ -33,12 +34,14 @@ export const getDirectoryInfoById = (id: string) =>
 export const postDirectoryInfoById = (
   name: string,
   parentFolderId: string | null,
-  type: "folder" | "article"
+  type: "folder" | "article",
+  tags?: tag[]
 ) =>
   http.post<any, ResponsePostDirectoryInfoById>(API.ACTICAL_DIRECTORY, {
     name,
     parentFolderId,
     type,
+    tags,
   });
 
 //根据目录id添加文章或文件夹

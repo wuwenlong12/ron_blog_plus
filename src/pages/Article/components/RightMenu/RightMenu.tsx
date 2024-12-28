@@ -12,6 +12,7 @@ import {
   postDirectoryInfoById,
 } from "../../../../api/folder";
 import useArticleRoutes from "../../../../router/useArticleRoutes";
+import ChooseTag, { tag } from "./componets/ChooseTag";
 
 type content = {
   visible: boolean;
@@ -35,6 +36,7 @@ const RightMenu: React.FC<RightMenuProps> = ({
 
   const [newFolderName, setNewFolderName] = useState("");
   const [newFileName, setNewFileName] = useState("");
+  const [tags, setTags] = useState<tag[]>([]);
   const { loadArticleRoutes } = useArticleRoutes();
   const { message } = App.useApp();
   const menuItems = [
@@ -120,12 +122,15 @@ const RightMenu: React.FC<RightMenuProps> = ({
     const res = await postDirectoryInfoById(
       newFileName.trim(),
       parentFolderId,
-      "article"
+      "article",
+      tags
     );
 
     if (res.code === 0) {
       setIsAddFileModalOpen(false);
       setNewFileName(""); // 清空输入框
+      // const _id = res.data._id
+
       message.success("文件已创建");
       loadArticleRoutes();
     } else {
@@ -168,6 +173,9 @@ const RightMenu: React.FC<RightMenuProps> = ({
     };
   }, [contextMenu, setContextMenu]);
 
+  const tagsChange = (tags: tag[]) => {
+    setTags(tags);
+  };
   return (
     <div
       className={`${styles.rightMenu}`}
@@ -206,7 +214,7 @@ const RightMenu: React.FC<RightMenuProps> = ({
 
       {/* 新建文件弹出框 */}
       <Modal
-        title="新建文件"
+        title="新建文章"
         open={isAddFileModalOpen}
         onOk={handleAddFileOk}
         onCancel={closeAllModals}
@@ -216,8 +224,10 @@ const RightMenu: React.FC<RightMenuProps> = ({
         <Input
           value={newFileName}
           onChange={(e) => setNewFileName(e.target.value)}
-          placeholder="请输入文件名称"
+          placeholder="请输入文章名称"
         />
+        <div style={{ padding: 10 }}></div>
+        <ChooseTag onChange={tagsChange}></ChooseTag>
       </Modal>
 
       {/* 删除确认弹出框 */}
