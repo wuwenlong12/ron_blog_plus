@@ -1,8 +1,8 @@
 @import "../../setting/variables.scss";
 .container {
-  padding: 20px 50px;
+  padding: 2rem 4rem;
   // background-color: aqua;
-
+  scroll-behavior: smooth;
   position: relative;
   overflow: auto;
   height: calc(100vh - 60px);
@@ -43,5 +43,11 @@
     border-color: rgba($color: #6e6e6e, $alpha: 0.1);
     border-width: 1px;
     margin-bottom: 20px;
+    margin-top: 5px;
+  }
+}
+@media (max-width: $breakpoint-md) {
+  .container {
+    padding: 2rem 2rem;
   }
 }

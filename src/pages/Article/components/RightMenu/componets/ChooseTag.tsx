@@ -24,13 +24,13 @@ const getRandomColor = () => {
 export type tag = { name: string; color: string };
 
 interface ChooseTagProps {
-  initTag?: tag[];
-  onChange: (tag: tag[]) => void;
+  tags: tag[];
+  setTags: React.Dispatch<React.SetStateAction<tag[]>>;
 }
 
-const ChooseTag: React.FC<ChooseTagProps> = ({ initTag, onChange }) => {
+const ChooseTag: React.FC<ChooseTagProps> = ({ tags, setTags }) => {
   const { token } = theme.useToken();
-  const [tags, setTags] = useState<tag[]>([]);
+
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [editInputIndex, setEditInputIndex] = useState(-1);
@@ -38,11 +38,6 @@ const ChooseTag: React.FC<ChooseTagProps> = ({ initTag, onChange }) => {
   const inputRef = useRef<InputRef>(null);
   const editInputRef = useRef<InputRef>(null);
 
-  useEffect(() => {
-    if (initTag) {
-      setTags(initTag);
-    }
-  }, []);
   useEffect(() => {
     if (inputVisible) {
       inputRef.current?.focus();
@@ -53,9 +48,6 @@ const ChooseTag: React.FC<ChooseTagProps> = ({ initTag, onChange }) => {
     editInputRef.current?.focus();
   }, [editInputValue]);
 
-  useEffect(() => {
-    onChange(tags);
-  }, [tags]);
   const handleClose = (removedTag: string) => {
     const newTags = tags.filter((tag) => tag.name !== removedTag);
     setTags(newTags);

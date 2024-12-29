@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import styles from "./Article.module.scss";
 import useTheme from "../../hook/useTheme";
 import { Button, Input } from "antd";
-import {
+import Icon, {
   RightOutlined,
   LeftOutlined,
   FolderOutlined,
   ReadOutlined,
+  DownOutlined,
 } from "@ant-design/icons";
 import { Outlet, RouteObject, useNavigate } from "react-router-dom";
 import { findFullPathByKey } from "../../router/utils/findFullPathByKey";
@@ -18,7 +19,9 @@ import { setSelectedKey } from "../../store/routersMapSlice";
 import { patchFolderOrder } from "../../api/folder";
 import useArticleRoutes from "../../router/useArticleRoutes";
 import RightMenu from "./components/RightMenu/RightMenu";
-
+import { FaAngleDown, FaChevronDown, FaFolderMinus } from "react-icons/fa";
+import { IoFolderOutline } from "react-icons/io5";
+import { RiBook2Line } from "react-icons/ri";
 type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
 
 const { DirectoryTree } = Tree;
@@ -82,12 +85,13 @@ const Actical = ({}) => {
         <div
           style={{
             display: "flex",
+            alignItems: "center",
           }}
         >
           {item.handle.type === "folder" ? (
-            <FolderOutlined style={{ marginRight: 10 }} />
+            <IoFolderOutline style={{ marginRight: 10 }} />
           ) : (
-            <ReadOutlined style={{ marginRight: 10 }} />
+            <RiBook2Line style={{ marginRight: 10 }} />
           )}
           <div>{item.handle.label}</div>
         </div>
@@ -254,10 +258,16 @@ const Actical = ({}) => {
 
         <DirectoryTree
           className={styles.menu}
+          style={{ opacity: isOpenMenu ? 1 : 0 }}
           multiple
           defaultExpandAll
           onSelect={onSelect}
           selectedKeys={[selectedKey]}
+          switcherIcon={
+            <Icon
+              component={FaChevronDown as React.ForwardRefExoticComponent<any>}
+            />
+          }
           onExpand={onExpand}
           showIcon={false}
           onRightClick={onRightClick}

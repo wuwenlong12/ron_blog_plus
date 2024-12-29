@@ -11,9 +11,10 @@ import { MenuProps } from "antd";
 import useTheme from "../hook/useTheme";
 import { setting } from "../setting";
 import Modal from "../components/Modal/Modal";
-import LeftModalDom from "../components/RightModalDom/RightModalDom";
+import RightModalDom from "../components/RightModalDom/RightModalDom";
 import { useDispatch, useSelector } from "react-redux";
 import { selectRoutes, setCurrentPath } from "../store/routersMapSlice";
+import LeftModalDom from "../components/LeftModalDom/LeftModalDom";
 
 const IndexLayout = () => {
   const { isDarkMode, handleToggleTheme } = useTheme();
@@ -99,13 +100,13 @@ const IndexLayout = () => {
         isShowModal={isRightMenuOpen}
         direction="right"
       >
-        <LeftModalDom
+        <RightModalDom
           menuItems={items}
           current={current}
           isDarkMode={isDarkMode}
           onNavigate={handleNavigate}
           onToggleTheme={handleToggleTheme}
-        ></LeftModalDom>
+        ></RightModalDom>
       </Modal>
       <Modal
         transition={{
@@ -117,7 +118,7 @@ const IndexLayout = () => {
         direction="left"
         style={{ width: "50%" }}
       >
-        left1213
+        <LeftModalDom></LeftModalDom>
       </Modal>
     </div>
   );

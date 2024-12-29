@@ -21,6 +21,7 @@
 /* 在全局 CSS 文件（例如 index.css）中 */
 html {
   font-size: 16px !important; /* 1rem = 16px */
+  scroll-behavior: smooth;
 }
 
 /* 覆盖 Ant Design 选中节点背景色 */
@@ -28,7 +29,12 @@ html {
   background-color: #e6f7ff !important; /* 自定义背景颜色 */
   color: #1890ff !important; /* 自定义字体颜色 */
 }
-
+.ant-tree-switcher {
+  position: absolute !important;
+  right: 0;
+  left: auto;
+  z-index: -1;
+}
 /* 鼠标悬停在选中节点时的背景色 */
 .ant-tree .ant-tree-treenode-selected:hover {
   background-color: #bae7ff !important;
@@ -45,9 +51,11 @@ html {
 body {
   background-color: $global-background-color;
   color: $global-font-color;
-  transition: background-color 0, 3s ease, color 0.3s ease;
+  transition: background-color 0, 3s ease, color 0.3s ease, opacity 0.3s ease !important;
 }
-
+// .particles-bg-canvas-self {
+//   background: #fff !important;
+// }
 // 深色模式样式
 .dark-mode {
   background-color: $background-color-dark;

@@ -3,8 +3,8 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { RouteObject, useMatches, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { BiSolidMessageSquareEdit } from "react-icons/bi";
-import { MdDelete, MdOutlineAccessTimeFilled } from "react-icons/md";
-import { RiSendPlaneFill } from "react-icons/ri";
+import { MdDelete, MdUpdate } from "react-icons/md";
+import { RiBook2Line, RiSendPlaneFill } from "react-icons/ri";
 import styles from "./ArticleMainContent.module.scss";
 import {
   deleteDirectoryInfoById,
@@ -34,11 +34,13 @@ import {
 } from "../../api/article";
 import Editor, { EditorRef } from "../../components/Editor/Editor";
 import { PartialBlock } from "@blocknote/core";
-import { FaMarkdown, FaTags } from "react-icons/fa";
+import { FaClock, FaMarkdown, FaTags } from "react-icons/fa";
 import { downloadMarkdown } from "../../utils/downloadMarkdown";
 import ChooseTag, {
   tag,
 } from "../Article/components/RightMenu/componets/ChooseTag";
+import { formatTimestampToDay, formatTimestampToTime } from "../../utils/date";
+import { IoFolderOutline } from "react-icons/io5";
 
 type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
 
@@ -60,7 +62,10 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
   const [isEditDescing, setIsEditDescing] = useState(false);
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
+  const [createdAt, setCreatedAt] = useState<Date>();
+  const [updatedAt, setUpdatedAt] = useState<Date>();
   const [tags, setTags] = useState<tag[]>([]);
+
   const [isLoadingContent, setIsLoadingContent] = useState(true);
   const [isEditable, setIsEditable] = useState(false);
   const [initContent, setInitContent] = useState<PartialBlock[] | undefined>(
@@ -87,7 +92,7 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
   // 当searchParams变化时，重新加载数据
   useEffect(() => {
     if (currentId) {
-      setInitContent(undefined);
+      initalizeData();
       init(currentId);
     }
   }, [currentId]);
@@ -120,26 +125,40 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
     };
 
     // 将 RouteObject 转换为 TreeDataNode 格式
-    const transformToTreeData = (node: RouteObject): TreeDataNode => {
+    const transformToTreeData = (
+      node: RouteObject,
+      level: number = 0 // 添加层级参数，默认为 0
+    ): TreeDataNode => {
       return {
         title: (
-          <div
-            style={{
-              display: "flex",
-            }}
-          >
-            {node.handle.type === "folder" ? (
-              <FolderOutlined style={{ marginRight: 10 }} />
-            ) : (
-              <ReadOutlined style={{ marginRight: 10 }} />
-            )}
-            <div>{node.handle.label}</div>
-          </div>
+          <>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              {node.handle.type === "folder" ? (
+                <IoFolderOutline style={{ marginRight: 10 }} />
+              ) : (
+                <RiBook2Line style={{ marginRight: 10 }} />
+              )}
+              <div
+                style={{
+                  fontSize: 18 - level, // 不同层级不同字体大小
+                  // color: level === 0 ? "#000" : "#555", // 不同层级不同颜色
+                  // borderBottom: level === 0 ? "1px solid #000" : "none",
+                }}
+              >
+                {node.handle.label}
+              </div>
+            </div>
+          </>
         ),
         key: node.handle?.key || "",
         isLeaf: !node.children || node.children.length === 0,
         children: node.children
-          ? node.children.map((child) => transformToTreeData(child))
+          ? node.children.map((child) => transformToTreeData(child, level + 1)) // 递归传递层级
           : undefined,
       };
     };
@@ -163,6 +182,7 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
       setDesc("描述");
       return;
     }
+
     if (currentType === "folder") {
       const res = await getDirectoryInfoById(id);
       if (res.code === 0) {
@@ -184,7 +204,11 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
       if (res.code === 0) {
         setName(res.data.title);
         setInitContent(res.data.content);
-        setTags(res.data.tags);
+        setTags(res.data.tags || []);
+        setCreatedAt(res.data.createdAt);
+        setUpdatedAt(res.data.updatedAt);
+        console.log(res.data.tags);
+
         setIsLoadingContent(false);
         if (!curJson) setContent(res.data.content);
       } else {
@@ -193,6 +217,15 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
     }
   };
 
+  useEffect(() => {
+    console.log(isLoadingContent);
+  }, [isLoadingContent]);
+  const initalizeData = () => {
+    setTags([]);
+    setInitContent(undefined);
+    setIsEditDescing(false);
+    setIsEditNameing(false);
+  };
   // 结束后更新数据
   const handleAnimationComplete = () => {
     if (breadcrumbRef.current) {
@@ -206,8 +239,6 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
       if (res.code === 0) {
         // 更新路由配置
         await loadArticleRoutes();
-
-        // navigate(path || "");
         message.success("保存成功！");
       } else {
         message.error("保存失败，请稍后重试");
@@ -304,9 +335,7 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
       });
     setIsShareModalOpen(false);
   };
-  const tagsChange = (tags: tag[]) => {
-    setTags(tags);
-  };
+
   return (
     <AnimatePresence>
       <motion.div
@@ -402,17 +431,32 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
         </div>
         <div style={{ display: "flex", alignItems: "center" }}>
           <div style={{ display: "flex", alignItems: "center" }}>
-            <Button
-              type="link"
-              icon={<MdOutlineAccessTimeFilled color="#383a42" />}
-            ></Button>
+            <Tooltip title={formatTimestampToTime(createdAt)}>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Button type="text" icon={<FaClock color="#383a42" />}>
+                  {formatTimestampToDay(createdAt)}
+                </Button>
+              </div>
+            </Tooltip>
+            <Tooltip title="下载markdown文件"></Tooltip>
+          </div>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Tooltip title={formatTimestampToTime(updatedAt)}>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Button type="text" icon={<MdUpdate color="#383a42" />}>
+                  {formatTimestampToDay(updatedAt)}
+                </Button>
+              </div>
+            </Tooltip>
+            <Tooltip title="下载markdown文件"></Tooltip>
           </div>
           <div style={{ display: "flex", alignItems: "center" }}>
             <Button type="link" icon={<FaTags color="#383a42" />}></Button>
-            <ChooseTag initTag={tags} onChange={tagsChange}></ChooseTag>
+            <ChooseTag tags={tags} setTags={setTags}></ChooseTag>
           </div>
         </div>
-        <hr />
+
+        <hr className={styles.hr} />
         {currentType === "folder" ? (
           <div className={styles.desc}>
             <Button

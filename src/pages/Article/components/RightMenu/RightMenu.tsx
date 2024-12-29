@@ -39,23 +39,49 @@ const RightMenu: React.FC<RightMenuProps> = ({
   const [tags, setTags] = useState<tag[]>([]);
   const { loadArticleRoutes } = useArticleRoutes();
   const { message } = App.useApp();
-  const menuItems = [
-    {
-      key: "create-folder",
-      label: "新建文件夹",
-      icon: <FolderOutlined />,
-    },
-    {
-      key: "create-file",
-      label: "新建文件",
-      icon: <ReadOutlined />,
-    },
-    {
-      key: "delete",
-      label: "删除",
-      icon: <DeleteOutlined />,
-    },
-  ];
+
+  const menuItems = () => {
+    if (contextMenu.node && contextMenu.node.type === "article") {
+      return [
+        {
+          key: "delete",
+          label: "删除",
+          icon: <DeleteOutlined />,
+        },
+      ];
+    } else if (contextMenu.node && contextMenu.node.type === "folder") {
+      return [
+        {
+          key: "create-folder",
+          label: "新建文件夹",
+          icon: <FolderOutlined />,
+        },
+        {
+          key: "create-file",
+          label: "新建文件",
+          icon: <ReadOutlined />,
+        },
+        {
+          key: "delete",
+          label: "删除",
+          icon: <DeleteOutlined />,
+        },
+      ];
+    } else {
+      return [
+        {
+          key: "create-folder",
+          label: "新建文件夹",
+          icon: <FolderOutlined />,
+        },
+        {
+          key: "delete",
+          label: "删除",
+          icon: <DeleteOutlined />,
+        },
+      ];
+    }
+  };
 
   const handleMenuClick: MenuProps["onClick"] = (e) => {
     setContextMenu((prev) => ({ ...prev, visible: false }));
@@ -76,10 +102,13 @@ const RightMenu: React.FC<RightMenuProps> = ({
   };
 
   const handleCreateFolder = () => {
+    setNewFolderName("");
     setIsAddFolderModalOpen(true); // 打开新建文件夹弹出框
   };
 
   const handleCreateFile = () => {
+    setTags([]);
+    setNewFileName("");
     setIsAddFileModalOpen(true); // 打开新建文件弹出框
   };
 
@@ -173,9 +202,6 @@ const RightMenu: React.FC<RightMenuProps> = ({
     };
   }, [contextMenu, setContextMenu]);
 
-  const tagsChange = (tags: tag[]) => {
-    setTags(tags);
-  };
   return (
     <div
       className={`${styles.rightMenu}`}
@@ -189,7 +215,7 @@ const RightMenu: React.FC<RightMenuProps> = ({
       <Menu
         onClick={handleMenuClick}
         selectable={false}
-        items={menuItems.map((item) => ({
+        items={menuItems().map((item) => ({
           key: item.key,
           icon: item.icon,
           label: item.label,
@@ -227,7 +253,7 @@ const RightMenu: React.FC<RightMenuProps> = ({
           placeholder="请输入文章名称"
         />
         <div style={{ padding: 10 }}></div>
-        <ChooseTag onChange={tagsChange}></ChooseTag>
+        <ChooseTag tags={tags} setTags={setTags}></ChooseTag>
       </Modal>
 
       {/* 删除确认弹出框 */}

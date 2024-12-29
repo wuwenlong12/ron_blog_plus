@@ -1,11 +1,15 @@
-import React from 'react';
+import React from "react";
+import { Tree } from "antd";
+import ParticlesBg from "particles-bg";
+import styles from "./Diary.module.scss";
+const { TreeNode } = Tree;
 
-const Diary = () => {
-    return (
-        <div>
-            日记
-        </div>
-    );
-}
+const MyTree: React.FC = () => {
+  return (
+    <div className={styles.container}>
+      <ParticlesBg color="#fff" num={100} type="color" />
+    </div>
+  );
+};
 
-export default Diary;
+export default MyTree;
