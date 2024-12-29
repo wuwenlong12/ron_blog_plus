@@ -17,4 +17,4 @@ export const deleteTag = (id: string) =>
     },
   });
 //查找全部tag
-export const getTag = () => http.delete<any, ResponseGetTag>(API.TAG, {});
+export const getTag = () => http.get<any, ResponseGetTag>(API.TAG, {});

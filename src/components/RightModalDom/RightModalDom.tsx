@@ -24,7 +24,7 @@ const RightModalDom: React.FC<RightModalDomProps> = ({
   };
 
   return (
-    <ThemeView className={styles.container}>
+    <div className={styles.container}>
       <Menu
         style={{ background: "transparent", border: "none", textAlign: "left" }}
         className={styles.menu}
@@ -50,7 +50,7 @@ const RightModalDom: React.FC<RightModalDomProps> = ({
           }
         />
       </div>
-    </ThemeView>
+    </div>
   );
 };
 

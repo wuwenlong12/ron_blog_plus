@@ -98,7 +98,7 @@ const IndexLayout = () => {
           stiffness: 300, // 增加刚度，让弹跳更迅速
         }}
         isShowModal={isRightMenuOpen}
-        direction="right"
+        direction="top"
       >
         <RightModalDom
           menuItems={items}
@@ -116,7 +116,7 @@ const IndexLayout = () => {
         }}
         isShowModal={isLeftMenuOpen}
         direction="left"
-        style={{ width: "50%" }}
+        style={{ width: "70%" }}
       >
         <LeftModalDom></LeftModalDom>
       </Modal>

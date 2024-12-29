@@ -12,7 +12,8 @@ import {
   postDirectoryInfoById,
 } from "../../../../api/folder";
 import useArticleRoutes from "../../../../router/useArticleRoutes";
-import ChooseTag, { tag } from "./componets/ChooseTag";
+import ChooseTag from "../../../../components/ChooseTag";
+import { tag } from "../../../../api/tag/type";
 
 type content = {
   visible: boolean;

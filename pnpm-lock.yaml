@@ -71,6 +71,9 @@ importers:
       react-icons:
         specifier: ^5.4.0
         version: 5.4.0(react@18.3.1)
+      react-mouse-particles:
+        specifier: ^1.1.5
+        version: 1.1.5
       react-redux:
         specifier: ^9.1.2
         version: 9.1.2(@types/react@18.3.12)(react@18.3.1)(redux@5.0.1)
@@ -5305,6 +5308,10 @@ packages:
     resolution: {integrity: sha512-OCVPnIObs4N29kxTjzLfUryOkvZEq+pf8jTF0lg8E7uETuWHA+v7j3c/xJmiqpX450191LlmZfUKkXxkTry7nA==}
     engines: {node: ^10 || ^12 || >=14}
 
+  power-mode-input@1.0.3:
+    resolution: {integrity: sha512-53f2x4htVIkc3LjWgoGVaHtx4Oz7YE58nx6ayYsuUqJQvjyotXn+dyp1xjmBnZ2KRjIHjWpmZocBAGKWhwXQPA==}
+    engines: {node: '>=8', npm: '>=5'}
+
   prelude-ls@1.1.2:
     resolution: {integrity: sha512-ESF23V4SKG6lVSGZgYNpbsiaAkdab6ZgOxe52p7+Kid3W3u3bxR4Vfd/o21dmN7jSt0IwgZ4v5MUd26FEtXE9w==}
     engines: {node: '>= 0.8.0'}
@@ -5761,6 +5768,14 @@ packages:
 
   react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
+
+  react-mouse-particles@1.1.3:
+    resolution: {integrity: sha512-IxQk01PQisj5G8xaPVSOytg3gT7/taLzxDL7EXbwdijTGU3bXgxtYwBfcUBpiO4WWGNcclaIiUCWXjvlrv8Fgw==}
+    engines: {node: '>=8', npm: '>=5'}
+
+  react-mouse-particles@1.1.5:
+    resolution: {integrity: sha512-LXwKN00cWQCTHgbRR2ywKZVSkXaYcZrb3KKU/Qaz4suV5FfE3t5dkgZ9qjdZ+0Bu0XdO8UPRCFGGMV7uBBpjQg==}
+    engines: {node: '>=8', npm: '>=5'}
 
   react-number-format@5.4.2:
     resolution: {integrity: sha512-cg//jVdS49PYDgmcYoBnMMHl4XNTMuV723ZnHD2aXYtWWWqbVF3hjQ8iB+UZEuXapLbeA8P8H+1o6ZB1lcw3vg==}
@@ -13619,6 +13634,11 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
+  power-mode-input@1.0.3:
+    dependencies:
+      proton-engine: 4.2.1
+      raf-manager: 0.3.0
+
   prelude-ls@1.1.2: {}
 
   prelude-ls@1.2.1: {}
@@ -14205,6 +14225,18 @@ snapshots:
   react-is@17.0.2: {}
 
   react-is@18.3.1: {}
+
+  react-mouse-particles@1.1.3:
+    dependencies:
+      proton-engine: 4.2.1
+      raf-manager: 0.3.0
+
+  react-mouse-particles@1.1.5:
+    dependencies:
+      power-mode-input: 1.0.3
+      proton-engine: 4.2.1
+      raf-manager: 0.3.0
+      react-mouse-particles: 1.1.3
 
   react-number-format@5.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:

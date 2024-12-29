@@ -36,11 +36,10 @@ import Editor, { EditorRef } from "../../components/Editor/Editor";
 import { PartialBlock } from "@blocknote/core";
 import { FaClock, FaMarkdown, FaTags } from "react-icons/fa";
 import { downloadMarkdown } from "../../utils/downloadMarkdown";
-import ChooseTag, {
-  tag,
-} from "../Article/components/RightMenu/componets/ChooseTag";
+import ChooseTag from "../../components/ChooseTag";
 import { formatTimestampToDay, formatTimestampToTime } from "../../utils/date";
 import { IoFolderOutline } from "react-icons/io5";
+import { tag } from "../../api/tag/type";
 
 type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
 

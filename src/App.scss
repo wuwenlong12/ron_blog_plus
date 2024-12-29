@@ -51,11 +51,9 @@ html {
 body {
   background-color: $global-background-color;
   color: $global-font-color;
-  transition: background-color 0, 3s ease, color 0.3s ease, opacity 0.3s ease !important;
+  transition: background-color 0, 3s ease, color 0.3s ease;
 }
-// .particles-bg-canvas-self {
-//   background: #fff !important;
-// }
+
 // 深色模式样式
 .dark-mode {
   background-color: $background-color-dark;

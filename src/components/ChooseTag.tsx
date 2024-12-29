@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import type { InputRef } from "antd";
 import { Flex, Input, Tag, theme, Tooltip } from "antd";
-import { debounce } from "../../../../../utils/debounce";
+import { debounce } from "../utils/debounce";
+import type { tag } from "../api/tag/type";
 
 // TagInput 样式
 const tagInputStyle: React.CSSProperties = {
@@ -21,14 +22,18 @@ const getRandomColor = () => {
   }
   return color;
 };
-export type tag = { name: string; color: string };
 
 interface ChooseTagProps {
   tags: tag[];
   setTags: React.Dispatch<React.SetStateAction<tag[]>>;
+  auth?: boolean;
 }
 
-const ChooseTag: React.FC<ChooseTagProps> = ({ tags, setTags }) => {
+const ChooseTag: React.FC<ChooseTagProps> = ({
+  tags,
+  setTags,
+  auth = false,
+}) => {
   const { token } = theme.useToken();
 
   const [inputVisible, setInputVisible] = useState(false);
@@ -62,11 +67,7 @@ const ChooseTag: React.FC<ChooseTagProps> = ({ tags, setTags }) => {
   };
 
   const handleInputConfirm = () => {
-    if (
-      inputValue &&
-      !tags.some((tag) => tag.name === inputValue) &&
-      tags.length < 3
-    ) {
+    if (inputValue && !tags.some((tag) => tag.name === inputValue) && auth) {
       setTags([...tags, { name: inputValue, color: getRandomColor() }]);
     }
     setInputVisible(false);
@@ -74,6 +75,7 @@ const ChooseTag: React.FC<ChooseTagProps> = ({ tags, setTags }) => {
   };
 
   const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!auth) return;
     setEditInputValue(e.target.value);
   };
 
@@ -92,6 +94,7 @@ const ChooseTag: React.FC<ChooseTagProps> = ({ tags, setTags }) => {
   };
 
   const handleTagClick = (index: number) => {
+    if (!auth) return;
     const newTags = [...tags];
     newTags[index].color = getRandomColor(); // 更新该 tag 的背景色
     setTags(newTags);
@@ -118,14 +121,20 @@ const ChooseTag: React.FC<ChooseTagProps> = ({ tags, setTags }) => {
         const tagElem = (
           <Tag
             key={tag.name}
-            closable={true}
-            style={{ userSelect: "none", backgroundColor: tag.color }}
+            closable={auth}
+            style={{
+              userSelect: "none",
+              backgroundColor: tag.color,
+              border: "none",
+              color: "#fff",
+              fontWeight: "500",
+            }}
             onClose={() => handleClose(tag.name)}
             onClick={() => handleTagClick(index)} // 点击时改变背景色
           >
             <span
               onDoubleClick={(e) => {
-                if (index !== 0) {
+                if (auth) {
                   setEditInputIndex(index);
                   setEditInputValue(tag.name);
                   e.preventDefault();
@@ -155,7 +164,7 @@ const ChooseTag: React.FC<ChooseTagProps> = ({ tags, setTags }) => {
           onBlur={handleInputConfirm}
           onPressEnter={handleInputConfirm}
         />
-      ) : tags.length < 3 ? (
+      ) : tags.length < 3 && auth ? (
         <Tag style={tagPlusStyle} icon={<PlusOutlined />} onClick={showInput}>
           New Tag
         </Tag>

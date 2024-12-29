@@ -2,11 +2,10 @@ import { PartialBlock } from "@blocknote/core";
 import { ResponseBase } from "../type";
 
 export interface ResponseGetTag extends ResponseBase {
-  data: GetTag;
+  data: tag[];
 }
-export type GetTag = {
-  _id: string;
+export type tag = {
+  // id: string;
   name: string;
-  createdAt: Date;
-  updatedAt: Date;
+  color: string;
 };

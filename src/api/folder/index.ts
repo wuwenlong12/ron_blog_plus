@@ -1,5 +1,5 @@
 import http from "..";
-import { tag } from "../../pages/Article/components/RightMenu/componets/ChooseTag";
+import { tag } from "../tag/type";
 import { ResponseBase } from "../type";
 import {
   ResponseGetArticleDirectory,

@@ -7,7 +7,7 @@ const { TreeNode } = Tree;
 const MyTree: React.FC = () => {
   return (
     <div className={styles.container}>
-      <ParticlesBg color="#fff" num={100} type="color" />
+      <ParticlesBg color="#fff" num={300} type="custom" />
     </div>
   );
 };

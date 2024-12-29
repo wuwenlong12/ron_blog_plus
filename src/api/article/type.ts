@@ -1,6 +1,6 @@
 import { PartialBlock } from "@blocknote/core";
 import { ResponseBase } from "../type";
-import { tag } from "../../pages/Article/components/RightMenu/componets/ChooseTag";
+import { tag } from "../tag/type";
 
 export interface ResponseGetArticleContent extends ResponseBase {
   data: ArticleContent;
@@ -17,3 +17,15 @@ export type ArticleContent = {
 export interface ResponseUpdateArticleContent extends ResponseBase {
   data: ArticleContent;
 }
+
+export interface ResponseGetAllArticleInfo extends ResponseBase {
+  data: ArticleInfos;
+}
+
+interface ArticleInfo {
+  _id: string;
+  title: string;
+  updatedAt: string; // 使用 ISO 日期字符串
+}
+
+type ArticleInfos = Record<string, ArticleInfo[]>;

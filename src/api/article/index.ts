@@ -1,11 +1,13 @@
 import http from "..";
 import {
+  ResponseGetAllArticleInfo,
   ResponseGetArticleContent,
   ResponseUpdateArticleContent,
 } from "./type";
 
 enum API {
   ARTICLE_CONTENT = "/article/content",
+  ARTICLE = "/article",
 }
 
 //根据目录id获取w文章内容
@@ -21,3 +23,6 @@ export const updateArticleContentById = (id: string, content: unknown) =>
     id,
     content,
   });
+
+export const getAllArticleInfo = () =>
+  http.get<any, ResponseGetAllArticleInfo>(API.ARTICLE);
