@@ -1,0 +1,20 @@
+@import "../../setting/variables.scss";
+.container {
+  text-align: center;
+  backdrop-filter: blur(60px); /* 背景模糊 */
+  -webkit-backdrop-filter: blur(60px); /* 兼容 Safari */
+  //   background-color: rgba($color: #fff, $alpha: 0.9);
+  // height: 100vh;
+  .icon {
+    width: 100px;
+  }
+  .buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    .btnItem {
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+  }
+}

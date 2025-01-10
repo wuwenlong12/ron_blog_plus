@@ -118,7 +118,15 @@ const IndexLayout = () => {
         direction="left"
         style={{ width: "70%" }}
       >
-        <LeftModalDom></LeftModalDom>
+        <div
+          style={{
+            paddingTop: 60,
+            height: "100vh",
+            backdropFilter: " blur(60px)",
+          }}
+        >
+          <LeftModalDom></LeftModalDom>
+        </div>
       </Modal>
     </div>
   );

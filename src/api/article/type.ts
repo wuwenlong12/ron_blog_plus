@@ -29,3 +29,24 @@ interface ArticleInfo {
 }
 
 type ArticleInfos = Record<string, ArticleInfo[]>;
+
+export interface ResponseGetArticleSummary extends ResponseBase {
+  data: ArticleSummaryData;
+}
+type ArticleSummaryData = {
+  articles: Articles[];
+  pagination: Pagination;
+};
+export type Articles = {
+  _id: string;
+  title: string;
+  tags: tag[];
+  summary: PartialBlock[];
+  createdAt: Date;
+  updatedAt: Date;
+};
+type Pagination = {
+  currentPage: number;
+  pageSize: number;
+  total: number;
+};

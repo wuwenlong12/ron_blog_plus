@@ -1,11 +1,10 @@
 @import "../../setting/variables.scss";
 .container {
-  padding-top: 60px;
   text-align: center;
   backdrop-filter: blur(60px); /* 背景模糊 */
   -webkit-backdrop-filter: blur(60px); /* 兼容 Safari */
   //   background-color: rgba($color: #fff, $alpha: 0.9);
-  height: 100vh;
+  // height: 100vh;
   .menu {
     display: flex;
     justify-content: space-around;

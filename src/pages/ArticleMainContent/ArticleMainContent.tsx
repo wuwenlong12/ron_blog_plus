@@ -40,6 +40,7 @@ import ChooseTag from "../../components/ChooseTag";
 import { formatTimestampToDay, formatTimestampToTime } from "../../utils/date";
 import { IoFolderOutline } from "react-icons/io5";
 import { tag } from "../../api/tag/type";
+import DesField from "./DesField";
 
 type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
 
@@ -428,32 +429,12 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
             </Button>
           </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Tooltip title={formatTimestampToTime(createdAt)}>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <Button type="text" icon={<FaClock color="#383a42" />}>
-                  {formatTimestampToDay(createdAt)}
-                </Button>
-              </div>
-            </Tooltip>
-            <Tooltip title="下载markdown文件"></Tooltip>
-          </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Tooltip title={formatTimestampToTime(updatedAt)}>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <Button type="text" icon={<MdUpdate color="#383a42" />}>
-                  {formatTimestampToDay(updatedAt)}
-                </Button>
-              </div>
-            </Tooltip>
-            <Tooltip title="下载markdown文件"></Tooltip>
-          </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Button type="link" icon={<FaTags color="#383a42" />}></Button>
-            <ChooseTag tags={tags} setTags={setTags}></ChooseTag>
-          </div>
-        </div>
+        <DesField
+          updatedAt={updatedAt}
+          createdAt={createdAt}
+          tags={tags}
+          setTags={setTags}
+        ></DesField>
 
         <hr className={styles.hr} />
         {currentType === "folder" ? (

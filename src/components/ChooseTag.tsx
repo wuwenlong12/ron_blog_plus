@@ -24,8 +24,8 @@ const getRandomColor = () => {
 };
 
 interface ChooseTagProps {
-  tags: tag[];
-  setTags: React.Dispatch<React.SetStateAction<tag[]>>;
+  tags: tag[] | null;
+  setTags?: React.Dispatch<React.SetStateAction<tag[]>>;
   auth?: boolean;
 }
 
@@ -53,7 +53,9 @@ const ChooseTag: React.FC<ChooseTagProps> = ({
     editInputRef.current?.focus();
   }, [editInputValue]);
 
+  if (!tags) return null;
   const handleClose = (removedTag: string) => {
+    if (!setTags) return;
     const newTags = tags.filter((tag) => tag.name !== removedTag);
     setTags(newTags);
   };
@@ -67,6 +69,7 @@ const ChooseTag: React.FC<ChooseTagProps> = ({
   };
 
   const handleInputConfirm = () => {
+    if (!setTags) return;
     if (inputValue && !tags.some((tag) => tag.name === inputValue) && auth) {
       setTags([...tags, { name: inputValue, color: getRandomColor() }]);
     }
@@ -80,6 +83,7 @@ const ChooseTag: React.FC<ChooseTagProps> = ({
   };
 
   const handleEditInputConfirm = () => {
+    if (!setTags) return;
     const newTags = [...tags];
     newTags[editInputIndex].name = editInputValue;
     setTags(newTags);
@@ -94,6 +98,7 @@ const ChooseTag: React.FC<ChooseTagProps> = ({
   };
 
   const handleTagClick = (index: number) => {
+    if (!setTags) return;
     if (!auth) return;
     const newTags = [...tags];
     newTags[index].color = getRandomColor(); // 更新该 tag 的背景色

@@ -16,6 +16,7 @@ export default function Timeline() {
   );
   useEffect(() => {
     init();
+    console.log(timelineItems);
   }, []);
 
   const init = async () => {
@@ -65,7 +66,7 @@ export default function Timeline() {
     <div className={styles.starContainer}>
       <div className={styles.middleInfo}>
         <MdOutlineAccessTimeFilled className={styles.middleIcon} />
-        <div className={styles.middleNum}>{70}</div>
+        <div className={styles.middleNum}>{timelineItems.length - 1}</div>
         <div className={styles.middleText}>时间轴</div>
       </div>
       <div className={styles.main}>

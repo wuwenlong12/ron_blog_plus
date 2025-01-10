@@ -16,6 +16,55 @@ import { FaBeer, FaMarkdown } from "react-icons/fa"; // 导入 FontAwesome 中�
 import { AiOutlineOrderedList } from "react-icons/ai";
 import Toc from "react-toc";
 import TreeDoc from "./TreeDoc/TreeDoc";
+import { upload } from "../../api/upload";
+import { md5, Message } from "js-md5";
+
+async function uploadFile(file: File) {
+  const res = await uploadFileInChunks(file);
+  console.log(res);
+
+  return res as string;
+}
+const readFile = async (file: any) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as ArrayBuffer);
+    reader.onerror = reject;
+    reader.readAsArrayBuffer(file);
+  });
+};
+const uploadFileInChunks = (file: File, chunkSize = 1024 * 1024) => {
+  return new Promise(async (resolve, reject) => {
+    const fileSize = file.size;
+
+    const fileName = file.name;
+
+    const totalChunks = Math.ceil(fileSize / chunkSize);
+
+    const fileContent = await readFile(file);
+    const fileHash = md5(fileContent as Message); // 计算文件哈希值
+    console.log(fileHash);
+    for (let i = 0; i < totalChunks; i++) {
+      const chunk = file.slice(
+        chunkSize * i,
+        Math.min(chunkSize * (i + 1), fileSize)
+      );
+      const formData = new FormData();
+      formData.append("file", chunk);
+      formData.append("name", fileName);
+      formData.append("size", fileSize.toString());
+      formData.append("type", file.type);
+      formData.append("offset", (chunkSize * i).toString());
+      formData.append("hash", fileHash); // 文件哈希值
+      console.log(formData);
+      const res = await upload(formData);
+      if (res.code !== 0) reject(res.data);
+      if (i + 1 === totalChunks) {
+        resolve(res.fileUrl);
+      }
+    }
+  });
+};
 
 interface HeadingNode {
   tag: string; // h1, h2, h3
@@ -27,7 +76,8 @@ interface HeadingNode {
 interface EditorProps {
   initialContent: PartialBlock[] | undefined;
   editable: boolean;
-  onChange: (document: unknown) => void;
+  isSummary?: boolean;
+  onChange?: (document: unknown) => void;
 }
 
 export interface EditorRef {
@@ -35,7 +85,7 @@ export interface EditorRef {
 }
 
 const Editor = forwardRef<EditorRef, EditorProps>(
-  ({ initialContent, editable = false, onChange }, ref) => {
+  ({ initialContent, editable = false, onChange, isSummary = false }, ref) => {
     const { isDarkMode } = useTheme(); // 获取当前主题状态
     const [markdownFromBlocks, setMarkdownFromBlocks] = useState<
       string | undefined
@@ -44,6 +94,7 @@ const Editor = forwardRef<EditorRef, EditorProps>(
     const editor = useCreateBlockNote({
       dictionary: locales.zh,
       initialContent,
+      uploadFile,
     });
 
     function extractHeadingsToTree(html: string): HeadingNode[] {
@@ -121,11 +172,13 @@ const Editor = forwardRef<EditorRef, EditorProps>(
 
     return (
       <div className={styles.container}>
-        <div className={styles.contentInPage}>
-          <TreeDoc html={html}></TreeDoc>
-        </div>
+        {isSummary ? null : (
+          <div className={styles.contentInPage}>
+            <TreeDoc html={html}></TreeDoc>
+          </div>
+        )}
 
-        {editable ? (
+        {editable && onChange ? (
           <BlockNoteView
             style={{ fontSize: "1rem" }}
             editor={editor}
