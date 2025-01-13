@@ -74,7 +74,7 @@ interface HeadingNode {
 }
 
 interface EditorProps {
-  initialContent: PartialBlock[] | undefined;
+  initialContent?: PartialBlock[] | undefined;
   editable: boolean;
   isSummary?: boolean;
   onChange?: (document: unknown) => void;
@@ -85,7 +85,36 @@ export interface EditorRef {
 }
 
 const Editor = forwardRef<EditorRef, EditorProps>(
-  ({ initialContent, editable = false, onChange, isSummary = false }, ref) => {
+  (
+    {
+      initialContent = [
+        {
+          id: "b7e79971-43cb-42d7-886c-5598f5c911fa",
+          type: "paragraph",
+          props: {
+            textColor: "default",
+            backgroundColor: "default",
+            textAlignment: "left",
+          },
+          content: [
+            {
+              type: "text",
+              text: "快开始分享你的知识吧～",
+              styles: {
+                italic: true,
+                underline: true,
+              },
+            },
+          ],
+          children: [],
+        },
+      ],
+      editable = false,
+      onChange,
+      isSummary = false,
+    },
+    ref
+  ) => {
     const { isDarkMode } = useTheme(); // 获取当前主题状态
     const [markdownFromBlocks, setMarkdownFromBlocks] = useState<
       string | undefined
@@ -182,7 +211,7 @@ const Editor = forwardRef<EditorRef, EditorProps>(
           <BlockNoteView
             style={{ fontSize: "1rem" }}
             editor={editor}
-            editable={editable}
+            editable={true}
             onChange={debounce(() => onChange(editor.document), 3000)}
             theme={isDarkMode ? "dark" : "light"}
             formattingToolbar

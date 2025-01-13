@@ -21,7 +21,7 @@ export default function Tag() {
         <div className={styles.middleText}>标签</div>
       </div>
       <div className={styles.main}>
-        <ChooseTag tags={tags} setTags={setTags}></ChooseTag>
+        <ChooseTag initTags={tags} onChange={(e) => setTags(e)}></ChooseTag>
       </div>
     </div>
   );

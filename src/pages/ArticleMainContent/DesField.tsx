@@ -9,15 +9,15 @@ import { tag } from "../../api/tag/type";
 interface DesFieldProps {
   createdAt?: Date; // 创建时间的时间戳
   updatedAt?: Date; // 更新时间的时间戳
-  tags: tag[] | null; // 当前的标签
-  setTags?: React.Dispatch<React.SetStateAction<tag[]>>; // 更新标签的函数
+  initTags: tag[] | null; // 当前的标签
+  onChange?: (tags: tag[]) => void;
 }
 
 const DesField: React.FC<DesFieldProps> = ({
   createdAt,
   updatedAt,
-  tags,
-  setTags,
+  initTags,
+  onChange,
 }) => {
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
@@ -42,11 +42,16 @@ const DesField: React.FC<DesFieldProps> = ({
           </div>
         </Tooltip>
       </div>
-
       {/* 标签 */}
       <div style={{ display: "flex", alignItems: "center" }}>
         <Button type="link" icon={<FaTags color="#383a42" />}></Button>
-        <ChooseTag tags={tags} setTags={setTags} />
+        <ChooseTag
+          initTags={initTags}
+          onChange={(e) => {
+            if (!onChange) return;
+            onChange(e);
+          }}
+        />
       </div>
     </div>
   );

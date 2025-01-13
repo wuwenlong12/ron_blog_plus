@@ -1,0 +1,40 @@
+{
+  "_id": {
+    "$oid": "676eba2a20d5c13536b60ef9"
+  },
+  "title": "124",
+  "content": [
+    {
+      "id": "b7e79971-43cb-42d7-886c-5598f5c911fa",
+      "type": "paragraph",
+      "props": {
+        "textColor": "default",
+        "backgroundColor": "default",
+        "textAlignment": "left"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "快开始分享你的知识吧～",
+          "styles": {
+            "italic": true,
+            "underline": true
+          }
+        }
+      ],
+      "children": []
+    }
+  ],
+  "parentFolder": {
+    "$oid": "67692acb6cc461f42599ac16"
+  },
+  "tags": [],
+  "order": 4,
+  "createdAt": {
+    "$date": "2024-12-27T14:31:06.043Z"
+  },
+  "updatedAt": {
+    "$date": "2024-12-30T09:23:13.482Z"
+  },
+  "__v": 0
+}

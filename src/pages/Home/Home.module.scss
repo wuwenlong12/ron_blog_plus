@@ -37,13 +37,37 @@
     justify-content: center;
     .leftCardList {
       flex: 1;
-      max-width: 800px;
+      max-width: 600px;
       margin-right: 3rem;
+      margin-left: 3rem;
+
       .leftCard {
         box-shadow: $box-shadow-md;
         margin-top: 20px;
-        padding: 20px;
-        border-radius: 2px;
+        // padding: 20px;
+        border-radius: 10px;
+        position: relative;
+        overflow: hidden;
+        top: 0;
+        transition: all 0.3s ease-in-out;
+        cursor: pointer;
+        &:hover {
+          top: 4px;
+          .cardTitle {
+            color: #27b3df;
+          }
+        }
+        .leftCardTopImage {
+          background-color: #e8ad57;
+          width: 100%;
+          height: 6px;
+          position: absolute;
+          top: 0;
+          border-radius: 10px 10px 0 0;
+        }
+        .cardTitle {
+          font-weight: 400;
+        }
       }
     }
     .rightCardList {
@@ -63,5 +87,17 @@
   .cardTitle {
     font-size: 30px;
     font-weight: bold;
+  }
+}
+@media (max-width: $breakpoint-md) {
+  .main {
+    justify-content: center;
+    .leftCardList {
+      margin-right: 1rem;
+      margin-left: 1rem;
+    }
+    .rightCardList {
+      display: none;
+    }
   }
 }

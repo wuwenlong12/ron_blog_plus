@@ -204,6 +204,8 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
       if (res.code === 0) {
         setName(res.data.title);
         setInitContent(res.data.content);
+        console.log("res.data.tags" + JSON.stringify(tags));
+
         setTags(res.data.tags || []);
         setCreatedAt(res.data.createdAt);
         setUpdatedAt(res.data.updatedAt);
@@ -430,10 +432,11 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
           </div>
         </div>
         <DesField
+          key={Math.random()}
           updatedAt={updatedAt}
           createdAt={createdAt}
-          tags={tags}
-          setTags={setTags}
+          initTags={tags}
+          onChange={(e) => setTags(e)}
         ></DesField>
 
         <hr className={styles.hr} />

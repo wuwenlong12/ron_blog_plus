@@ -9,7 +9,7 @@ export const StaticRoutesMap: RouteObject[] = [
     handle: {
       key: "Home",
       label: "主页",
-      Icon: iconKey.HomeOutlined, // 用字符串表示图标
+      Icon: iconKey.FaHome, // 用字符串表示图标
       requiresAuth: false,
     },
     children: [
@@ -19,7 +19,7 @@ export const StaticRoutesMap: RouteObject[] = [
         handle: {
           key: "Home",
           label: "主页",
-          Icon: iconKey.HomeOutlined, // 用字符串表示图标
+          Icon: iconKey.FaHome, // 用字符串表示图标
           requiresAuth: false,
         },
       },
@@ -29,7 +29,7 @@ export const StaticRoutesMap: RouteObject[] = [
         handle: {
           key: "Diary",
           label: "日记",
-          Icon: iconKey.HomeOutlined, // 用字符串表示图标
+          Icon: iconKey.FaSun, // 用字符串表示图标
           requiresAuth: false,
         },
       },
@@ -43,7 +43,7 @@ export const StaticRoutesMap: RouteObject[] = [
             handle: {
               key: "MainPage",
               label: "主页",
-              Icon: iconKey.HomeOutlined, // 用字符串表示图标
+              Icon: iconKey.FaHome, // 用字符串表示图标
               requiresAuth: false,
             },
           },
@@ -51,7 +51,7 @@ export const StaticRoutesMap: RouteObject[] = [
         handle: {
           key: "Article",
           label: "文章",
-          Icon: iconKey.HomeOutlined, // 用字符串表示图标
+          Icon: iconKey.MdArticle, // 用字符串表示图标
           requiresAuth: false,
         },
       },
@@ -61,7 +61,7 @@ export const StaticRoutesMap: RouteObject[] = [
         handle: {
           key: "About",
           label: "关于",
-          Icon: iconKey.HomeOutlined, // 用字符串表示图标
+          Icon: iconKey.FaMeteor, // 用字符串表示图标
           requiresAuth: false,
         },
       },

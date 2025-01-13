@@ -29,7 +29,10 @@ export const updateArticleContentById = (id: string, content: unknown) =>
 export const getAllArticleInfo = () =>
   http.get<any, ResponseGetAllArticleInfo>(API.ARTICLE);
 
-export const getArticleSummary = (pageNumber: number, limitNumber: number) =>
+export const getArticleSummary = (
+  pageNumber: number = 1,
+  limitNumber: number = 10
+) =>
   http.get<any, ResponseGetArticleSummary>(API.ARTICLE_SUMMARY, {
     params: {
       pageNumber,

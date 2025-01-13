@@ -254,7 +254,13 @@ const RightMenu: React.FC<RightMenuProps> = ({
           placeholder="请输入文章名称"
         />
         <div style={{ padding: 10 }}></div>
-        <ChooseTag tags={tags} setTags={setTags}></ChooseTag>
+        <ChooseTag
+          initTags={tags}
+          onChange={(e) => {
+            setTags(e);
+          }}
+          auth={true}
+        ></ChooseTag>
       </Modal>
 
       {/* 删除确认弹出框 */}

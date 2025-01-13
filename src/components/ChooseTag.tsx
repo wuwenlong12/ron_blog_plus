@@ -24,18 +24,18 @@ const getRandomColor = () => {
 };
 
 interface ChooseTagProps {
-  tags: tag[] | null;
-  setTags?: React.Dispatch<React.SetStateAction<tag[]>>;
+  initTags: tag[] | null;
   auth?: boolean;
+  onChange?: (tags: tag[]) => void;
 }
 
 const ChooseTag: React.FC<ChooseTagProps> = ({
-  tags,
-  setTags,
+  initTags,
   auth = false,
+  onChange,
 }) => {
   const { token } = theme.useToken();
-
+  const [tags, setTags] = useState(initTags);
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [editInputIndex, setEditInputIndex] = useState(-1);
@@ -58,6 +58,8 @@ const ChooseTag: React.FC<ChooseTagProps> = ({
     if (!setTags) return;
     const newTags = tags.filter((tag) => tag.name !== removedTag);
     setTags(newTags);
+    if (!onChange || !tags) return;
+    onChange(newTags);
   };
 
   const showInput = () => {
@@ -70,11 +72,15 @@ const ChooseTag: React.FC<ChooseTagProps> = ({
 
   const handleInputConfirm = () => {
     if (!setTags) return;
+    let newTags;
     if (inputValue && !tags.some((tag) => tag.name === inputValue) && auth) {
-      setTags([...tags, { name: inputValue, color: getRandomColor() }]);
+      newTags = [...tags, { name: inputValue, color: getRandomColor() }];
+      setTags(newTags);
     }
     setInputVisible(false);
     setInputValue("");
+    if (!onChange || !tags) return;
+    onChange(newTags as tag[]);
   };
 
   const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,6 +109,8 @@ const ChooseTag: React.FC<ChooseTagProps> = ({
     const newTags = [...tags];
     newTags[index].color = getRandomColor(); // 更新该 tag 的背景色
     setTags(newTags);
+    if (!onChange || !tags) return;
+    onChange(newTags);
   };
 
   return (
