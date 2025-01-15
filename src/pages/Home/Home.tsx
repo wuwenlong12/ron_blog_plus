@@ -24,37 +24,16 @@ import Typist from "react-typist";
 import "react-typist/dist/Typist.css";
 import { FaArrowDown } from "react-icons/fa";
 import DataCard from "./components/DateCard/DataCard";
+import InfoList from "./components/InfoList/InfoList";
+import BlogCard from "./components/BlogCard/BlogCard";
 
 const Main = () => {
-  const [articles, setArticles] = useState<Articles[]>([]);
-  const [pagination, setPagination] = useState<PaginationType>();
-  const [currentPage, setCurrentPage] = useState(1);
-  const articleRoutesMap = useSelector(
-    (state: RootState) => state.routesMap.articleRoutesMap
-  );
-  const navigate = useNavigate();
-
   const mainContentRef = useRef<HTMLDivElement>(null);
 
   const scrollToContent = () => {
     mainContentRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-  useEffect(() => {
-    init();
-  }, [currentPage]);
-  const init = async () => {
-    const res = await getArticleSummary(currentPage);
-    setArticles(res.data.articles);
-    setPagination(res.data.pagination);
-  };
-  const paginationChange: PaginationProps["onChange"] = (page) => {
-    setCurrentPage(page);
-    init();
-  };
-  const navigateArticle = (id: string) => {
-    const path = "/Article/" + findFullPathByKey(articleRoutesMap, id);
-    navigate(path || "");
-  };
+
   return (
     <div className={styles.container}>
       <div className={styles.bg}>
@@ -93,42 +72,45 @@ const Main = () => {
           </Button>
         </div>
       </div>
+
       <div ref={mainContentRef} className={styles.main}>
         <DataCard></DataCard>
-        <AnimatePresence>
-          <motion.div
-            key={currentPage}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            // exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className={styles.leftCardList}
-          >
-            {articles.map((item, index) => (
-              <div
-                key={item._id}
-                className={styles.leftCard}
-                onClick={() => navigateArticle(item._id)}
-              >
-                <div className={styles.leftCardTopImage}></div>
-                <div style={{ padding: 20 }}>
-                  <div className={styles.cardTitle}>{item.title}</div>
-                  <hr className={styles.hr} />
-                  <Editor
-                    isSummary={true}
-                    initialContent={item.summary}
-                    editable={false}
-                  ></Editor>
-                  <DesField
-                    initTags={item.tags}
-                    createdAt={item.createdAt}
-                    updatedAt={item.updatedAt}
-                  ></DesField>
-                </div>
-              </div>
-            ))}
-          </motion.div>
-        </AnimatePresence>
+        <InfoList
+          title="项目产品"
+          desc="设计及开发项目总结，不限于开发完成的项目，包括一些产品概念..."
+          infos={[
+            {
+              title: "RONBLOG1.0",
+              imgUrl: "https://huohuo90.com:3001/files/1730124974492.jpg",
+              date: " 2024-10-28",
+              classify: " react/express",
+              like: 28,
+              clickUrl: "www.baidu.com",
+            },
+            {
+              title: "RONBLOG1.0",
+              imgUrl: "https://huohuo90.com:3001/files/1730124514106.jpg",
+              date: " 2024-10-28",
+              classify: " react/express",
+              like: 28,
+              clickUrl: "www.baidu.com",
+            },
+            {
+              title: "RONBLOG1.0",
+              imgUrl: "https://huohuo90.com:3001/files/1730124514106.jpg",
+              date: " 2024-10-28",
+              classify: " react/express",
+              like: 28,
+              clickUrl: "www.baidu.com",
+            },
+          ]}
+          style={{ marginTop: 40 }}
+        ></InfoList>
+        <BlogCard
+          title="博客文章"
+          desc="我的所思、所想，像模像样的文章..."
+        ></BlogCard>
+
         <div className={styles.rightCardList}>
           <div className={styles.rightCardItem}>
             <SelfInfoCard></SelfInfoCard>
@@ -138,13 +120,6 @@ const Main = () => {
           </div>
         </div>
       </div>
-      <Pagination
-        style={{ marginBottom: 20 }}
-        align="center"
-        onChange={paginationChange}
-        defaultCurrent={1}
-        total={pagination?.total}
-      />
     </div>
   );
 };
