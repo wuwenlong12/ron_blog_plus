@@ -90,44 +90,6 @@ const IndexLayout = () => {
         current={current} // 传递当前选中的菜单项
       ></Header>
       <Outlet />
-
-      <Modal
-        transition={{
-          type: "spring",
-          damping: 20, // 减少阻尼，让弹跳效果更强
-          stiffness: 300, // 增加刚度，让弹跳更迅速
-        }}
-        isShowModal={isRightMenuOpen}
-        direction="top"
-      >
-        <RightModalDom
-          menuItems={items}
-          current={current}
-          isDarkMode={isDarkMode}
-          onNavigate={handleNavigate}
-          onToggleTheme={handleToggleTheme}
-        ></RightModalDom>
-      </Modal>
-      <Modal
-        transition={{
-          type: "tween",
-          ease: "easeInOut", // 可选 "easeIn", "easeOut", "easeInOut", "linear"
-          duration: 0.5,
-        }}
-        isShowModal={isLeftMenuOpen}
-        direction="left"
-        style={{ width: "70%" }}
-      >
-        <div
-          style={{
-            paddingTop: 60,
-            height: "100vh",
-            backdropFilter: " blur(60px)",
-          }}
-        >
-          <LeftModalDom></LeftModalDom>
-        </div>
-      </Modal>
     </div>
   );
 };

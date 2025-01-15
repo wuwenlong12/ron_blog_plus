@@ -1,7 +1,27 @@
 @import "../../setting/variables.scss";
 .container {
   padding-top: 60px;
+  position: relative;
+  .bg {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    .bgImg {
+      position: fixed;
+      z-index: -2;
+      // background-color: #27b3df;
+    }
+    .bgPar {
+      position: fixed;
+      z-index: -1;
+
+      width: 100vw;
+      height: 100vh;
+    }
+  }
   .mainInfo {
+    // background-color: #000000;
     width: 100%;
     height: calc(100vh - 60px);
     // background-image: url("https://nfassetoss.southcn.com/__asset/e8450061a1/cac6b395d3.jpg");
@@ -10,36 +30,68 @@
     background-repeat: no-repeat; /* 防止重复背景 */
     background-size: cover; /* 背景图保持比例填满容器 */
     overflow: hidden; /* 避免背景溢出 */
-    padding-top: 20vh;
+    padding-top: 15vh;
+    padding-left: 8vw;
+    position: relative;
+
     .icon {
       display: block;
       width: 200px;
       height: 200px;
       margin: 0 auto;
     }
-    .title {
-      font-weight: 600;
-      font-size: 2rem;
-      margin: auto;
-      text-align: center;
-      color: #fff;
+    .svgImg {
+      position: absolute;
+      z-index: -3;
+      right: 0;
+      // background-color: #000000;
+      bottom: 0;
     }
+
     .desc {
-      font-size: 1.25rem;
+      padding-top: 50px;
+      // width: 1900px;
       margin: auto;
-      text-align: center;
-      color: #fff;
+      font-weight: bold;
+      font-size: 1.25rem;
+      // text-align: center;
+      // color: #fff;
+    }
+    .rollBtn {
+      height: 80px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #ffb6c1, #87cefa);
+      position: absolute;
+      // left: 200px;
+      bottom: 20px;
+      .rollBtnIcon {
+        position: relative;
+        top: 0;
+        animation: moveUpDown 2s infinite ease-in-out;
+
+        @keyframes moveUpDown {
+          0% {
+            top: 0;
+          }
+          50% {
+            top: 10px; // 向上移动10px
+          }
+          100% {
+            top: 0;
+          }
+        }
+      }
     }
   }
   .main {
-    padding: 20px;
-    display: flex;
-    justify-content: center;
+    padding: 2.5rem;
+    // display: flex;
+    // justify-content: center;
     .leftCardList {
       flex: 1;
       max-width: 600px;
-      margin-right: 3rem;
-      margin-left: 3rem;
+      // margin-right: 3rem;
+      // margin-left: 3rem;
 
       .leftCard {
         box-shadow: $box-shadow-md;

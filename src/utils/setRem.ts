@@ -15,13 +15,16 @@ export function setRem(): void {
 
   // 计算根字体大小，限制最大缩放比例为2倍，同时限制最小根字体大小
   const fontSize = Math.max(baseFontSize * Math.min(scale, 2), minFontSize);
-
+  console.log("窗口大小变化了！" + fontSize);
   // 设置根元素的字体大小
   document.documentElement.style.fontSize = `${fontSize}px`;
 }
 
 // 防抖函数，避免频繁触发
-function debounce<T extends (...args: any[]) => void>(func: T, wait = 100): (...args: Parameters<T>) => void {
+function debounce<T extends (...args: any[]) => void>(
+  func: T,
+  wait = 100
+): (...args: Parameters<T>) => void {
   let timeout: number | undefined;
 
   return function (this: unknown, ...args: Parameters<T>): void {
@@ -31,7 +34,7 @@ function debounce<T extends (...args: any[]) => void>(func: T, wait = 100): (...
 }
 
 // 监听窗口变化，添加防抖
-window.addEventListener('resize', debounce(setRem));
+window.addEventListener("resize", debounce(setRem));
 
 // 页面加载时执行一次
 setRem();

@@ -60,18 +60,18 @@ const LeftModalDom: React.FC = () => {
 
       {/* 动态内容区域 */}
       <div className={styles.content}>
-        <AnimatePresence>
-          {selectedButton && (
-            <motion.div
-              key={selectedButton}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              {buttonData.find((btn) => btn.key === selectedButton)?.content}
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* <AnimatePresence> */}
+        {selectedButton && (
+          <motion.div
+            key={selectedButton}
+            initial={{ opacity: 0, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {buttonData.find((btn) => btn.key === selectedButton)?.content}
+          </motion.div>
+        )}
+        {/* </AnimatePresence> */}
       </div>
     </div>
   );

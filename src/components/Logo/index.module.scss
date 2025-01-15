@@ -1,0 +1,30 @@
+@import "../../setting/variables.scss";
+.container {
+  svg {
+    width: 50vw;
+    height: auto;
+    display: flex;
+    justify-content: space-around;
+    // background-color: #000;
+  }
+
+  .path {
+    stroke: #000; /* 设置路径颜色 */
+    fill: transparent;
+    stroke-width: 2; /* 设置线条宽度 */
+    stroke-linecap: round; /* 使路径端点圆滑 */
+    stroke-linejoin: round; /* 使路径连接处圆滑 */
+  }
+}
+
+@media (max-width: $breakpoint-md) {
+  .container {
+    svg {
+      width: 80vw;
+      height: auto;
+      display: flex;
+      justify-content: space-around;
+      // background-color: #000;
+    }
+  }
+}

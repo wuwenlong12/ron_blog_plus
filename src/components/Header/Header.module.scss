@@ -3,9 +3,89 @@
 
 /* 桌面端样式 */
 .container {
-    width: 100%;
-    height: 60px; /* 明确设置高度 */
-    padding: 8px 16px;
+  width: 100%;
+  height: 60px; /* 明确设置高度 */
+  //   padding: 8px 0;
+  position: fixed;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: $box-shadow-light;
+  backdrop-filter: blur(10px); /* 背景模糊 */
+  -webkit-backdrop-filter: blur(10px); /* 兼容 Safari */
+  z-index: 10;
+  .containerLeft {
+    display: flex;
+    align-items: center;
+    margin-left: 8px;
+    .BtnLight {
+      background-color: transparent;
+      color: #000;
+      margin-right: 10px;
+      &:hover {
+        color: #4096ff !important;
+        //   border-color: #f59b4c !important;
+      }
+    }
+    .BtnDark {
+      color: #fff;
+      background-color: transparent;
+      margin-right: 10px;
+      &:hover {
+        color: #4096ff !important;
+        //   border-color: #f59b4c !important;
+      }
+    }
+    .navLogo {
+      display: block;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      margin-right: 20px;
+    }
+
+    .siteName {
+      font-size: 20px;
+      text-align: center;
+    }
+  }
+
+  .menu {
+    width: 500px;
+    height: 50px;
+    padding: 8px 0;
+  }
+
+  .containerRight {
+    display: flex;
+    align-items: center;
+    margin-right: 8px;
+    .BtnLight {
+      background-color: transparent;
+      color: #000;
+      margin-right: 10px;
+      &:hover {
+        color: #4096ff !important;
+        //   border-color: #f59b4c !important;
+      }
+    }
+    .BtnDark {
+      color: #fff;
+      background-color: transparent;
+      margin-right: 10px;
+      &:hover {
+        color: #4096ff !important;
+        //   border-color: #f59b4c !important;
+      }
+    }
+  }
+}
+
+/* 移动端样式 */
+@media (max-width: $breakpoint-md) {
+  .container {
+    height: 60px; /* 在移动端设置适合的高度 */
+    // padding: 8px 16px;
     position: fixed;
     top: 0;
     display: flex;
@@ -13,133 +93,56 @@
     box-shadow: $box-shadow-light;
     backdrop-filter: blur(10px); /* 背景模糊 */
     -webkit-backdrop-filter: blur(10px); /* 兼容 Safari */
-    z-index: 10;
     .containerLeft {
-        display: flex;
-        align-items: center;
-        .BtnLight {
-            background-color: transparent;
-            color: #000;
-            margin-right: 10px;
-            &:hover {
-                color: #4096ff !important;
-                //   border-color: #f59b4c !important;
-            }
+      display: flex;
+      align-items: center;
+      .BtnLight {
+        background-color: transparent;
+        color: #000;
+        margin-right: 10px;
+        &:hover {
+          color: #4096ff !important;
+          //   border-color: #f59b4c !important;
         }
-        .BtnDark {
-            color: #fff;
-            background-color: transparent;
-            margin-right: 10px;
-            &:hover {
-                color: #4096ff !important;
-                //   border-color: #f59b4c !important;
-            }
+      }
+      .BtnDark {
+        color: #fff;
+        background-color: transparent;
+        margin-right: 10px;
+        &:hover {
+          color: #4096ff !important;
+          //   border-color: #f59b4c !important;
         }
-        .navLogo {
-            display: block;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            margin-right: 20px;
-        }
+      }
+      .navLogo {
+        display: block;
+        width: 36px; /* 可以保持原尺寸 */
+        height: 36px;
+        border-radius: 50%;
+        margin-right: 10px; /* 调整移动端的间距 */
+      }
 
-        .siteName {
-            font-size: 20px;
-            text-align: center;
-        }
+      .siteName {
+        display: none;
+      }
     }
 
     .menu {
-        width: 500px;
-        height: 50px;
+      display: none; /* 隐藏菜单，通常在移动端使用按钮展开 */
     }
 
     .containerRight {
-        display: flex;
-        align-items: center;
-        .BtnLight {
-            background-color: transparent;
-            color: #000;
-            margin-right: 10px;
-            &:hover {
-                color: #4096ff !important;
-                //   border-color: #f59b4c !important;
-            }
-        }
-        .BtnDark {
-            color: #fff;
-            background-color: transparent;
-            margin-right: 10px;
-            &:hover {
-                color: #4096ff !important;
-                //   border-color: #f59b4c !important;
-            }
-        }
+      display: flex;
+      font-size: 14px; /* 调整字体大小 */
+
+      .isDarkBtn {
+        display: none;
+      }
     }
-}
-
-/* 移动端样式 */
-@media (max-width: $breakpoint-md) {
-    .container {
-        height: 60px; /* 在移动端设置适合的高度 */
-        padding: 8px 16px;
-        position: fixed;
-        top: 0;
-        display: flex;
-        justify-content: space-between;
-        box-shadow: $box-shadow-light;
-        backdrop-filter: blur(10px); /* 背景模糊 */
-        -webkit-backdrop-filter: blur(10px); /* 兼容 Safari */
-        .containerLeft {
-            display: flex;
-            align-items: center;
-            .BtnLight {
-                background-color: transparent;
-                color: #000;
-                margin-right: 10px;
-                &:hover {
-                    color: #4096ff !important;
-                    //   border-color: #f59b4c !important;
-                }
-            }
-            .BtnDark {
-                color: #fff;
-                background-color: transparent;
-                margin-right: 10px;
-                &:hover {
-                    color: #4096ff !important;
-                    //   border-color: #f59b4c !important;
-                }
-            }
-            .navLogo {
-                display: block;
-                width: 36px; /* 可以保持原尺寸 */
-                height: 36px;
-                border-radius: 50%;
-                margin-right: 10px; /* 调整移动端的间距 */
-            }
-
-            .siteName {
-                display: none;
-            }
-        }
-
-        .menu {
-            display: none; /* 隐藏菜单，通常在移动端使用按钮展开 */
-        }
-
-        .containerRight {
-            display: flex;
-            font-size: 14px; /* 调整字体大小 */
-
-          .isDarkBtn{
-            display: none;
-          }
-        }
-    }
-    .modal{
-        position: absolute;
-        top: 60px;
-        height:calc(100vh - 60px);
-    }
+  }
+  .modal {
+    position: absolute;
+    top: 60px;
+    height: calc(100vh - 60px);
+  }
 }

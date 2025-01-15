@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./Home.module.scss";
 import favicon from "../../assets/logo.png";
+import bg from "../../assets/bg.png";
 import ParticlesBg from "particles-bg";
-import { Card, Pagination, PaginationProps } from "antd";
+import { Button, Card, Pagination, PaginationProps } from "antd";
 import LeftModalDom from "../../components/LeftModalDom/LeftModalDom";
 import { getArticleSummary } from "../../api/article";
 import { PartialBlock } from "@blocknote/core";
@@ -17,6 +18,12 @@ import { findFullPathByKey } from "../../router/utils/findFullPathByKey";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
+import Logo from "../../components/Logo";
+import Coder from "../../assets/svg/Coder";
+import Typist from "react-typist";
+import "react-typist/dist/Typist.css";
+import { FaArrowDown } from "react-icons/fa";
+import DataCard from "./components/DateCard/DataCard";
 
 const Main = () => {
   const [articles, setArticles] = useState<Articles[]>([]);
@@ -26,6 +33,12 @@ const Main = () => {
     (state: RootState) => state.routesMap.articleRoutesMap
   );
   const navigate = useNavigate();
+
+  const mainContentRef = useRef<HTMLDivElement>(null);
+
+  const scrollToContent = () => {
+    mainContentRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
   useEffect(() => {
     init();
   }, [currentPage]);
@@ -44,13 +57,44 @@ const Main = () => {
   };
   return (
     <div className={styles.container}>
-      <ParticlesBg color="#fff" num={100} type="color" bg={true} />
-      <div className={styles.mainInfo}>
-        <img className={styles.icon} src={favicon} alt="" />
-        <div className={styles.title}>Ron Blog</div>
-        <div className={styles.desc}>求offer！！！！</div>
+      <div className={styles.bg}>
+        <img className={styles.bgImg} src={bg} alt="" />
+        <div className={styles.bgPar}>
+          <ParticlesBg color="#fff" num={5} type="polygon" bg={false} />
+        </div>
       </div>
-      <div className={styles.main}>
+      {/* <div className={styles.bg}></div> */}
+
+      <div className={styles.mainInfo}>
+        {/* <img className={styles.icon} src={favicon} alt="" /> */}
+        <div className={styles.title}>
+          <Logo></Logo>
+        </div>
+        <div className={styles.svgImg}>
+          <Coder></Coder>
+        </div>
+        <div className={styles.desc}>
+          <Typist
+            avgTypingDelay={100}
+            cursor={{
+              show: true,
+              blink: true,
+              element: "_",
+              hideWhenDone: false,
+              hideWhenDoneDelay: 1000,
+            }}
+          >
+            <p>把初心别在袖口，任世事如流。</p>
+            <Typist.Delay ms={500} />
+            <p>清风拂过，衣角翻卷间，那抹最初的颜色，永远醒目。</p>
+          </Typist>
+          <Button className={styles.rollBtn} onClick={scrollToContent}>
+            <FaArrowDown className={styles.rollBtnIcon} />
+          </Button>
+        </div>
+      </div>
+      <div ref={mainContentRef} className={styles.main}>
+        <DataCard></DataCard>
         <AnimatePresence>
           <motion.div
             key={currentPage}
@@ -85,7 +129,6 @@ const Main = () => {
             ))}
           </motion.div>
         </AnimatePresence>
-
         <div className={styles.rightCardList}>
           <div className={styles.rightCardItem}>
             <SelfInfoCard></SelfInfoCard>

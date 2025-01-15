@@ -25,9 +25,9 @@ const Modal: React.FC<ModalProps> = ({
   // 定义不同方向的动画效果
   const directionVariants = {
     top: {
-      initial: { opacity: 0, y: "-100%" },
-      animate: { opacity: 1, y: 0 },
-      exit: { opacity: 0, y: "-100%" },
+      initial: { y: "-100%" },
+      animate: { y: 60 },
+      exit: { y: "-100%" },
     },
     bottom: {
       initial: { opacity: 0, y: "100%" },
@@ -35,9 +35,9 @@ const Modal: React.FC<ModalProps> = ({
       exit: { opacity: 0, y: "100%" },
     },
     left: {
-      initial: { opacity: 0, x: "-100%" },
-      animate: { opacity: 1, x: 0 },
-      exit: { opacity: 0, x: "-100%" },
+      initial: { opacity: 0, x: "-100%", y: 60 },
+      animate: { opacity: 1, x: 0, y: 60 },
+      exit: { opacity: 0, x: "-100%", y: 60 },
     },
     right: {
       initial: { opacity: 0, x: "100%" },
@@ -89,7 +89,6 @@ const Modal: React.FC<ModalProps> = ({
                 <ThemeView
                   style={{
                     height: 32,
-
                     position: "relative",
                     borderRadius: "10px 10px 0 0",
                   }}
