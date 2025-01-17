@@ -50,7 +50,7 @@ const Main = () => {
           <Logo></Logo>
         </div>
         <div className={styles.svgImg}>
-          <Coder></Coder>
+          <Coder style={{ width: "clamp(400px, 50.2vw, 800px)" }}></Coder>
         </div>
         <div className={styles.desc}>
           <Typist

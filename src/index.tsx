@@ -11,8 +11,8 @@ import "remixicon/fonts/remixicon.css";
 import "@blocknote/mantine/style.css";
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
-// 适配移动端
-setRem();
+// // 适配移动端
+// setRem();
 
 const Root = () => {
   return <App />;

@@ -1,9 +1,9 @@
 import React from "react";
 
-export default function Coder({}) {
+export default function Coder({ style }: { style?: React.CSSProperties }) {
   return (
     <svg
-      style={{ width: "30rem", height: "30rem" }}
+      style={style}
       xmlns="http://www.w3.org/2000/svg"
       width="900.31"
       height="787"

@@ -1,9 +1,11 @@
+@import "../../../../setting/variables.scss";
 .container {
+  padding: 1.5vh 4vw;
   display: flex;
   //   justify-content: space-between;
-  height: 360px;
+  //   height: 360px;
   .cardList {
-    margin-right: 1.5rem;
+    margin-right: 1vw;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -73,7 +75,12 @@
         position: relative;
         color: #0b1926d8;
         z-index: 1;
-        max-width: calc(100% - 10rem);
+        max-width: calc(100% - 6rem);
+        display: -webkit-box; /* 必须设置为 -webkit-box */
+        -webkit-box-orient: vertical; /* 设置盒子排列方向为垂直 */
+        -webkit-line-clamp: 4; /* 限制显示的行数 */
+        overflow: hidden; /* 隐藏溢出内容 */
+        text-overflow: ellipsis; /* 省略号显示溢出部分 */
       }
       .bgImg {
         position: absolute;
@@ -90,6 +97,22 @@
           height: 50px;
           border-radius: 30px;
           margin-right: 20px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: $breakpoint-lg) {
+  .container {
+    flex-direction: column;
+    .cardList {
+      flex-direction: row;
+      margin-bottom: 20px;
+      margin-right: 0;
+      .card {
+        &.first {
+          margin-right: 2vw;
         }
       }
     }

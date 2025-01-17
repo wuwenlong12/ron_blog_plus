@@ -73,7 +73,11 @@ const Modal: React.FC<ModalProps> = ({
                   justifyContent: "center",
                   alignItems: "center",
                   position: "fixed",
-                  top: 100,
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  zIndex: 9999,
                 }
               : {}
           }

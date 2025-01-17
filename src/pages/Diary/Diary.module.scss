@@ -2,6 +2,13 @@
 .container {
   height: 100vh;
   overflow: auto;
+  // padding-top: 100vh;
+  .calendar {
+    position: absolute;
+
+    top: 28px;
+    background-color: #27b3df;
+  }
   .main {
     z-index: 999;
     padding: 160px 20px 0 20px;
@@ -60,7 +67,36 @@
       }
     }
   }
+
+  .diaryCon {
+    position: relative;
+    top: 100px;
+    left: 320px;
+    width: 60vw;
+    height: 75vh;
+    padding: 40px 30px;
+    background-image: url(../../assets/diarybg.jpg);
+    // background-color: #000;
+    box-shadow: $box-shadow-light;
+    // background-color: #fff;
+    overflow: auto;
+
+    .modalInput {
+      margin-bottom: 20px;
+    }
+    .diaryTitle {
+      font-size: 30px;
+      font-weight: 900;
+    }
+    .diaryDesc {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+  }
   .modalCon {
+    position: relative;
+    top: 100vh;
     width: 80vw;
     height: 75vh;
     padding: 40px 30px;

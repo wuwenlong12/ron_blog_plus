@@ -1,21 +1,36 @@
+@import "../../../../setting/variables.scss";
 .container {
   .top {
+    padding: 0 4vw;
     display: flex;
     align-items: center;
     .title {
-      font-size: 35px;
+      font-size: clamp(22px, 2.2vw, 35px);
+      white-space: nowrap;
       font-weight: 600;
       margin-right: 20px;
+    }
+    .desc {
+      font-size: clamp(12px, 1.6vw, 16px);
+      display: -webkit-box; /* 必须设置为 -webkit-box */
+      -webkit-box-orient: vertical; /* 设置盒子排列方向为垂直 */
+      -webkit-line-clamp: 1; /* 限制显示的行数 */
+      overflow: hidden; /* 隐藏溢出内容 */
+      text-overflow: ellipsis; /* 省略号显示溢出部分 */
     }
   }
   .list {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
+    overflow: auto;
+    scrollbar-width: none; /* 对 Firefox 隐藏滚动条 */
+    padding-left: 20px;
     .projectCard {
       background-color: #fff;
       border-radius: 20px;
       padding: 20px;
+      margin-right: 20px;
       .img {
         width: 300px;
         border-radius: 20px;

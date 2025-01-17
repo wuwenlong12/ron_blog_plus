@@ -50,6 +50,9 @@ importers:
       axios:
         specifier: ^1.7.7
         version: 1.7.7
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
       framer-motion:
         specifier: ^11.11.11
         version: 11.11.11(react-dom@18.3.1(react@18.3.1))(react@18.3.1)

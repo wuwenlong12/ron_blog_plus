@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import {
   App,
   Button,
+  Calendar,
+  DatePicker,
   FloatButton,
   Input,
   Pagination,
   PaginationProps,
+  theme,
   Tree,
 } from "antd";
 import ParticlesBg from "particles-bg";
@@ -15,6 +18,8 @@ import Modal from "../../components/Modal/Modal";
 import Editor from "../../components/Editor/Editor";
 import { PartialBlock } from "@blocknote/core";
 import { FaCircleCheck } from "react-icons/fa6";
+import type { CalendarProps, DatePickerProps } from "antd";
+import type { Dayjs } from "dayjs";
 import {
   getAllDiary,
   getDiaryById,
@@ -50,6 +55,8 @@ const MyTree: React.FC = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState<PartialBlock[] | undefined>(undefined);
   const { message } = App.useApp();
+  const { token } = theme.useToken();
+
   const EditorChange = (content: any) => {
     setContent(content);
     selfSaved();
@@ -185,15 +192,55 @@ const MyTree: React.FC = () => {
     setCurrentPage(page);
     init();
   };
+  const onDateChange: DatePickerProps["onChange"] = (date, dateString) => {
+    console.log(date, dateString);
+  };
+
   return (
     <div
       className={styles.container}
       // lightStyle={{ backgroundColor: "#f2f0ea" }}
       // darkStyle={{}}
     >
+      <div className={styles.calendar}>
+        <DatePicker
+          placement={"bottomRight"}
+          open={true}
+          onChange={onDateChange}
+        />
+      </div>
       <div style={{ zIndex: "-1" }}>
         <ParticlesBg color=" #f2f0ea" num={300} type="custom" bg={true} />
       </div>
+      <ThemeView className={styles.diaryCon}>
+        <div className={styles.diaryTitle}>{diarty?.title}</div>
+        <div className={styles.diaryDesc}>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <ChooseTag
+              initTags={diarty?.tags || null}
+              onChange={onTagsChange}
+              auth={false}
+            ></ChooseTag>
+
+            <div>{formatTimestampToFullDateTime(diarty?.createdAt)}</div>
+          </div>
+          <Button
+            onClick={diaryEditClick}
+            style={{ marginRight: 10 }}
+            color="default"
+            variant="solid"
+            icon={<BiSolidMessageSquareEdit />}
+          >
+            编辑
+          </Button>
+        </div>
+        <Editor
+          editable={false}
+          isSummary={true}
+          onChange={EditorChange}
+          initialContent={diarty?.content}
+        ></Editor>
+      </ThemeView>
       <AnimatePresence>
         <motion.div
           key={currentPage}
