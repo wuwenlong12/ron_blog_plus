@@ -30,3 +30,20 @@ export type Pagination = {
 export interface ResponseGetDiary extends ResponseBase {
   data: Diary;
 }
+export interface ResponseGetDiaryDates extends ResponseBase {
+  data: string[];
+}
+
+export interface ResponseGetDiaryTimeline extends ResponseBase {
+  data: TimelineData;
+}
+
+interface TimelineInfo {
+  _id: string;
+  title: string;
+  createdAt: string; // 使用 ISO 日期字符串
+}
+
+export interface TimelineData {
+  [year: string]: TimelineInfo[];
+}

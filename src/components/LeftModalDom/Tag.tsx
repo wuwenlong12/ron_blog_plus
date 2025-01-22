@@ -11,6 +11,8 @@ export default function Tag() {
   }, []);
   const init = async () => {
     const res = await getTag();
+    console.log(res);
+
     setTags(res.data);
   };
   return (
@@ -21,7 +23,15 @@ export default function Tag() {
         <div className={styles.middleText}>标签</div>
       </div>
       <div className={styles.main}>
-        <ChooseTag initTags={tags} onChange={(e) => setTags(e)}></ChooseTag>
+        {tags.length > 0 ? (
+          <ChooseTag
+            initTags={tags}
+            onChange={(e) => setTags(e)}
+            auth={false}
+          ></ChooseTag>
+        ) : (
+          "目前还没有标签..."
+        )}
       </div>
     </div>
   );

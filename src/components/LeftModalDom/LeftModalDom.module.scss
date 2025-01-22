@@ -1,18 +1,17 @@
 @import "../../setting/variables.scss";
 .container {
   text-align: center;
-  backdrop-filter: blur(60px); /* 背景模糊 */
   background-color: rgba(255, 255, 255, 0.85);
   z-index: 999;
   height: 100%;
   width: 100%;
+
   .menu {
     display: flex;
     justify-content: space-around;
     padding: 20px;
     .btnItem {
-      width: 1.4rem;
-      height: 1.4rem;
+      width: 2vw;
       display: flex;
       .btnItemIcon {
         font-size: 0.8rem;

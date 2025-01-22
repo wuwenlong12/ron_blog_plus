@@ -35,7 +35,7 @@ const ChooseTag: React.FC<ChooseTagProps> = ({
   onChange,
 }) => {
   const { token } = theme.useToken();
-  const [tags, setTags] = useState(initTags);
+  const [tags, setTags] = useState(initTags || []);
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [editInputIndex, setEditInputIndex] = useState(-1);

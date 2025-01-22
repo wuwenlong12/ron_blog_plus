@@ -378,16 +378,18 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
             )}
           </div>
           <div>
-            <Tooltip title="下载markdown文件">
-              <Button
-                type="primary"
-                style={{ marginRight: 10, backgroundColor: "#52c41a" }}
-                icon={<FaMarkdown />}
-                onClick={blocksToMarkdown}
-              >
-                下载
-              </Button>
-            </Tooltip>
+            {currentType === "article" ? (
+              <Tooltip title="下载markdown文件">
+                <Button
+                  type="primary"
+                  style={{ marginRight: 10, backgroundColor: "#52c41a" }}
+                  icon={<FaMarkdown />}
+                  onClick={blocksToMarkdown}
+                >
+                  下载
+                </Button>
+              </Tooltip>
+            ) : null}
             <Tooltip title="下载markdown文件">
               <Button
                 type="primary"

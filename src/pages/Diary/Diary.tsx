@@ -8,7 +8,9 @@ import {
   Input,
   Pagination,
   PaginationProps,
+  Tag,
   theme,
+  Timeline,
   Tree,
 } from "antd";
 import ParticlesBg from "particles-bg";
@@ -18,15 +20,23 @@ import Modal from "../../components/Modal/Modal";
 import Editor from "../../components/Editor/Editor";
 import { PartialBlock } from "@blocknote/core";
 import { FaCircleCheck } from "react-icons/fa6";
+import { LuCalendar1 } from "react-icons/lu";
 import type { CalendarProps, DatePickerProps } from "antd";
 import type { Dayjs } from "dayjs";
 import {
   getAllDiary,
+  getDiaryByDate,
   getDiaryById,
+  getDiaryDates,
+  getDiaryTimeLine,
   postDiary,
   updateDiary,
 } from "../../api/diary";
-import type { Diary, Pagination as PaginationType } from "../../api/diary/type";
+import type {
+  Diary,
+  Pagination as PaginationType,
+  TimelineData,
+} from "../../api/diary/type";
 import favicon from "../../assets/logo.png";
 import {
   formatTimestampToDay,
@@ -34,60 +44,74 @@ import {
   formatTimestampToTime,
 } from "../../utils/date";
 import ThemeView from "../../themeComponent/themeView";
-import { is } from "@blocknote/core/types/src/i18n/locales";
-import { log } from "console";
 import ChooseTag from "../../components/ChooseTag";
 import { tag } from "../../api/tag/type";
 import Masonry from "react-masonry-css";
 import { BiSolidMessageSquareEdit } from "react-icons/bi";
 import { debounce } from "../../utils/debounce";
 import { motion, AnimatePresence } from "framer-motion";
+import dayjs from "dayjs";
+import { RiSendPlaneFill } from "react-icons/ri";
+import { FcTimeline } from "react-icons/fc";
 const MyTree: React.FC = () => {
-  const [diartes, setDiaries] = useState<Diary[]>([]);
-  const [pagination, setPagination] = useState<PaginationType>();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [diarty, setDiarty] = useState<Diary>();
-  const [curOpenId, setCurOpenId] = useState("");
-  const [tags, setTags] = useState<tag[]>([]);
-  const [isEdit, setIsEdit] = useState(false);
-  const [isShowEditModal, setIsShowEditModal] = useState(false);
-  const [isShowDiaryModal, setIsShowDiaryModal] = useState(false);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState<PartialBlock[] | undefined>(undefined);
+  const [datePickerIsOpen, setDatePickerIsOpen] = useState(false); //是否为今日
+  const [timelineOpen, setTimelineOpen] = useState(false); //是否为今日
+  const [timelineData, setTimelineData] = useState<TimelineData>(); //是否为今日
+  const [currentDate, setCurrentDate] = useState<number>(0); //当前选中时间
+  const [isToday, setIsToday] = useState(false); //是否为今日
+  const [diarty, setDiarty] = useState<Diary>(); //日记的数据
+  const [isEdit, setIsEdit] = useState(false); // 是否为编辑模式
+  const [dates, setDates] = useState<Dayjs[]>([]); //标签已写日记的日期
+  const [title, setTitle] = useState(""); //输入的title
+  const [tags, setTags] = useState<tag[]>([]); //输入的tags数据
+  const [content, setContent] = useState<PartialBlock[] | undefined>(undefined); //输入的富文本内容
+
   const { message } = App.useApp();
   const { token } = theme.useToken();
 
+  //富文本编辑器内容改变
   const EditorChange = (content: any) => {
     setContent(content);
-    selfSaved();
-    // if (isEdit) {
-    //   if (!diarty) return;
-    //   localStorage.setItem(
-    //     diarty?._id,
-    //     JSON.stringify({ title, tags, content })
-    //   );
-    // } else {
-    //   localStorage.setItem("newDiary", JSON.stringify({ content }));
-    // }
-    // message.success("自动保存成功！");
   };
-  const onEditClose = () => {
-    setIsShowEditModal(false);
-  };
+
   useEffect(() => {
+    setCurrentDate(dayjs().valueOf());
     init();
-  }, [currentPage]);
-  const init = async () => {
-    const res = await getAllDiary(currentPage);
-    console.log(res.data.diaries);
+  }, []);
 
-    setDiaries(res.data.diaries);
-    setPagination(res.data.pagination);
+  //打开页面的初始化·刷新数据
+  const init = async () => {
+    //获取已写日记的日期
+    const dates = (await getDiaryDates()).data;
+    const formattedDates = dates.map((date) => dayjs(date)); // 转换字符串为 Dayjs
+    setDates(formattedDates);
+    //初始化当前日记  tip：dayjs不传参数会使用当前时间，适用于页面初始化获取当天日记
+    initDiary(dayjs(currentDate || undefined));
+    initTimeLine();
   };
 
+  const initTimeLine = async () => {
+    const res = await getDiaryTimeLine();
+    setTimelineData(res.data);
+  };
+
+  //初始化日记信息
+  const initDiary = async (date: Dayjs) => {
+    const time = date.valueOf();
+    const res = await getDiaryByDate(time);
+    setCurrentDate(time);
+    //是否为今天
+    setIsToday(dayjs(Number(time)).isSame(dayjs(), "day"));
+
+    //无论怎样都关闭编辑模式
+    setIsEdit(false);
+    //有日记数据设置到日记数据
+    setDiarty(res.data);
+  };
   const publish = async () => {
+    const formattedDate = dayjs(currentDate).format("YYYY-MM-DD");
     if (title && content) {
-      if (isEdit) {
+      if (diarty) {
         if (!diarty?._id) return;
         const res = await updateDiary(diarty?._id, title, tags, content);
         if (res.code === 0) {
@@ -100,21 +124,19 @@ const MyTree: React.FC = () => {
               tags,
             };
           });
-          localStorage.removeItem(diarty._id);
+
+          localStorage.removeItem(formattedDate);
           message.success("修改成功！");
 
-          setIsShowEditModal(false);
-          setIsShowDiaryModal(true);
           setTitle("");
         } else {
           message.error(res.message);
         }
       } else {
-        const res = await postDiary(title, tags, content);
+        const res = await postDiary(title, tags, content, isToday, currentDate);
         if (res.code === 0) {
-          localStorage.removeItem("newDiary");
+          localStorage.removeItem(formattedDate);
           message.success("发布成功！");
-          setIsShowEditModal(false);
           setTitle("");
           localStorage.removeItem("diary");
         } else {
@@ -122,16 +144,15 @@ const MyTree: React.FC = () => {
         }
       }
       init();
+      setIsEdit(false);
+    } else {
+      message.error("标题和内容是必须字段");
     }
   };
   const diaryItemClick = async (id: string) => {
     const res = await getDiaryById(id);
 
     setDiarty(res.data);
-    setIsShowDiaryModal(true);
-  };
-  const onDiaryClose = () => {
-    setIsShowDiaryModal(false);
   };
   const addBtnClick = () => {
     let curJson = localStorage.getItem("newDiary");
@@ -146,15 +167,19 @@ const MyTree: React.FC = () => {
     }
 
     setIsEdit(false);
-    setIsShowEditModal(true);
   };
 
+  useEffect(() => {
+    console.log(dayjs(currentDate));
+  }, [currentDate]);
   const diaryEditClick = () => {
+    setTitle("");
+    setTags([]);
+    setContent(undefined);
     setIsEdit(true);
-    setIsShowDiaryModal(false);
-    setIsShowEditModal(true);
-    if (!diarty) return;
-    const savdDiaryJson = localStorage.getItem(diarty?._id);
+    const formattedDate = dayjs(currentDate).format("YYYY-MM-DD");
+
+    const savdDiaryJson = localStorage.getItem(formattedDate);
     if (savdDiaryJson) {
       const savdDiary = JSON.parse(savdDiaryJson);
       message.success("已自动恢复上次编辑！");
@@ -162,6 +187,7 @@ const MyTree: React.FC = () => {
       setContent(savdDiary?.content || diarty?.content);
       setTags(savdDiary?.tags || diarty?.tags);
     } else {
+      if (!diarty) return;
       if (diarty?.title && diarty?.tags && diarty?.content) {
         setTitle(diarty?.title);
         setContent(diarty?.content);
@@ -172,220 +198,226 @@ const MyTree: React.FC = () => {
 
   const titleChange = debounce((e) => {
     setTitle(e.target.value);
-    selfSaved();
   }, 1000);
+
   const onTagsChange = debounce((e) => {
     setTags(e);
-    console.log("hhhhh");
-
-    selfSaved();
   }, 1000);
-  const selfSaved = () => {
-    localStorage.setItem(
-      isEdit ? (diarty?._id as string) : "newDiary",
-      JSON.stringify({ title, tags, content })
+
+  useEffect(() => {
+    if (!content) return;
+    if (isEdit) {
+      const formattedDate = dayjs(currentDate).format("YYYY-MM-DD");
+      localStorage.setItem(
+        formattedDate,
+        JSON.stringify({ title, tags, content })
+      );
+      message.success("自动保存成功");
+    }
+  }, [title, tags, content, isEdit]);
+
+  const onDateChange: DatePickerProps["onChange"] = async (
+    date,
+    dateString
+  ) => {
+    initDiary(date);
+  };
+
+  const style: React.CSSProperties = {
+    border: `1px solid ${token.colorPrimary}`,
+    borderRadius: "50%",
+  };
+
+  // 自定义日期渲染
+  const cellRender: DatePickerProps<Dayjs>["cellRender"] = (current, info) => {
+    if (info.type !== "date") {
+      return info.originNode;
+    }
+
+    const currentDayjs = dayjs(current);
+    // 确保 current 是 Dayjs 类型，并检查是否匹配标记日期
+    const isMarked = dates.some((date) => date.isSame(current, "day"));
+
+    return (
+      <div className="ant-picker-cell-inner" style={isMarked ? style : {}}>
+        {currentDayjs.date()}
+      </div>
     );
-    message.success("自动保存成功");
   };
 
-  const paginationChange: PaginationProps["onChange"] = (page) => {
-    setCurrentPage(page);
-    init();
+  const timeLineClick = async (date: Dayjs) => {
+    initDiary(date);
+    setTimelineOpen(false);
   };
-  const onDateChange: DatePickerProps["onChange"] = (date, dateString) => {
-    console.log(date, dateString);
-  };
-
   return (
-    <div
-      className={styles.container}
-      // lightStyle={{ backgroundColor: "#f2f0ea" }}
-      // darkStyle={{}}
-    >
+    <div className={styles.container}>
       <div className={styles.calendar}>
         <DatePicker
+          style={{ border: "none", color: "transparent" }}
+          inputReadOnly={true} // 防止用户直接输入
+          cellRender={cellRender}
           placement={"bottomRight"}
-          open={true}
+          open={datePickerIsOpen}
           onChange={onDateChange}
         />
       </div>
+
+      <Timeline mode="left" className={styles.timeLine}>
+        {Object.entries(timelineData || []).map(([year, entries]) => (
+          <React.Fragment key={year}>
+            {/* 年份节点（颜色不同） */}
+            <Timeline.Item color="red">
+              <h3 style={{ fontWeight: "bold", color: "#555" }}>{year}</h3>
+            </Timeline.Item>
+
+            {/* 日记节点（正常显示） */}
+            {entries.map((entry) => (
+              <Timeline.Item
+                key={entry._id}
+                label={
+                  <Tag
+                    onClick={() => timeLineClick(dayjs(entry.createdAt))}
+                    color="purple"
+                  >
+                    {dayjs(entry.createdAt).format("YYYY-MM-DD")}
+                  </Tag>
+                }
+              >
+                <Tag
+                  onClick={() => timeLineClick(dayjs(entry.createdAt))}
+                  color="cyan"
+                >
+                  {entry.title}
+                </Tag>
+              </Timeline.Item>
+            ))}
+          </React.Fragment>
+        ))}
+      </Timeline>
+      <div className={styles.calendarBtn}>
+        <Button
+          onClick={() => setTimelineOpen(!timelineOpen)}
+          shape="circle"
+          icon={<FcTimeline />}
+        ></Button>
+        <Button
+          onClick={() => setDatePickerIsOpen(!datePickerIsOpen)}
+          shape="circle"
+          icon={<LuCalendar1 />}
+        ></Button>
+      </div>
+
       <div style={{ zIndex: "-1" }}>
         <ParticlesBg color=" #f2f0ea" num={300} type="custom" bg={true} />
       </div>
-      <ThemeView className={styles.diaryCon}>
-        <div className={styles.diaryTitle}>{diarty?.title}</div>
-        <div className={styles.diaryDesc}>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <ChooseTag
-              initTags={diarty?.tags || null}
-              onChange={onTagsChange}
-              auth={false}
-            ></ChooseTag>
-
-            <div>{formatTimestampToFullDateTime(diarty?.createdAt)}</div>
-          </div>
-          <Button
-            onClick={diaryEditClick}
-            style={{ marginRight: 10 }}
-            color="default"
-            variant="solid"
-            icon={<BiSolidMessageSquareEdit />}
-          >
-            编辑
-          </Button>
-        </div>
-        <Editor
-          editable={false}
-          isSummary={true}
-          onChange={EditorChange}
-          initialContent={diarty?.content}
-        ></Editor>
-      </ThemeView>
       <AnimatePresence>
         <motion.div
-          key={currentPage}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          // exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
           className={styles.main}
+          key={currentDate}
+          initial={{ opacity: 0, y: timelineOpen ? 800 : 200 }}
+          animate={{ opacity: 1, y: timelineOpen ? 400 : 0 }} // 根据 isExpanded 控制 y 轴// 根据 isExpanded 控制 y 轴
+          // exit={{ opacity: 1, y: 200 }}
+          transition={{ duration: 0.8, delay: 0.1, ease: [0, 0.71, 0.2, 1.01] }}
         >
-          <Masonry
-            breakpointCols={{
-              default: 4, // 默认列数
-              1400: 3, // 屏幕宽度 ≤ 1100px 时列数
-              1084: 2,
-              730: 1,
-            }}
-            className={styles.diaryList}
-          >
-            {diartes.map((diary) => (
-              <ThemeView
-                key={diary._id}
-                onClick={() => diaryItemClick(diary._id)}
-                darkStyle={{ backgroundColor: "#1b1f21" }}
-                lightStyle={{ backgroundColor: "#f2f0ea" }}
-                className={styles.diaryItem}
-              >
-                <div className={styles.diaryItemTop}>
-                  <img
-                    className={styles.diaryItemImage}
-                    src={diary.coverImage || favicon}
-                    alt=""
-                  />
-                  <div className={styles.diaryItemLeftInfo}>
-                    <div className={styles.diaryItemTitle}>{diary.title}</div>
-                    <div className={styles.diaryItemTime}>
-                      {formatTimestampToDay(diary.createdAt)}
+          <ThemeView className={styles.diaryCon}>
+            {isEdit ? (
+              <>
+                <Button
+                  onClick={publish}
+                  style={{ position: "absolute", right: 20 }}
+                  color="primary"
+                  variant="solid"
+                  icon={<RiSendPlaneFill />}
+                >
+                  发布
+                </Button>
+                <Input
+                  addonBefore={"标题"}
+                  className={styles.modalInput}
+                  showCount
+                  defaultValue={title}
+                  maxLength={20}
+                  onChange={titleChange}
+                />
+
+                <div className={styles.diaryDesc}>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <ChooseTag
+                      initTags={tags}
+                      onChange={onTagsChange}
+                      auth={true}
+                    ></ChooseTag>
+
+                    <div>
+                      {formatTimestampToFullDateTime(diarty?.createdAt)}
                     </div>
                   </div>
                 </div>
-                <div style={{ marginBottom: 10 }}>
-                  <ChooseTag initTags={diary?.tags || null}></ChooseTag>
-                </div>
+                <Editor
+                  editable={true}
+                  isSummary={true}
+                  onChange={EditorChange}
+                  initialContent={content}
+                ></Editor>
+              </>
+            ) : (
+              <>
+                {diarty ? (
+                  <>
+                    <Button
+                      onClick={diaryEditClick}
+                      style={{ position: "absolute", right: 20 }}
+                      color="default"
+                      variant="solid"
+                      icon={<BiSolidMessageSquareEdit />}
+                    >
+                      编辑
+                    </Button>
+                    <div className={styles.diaryTitle}>{diarty?.title}</div>
+                    <div className={styles.diaryDesc}>
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <ChooseTag
+                          initTags={diarty?.tags || null}
+                          onChange={onTagsChange}
+                          auth={false}
+                        ></ChooseTag>
 
-                <div className={styles.diaryItemSummary}>
-                  <Editor
-                    initialContent={diary.summary || undefined}
-                    isSummary={true}
-                    editable={false}
-                  ></Editor>
-                </div>
-              </ThemeView>
-            ))}
-          </Masonry>
+                        <div>
+                          {formatTimestampToFullDateTime(diarty?.createdAt)}
+                        </div>
+                      </div>
+                    </div>
+                    <Editor
+                      editable={false}
+                      isSummary={true}
+                      onChange={EditorChange}
+                      initialContent={diarty?.content}
+                    ></Editor>
+                  </>
+                ) : (
+                  <>
+                    <div>
+                      {isToday
+                        ? "今日未发布日记哦，可以点击编辑，编辑你要发布的内容～～"
+                        : "补签未发布的日记哦，可以点击编辑，编辑你要补签的内容～～"}
+                    </div>
+                    <div>{isToday.toString()}</div>
+                    <Button
+                      onClick={diaryEditClick}
+                      style={{ position: "absolute", right: 20 }}
+                      color="default"
+                      variant="solid"
+                      icon={<BiSolidMessageSquareEdit />}
+                    >
+                      {isToday ? "签到" : "补签"}
+                    </Button>
+                  </>
+                )}
+              </>
+            )}
+          </ThemeView>
         </motion.div>
       </AnimatePresence>
-      <Modal
-        isShowModal={isShowEditModal}
-        direction="center"
-        onClose={onEditClose}
-      >
-        <ThemeView className={styles.modalCon}>
-          <Input
-            addonBefore={"标题"}
-            className={styles.modalInput}
-            showCount
-            defaultValue={title}
-            maxLength={20}
-            onChange={titleChange}
-          />
-          <div style={{ marginBottom: 10 }}>
-            <ChooseTag
-              initTags={tags}
-              onChange={onTagsChange}
-              auth={true}
-            ></ChooseTag>
-          </div>
-          <Editor
-            editable={true}
-            isSummary={true}
-            onChange={EditorChange}
-            initialContent={content}
-          ></Editor>
-        </ThemeView>
-      </Modal>
-      <Modal
-        key={curOpenId}
-        isShowModal={isShowDiaryModal}
-        direction="center"
-        onClose={onDiaryClose}
-      >
-        <ThemeView className={styles.modalCon}>
-          <div className={styles.diaryTitle}>{diarty?.title}</div>
-          <div className={styles.diaryDesc}>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <ChooseTag
-                initTags={diarty?.tags || null}
-                onChange={onTagsChange}
-                auth={false}
-              ></ChooseTag>
-
-              <div>{formatTimestampToFullDateTime(diarty?.createdAt)}</div>
-            </div>
-            <Button
-              onClick={diaryEditClick}
-              style={{ marginRight: 10 }}
-              color="default"
-              variant="solid"
-              icon={<BiSolidMessageSquareEdit />}
-            >
-              编辑
-            </Button>
-          </div>
-          <Editor
-            editable={false}
-            isSummary={true}
-            onChange={EditorChange}
-            initialContent={diarty?.content}
-          ></Editor>
-        </ThemeView>
-      </Modal>
-      <FloatButton
-        icon={<IoIosAdd />}
-        type="primary"
-        onClick={addBtnClick}
-        style={{ insetInlineEnd: 24 }}
-      ></FloatButton>
-      {isShowEditModal ? (
-        <FloatButton
-          icon={<FaCircleCheck />}
-          type="primary"
-          onClick={publish}
-          style={{
-            backgroundColor: "red !import",
-            color: "red",
-            insetInlineEnd: 80,
-          }}
-        ></FloatButton>
-      ) : null}
-      <Pagination
-        style={{ position: "fixed", bottom: 20, left: 0, right: 0 }}
-        align="center"
-        onChange={paginationChange}
-        defaultCurrent={1}
-        total={pagination?.total}
-      />
     </div>
   );
 };
