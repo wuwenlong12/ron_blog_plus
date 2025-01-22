@@ -62,7 +62,7 @@ const Modal: React.FC<ModalProps> = ({
 
   return (
     <AnimatePresence>
-      {isShowModal && (
+      {isShowModal ? (
         <motion.div
           className={styles.container}
           style={
@@ -116,7 +116,7 @@ const Modal: React.FC<ModalProps> = ({
             {children}
           </div>
         </motion.div>
-      )}
+      ) : null}
     </AnimatePresence>
   );
 };
