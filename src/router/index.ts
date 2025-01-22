@@ -67,4 +67,24 @@ export const StaticRoutesMap: RouteObject[] = [
       },
     ],
   },
+  {
+    path: "login",
+    element: componentKey.Login, // 用字符串表示组件
+    handle: {
+      key: "Login",
+      label: "登陆",
+      Icon: iconKey.FaMeteor, // 用字符串表示图标
+      requiresAuth: false,
+    },
+  },
+  {
+    path: "init",
+    element: componentKey.Init, // 用字符串表示组件
+    handle: {
+      key: "Init",
+      label: "初始化",
+      Icon: iconKey.FaMeteor, // 用字符串表示图标
+      requiresAuth: false,
+    },
+  },
 ];

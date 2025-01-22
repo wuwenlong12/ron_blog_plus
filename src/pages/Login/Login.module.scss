@@ -1,0 +1,110 @@
+// LoginPage.module.scss
+.loginPage {
+  display: flex;
+  height: 100vh; // 确保整个页面占满视口
+}
+
+.imageContainer {
+  flex: 1;
+  background-image: url(../../assets/loginbg.jpg); // 使用自己的图片链接
+  background-size: cover;
+  background-position: center;
+  object-fit: cover; // 确保图片填满容器
+  height: 100%; // 使图片高度等于表单高度
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px; // 圆角效果
+  animation: zoomInOut 30s infinite linear; /* 设置动画的时间和循环 */
+  @keyframes zoomInOut {
+    0% {
+      transform: scale(1); /* 初始状态，正常大小 */
+    }
+    50% {
+      transform: scale(1.2); /* 放大 */
+    }
+    100% {
+      transform: scale(1); /* 恢复到原始大小 */
+    }
+  }
+}
+
+.formContainer {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 380px;
+  margin: auto;
+  position: relative;
+  z-index: 2;
+  height: 100%; // 确保表单高度等于图片
+  display: flex;
+  flex-direction: column;
+  justify-content: center; // 使表单内容垂直居中
+}
+
+.title {
+  text-align: center;
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+label {
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #555;
+}
+
+input {
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  transition: border 0.3s ease;
+
+  &:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+}
+
+.submitButton {
+  width: 100%;
+  padding: 14px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+}
+
+.footer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.footer p {
+  font-size: 14px;
+  color: #777;
+  margin: 5px 0;
+}
+
+.footer p:hover {
+  color: #0056b3;
+  cursor: pointer;
+}

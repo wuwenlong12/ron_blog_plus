@@ -7,7 +7,7 @@ import {
   useMatches,
 } from "react-router-dom";
 import Header from "../components/Header/Header";
-import { MenuProps } from "antd";
+import { MenuProps, message } from "antd";
 import useTheme from "../hook/useTheme";
 import { setting } from "../setting";
 import Modal from "../components/Modal/Modal";
@@ -15,6 +15,9 @@ import RightModalDom from "../components/RightModalDom/RightModalDom";
 import { useDispatch, useSelector } from "react-redux";
 import { selectRoutes, setCurrentPath } from "../store/routersMapSlice";
 import LeftModalDom from "../components/LeftModalDom/LeftModalDom";
+import { checkSystemInit } from "../api/auth";
+import { AppDispatch, RootState } from "../store";
+import { checkLoginStatus } from "../store/authSlice";
 
 const IndexLayout = () => {
   const { isDarkMode, handleToggleTheme } = useTheme();
@@ -23,8 +26,37 @@ const IndexLayout = () => {
   const navigate = useNavigate();
   const [current, setCurrent] = useState("");
   const { pathname } = useLocation();
-  const dispatch = useDispatch();
+
   const location = useLocation();
+
+  const dispatch = useDispatch<AppDispatch>();
+  const { isAuthenticated, user, status } = useSelector(
+    (state: RootState) => state.auth
+  );
+
+  useEffect(() => {
+    if (status === "succeeded") {
+      if (isAuthenticated) {
+        message.success("你好" + user?.username);
+      } else {
+        message.success("你好游客,欢迎来到我的博客");
+      }
+    }
+  }, [dispatch, isAuthenticated]);
+  //检查系统初始化
+  useEffect(() => {
+    init();
+  }, []);
+
+  const init = async () => {
+    const res = await checkSystemInit();
+
+    if (!res.data.initialized) {
+      navigate("Init");
+      return;
+    }
+    dispatch(checkLoginStatus());
+  };
   // 路由持久化
   useEffect(() => {
     const currentPath = location.pathname;

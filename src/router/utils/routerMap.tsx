@@ -1,5 +1,6 @@
 import React from "react";
 import { withPageTransition } from "../../components/withPageTransition";
+import Init from "../../pages/Init/Init";
 
 export const componentKey = {
   Layout: "Layout",
@@ -8,6 +9,8 @@ export const componentKey = {
   Article: "Article",
   About: "About",
   ArticleMainContent: "ArticleMainContent",
+  Login: "Login",
+  Init: "Init",
 };
 
 export const componentMap: Record<
@@ -41,6 +44,16 @@ export const componentMap: Record<
   ),
   ArticleMainContent: React.lazy(() =>
     import("../../pages/ArticleMainContent/ArticleMainContent").then((mod) => ({
+      default: withPageTransition(mod.default),
+    }))
+  ),
+  Login: React.lazy(() =>
+    import("../../pages/Login/Login").then((mod) => ({
+      default: withPageTransition(mod.default),
+    }))
+  ),
+  Init: React.lazy(() =>
+    import("../../pages/Init/Init").then((mod) => ({
       default: withPageTransition(mod.default),
     }))
   ),

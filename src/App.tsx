@@ -22,6 +22,7 @@ const App: React.FC = () => {
   const dispatch = useDispatch();
   const Routes: RouteObject[] = useSelector(selectRoutes);
   const { isLoaded, loadArticleRoutes } = useArticleRoutes();
+
   useEffect(() => {
     if (isDarkMode) {
       setCurrentTheme({
