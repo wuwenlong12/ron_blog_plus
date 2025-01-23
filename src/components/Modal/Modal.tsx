@@ -62,6 +62,7 @@ const Modal: React.FC<ModalProps> = ({
 
   return (
     <AnimatePresence>
+      <div></div>
       {isShowModal ? (
         <motion.div
           className={styles.container}
