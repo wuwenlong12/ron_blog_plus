@@ -1,0 +1,284 @@
+// 主题颜色
+$primary-blue: #1677ff;
+$success-green: #52c41a;
+$warning-yellow: #faad14;
+$error-red: #ff4d4f;
+$purple: #722ed1;
+$pink: #eb2f96;
+$text-primary: #1f1f1f;
+$text-secondary: #666;
+$border-color: #f0f0f0;
+
+.dashboard {
+  padding: 24px;
+
+  .statCard {
+    height: 100%;
+    border-radius: 12px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .iconWrapper {
+      position: absolute;
+      right: -10px;
+      top: -10px;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.2;
+      font-size: 40px;
+      transform: rotate(-30deg);
+    }
+
+    .statTrend {
+      margin-top: 8px;
+      font-size: 13px;
+      color: $text-secondary;
+    }
+
+    :global {
+      .ant-card-body {
+        padding: 20px;
+      }
+
+      .ant-statistic-title {
+        color: $text-secondary;
+        font-size: 14px;
+        margin-bottom: 12px;
+      }
+
+      .ant-statistic-content {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .ant-statistic-content-value {
+        font-size: 28px;
+        font-weight: 600;
+      }
+    }
+  }
+
+  // 不同卡片的样式
+  .visitCard {
+    background: linear-gradient(135deg, #e6f4ff 0%, #ffffff 100%);
+    .iconWrapper {
+      color: $primary-blue;
+    }
+  }
+
+  .totalCard {
+    background: linear-gradient(135deg, #f6ffed 0%, #ffffff 100%);
+    .iconWrapper {
+      color: $success-green;
+    }
+  }
+
+  .articleCard {
+    background: linear-gradient(135deg, #f9f0ff 0%, #ffffff 100%);
+    .iconWrapper {
+      color: $purple;
+    }
+  }
+
+  .diaryCard {
+    background: linear-gradient(135deg, #fff0f6 0%, #ffffff 100%);
+    .iconWrapper {
+      color: $pink;
+    }
+  }
+
+  .tagCard {
+    height: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+
+    &.gradientBg {
+      background: linear-gradient(135deg, #e6f4ff 0%, #ffffff 100%);
+    }
+
+    .tagHeader {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: $text-primary;
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 16px;
+
+      .anticon {
+        color: $primary-blue;
+        font-size: 18px;
+      }
+    }
+
+    .tagContent {
+      text-align: center;
+      padding: 16px 0;
+      position: relative;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: -40px;
+        right: -40px;
+        width: 80px;
+        height: 80px;
+        background: $primary-blue;
+        border-radius: 50%;
+        opacity: 0.1;
+      }
+
+      .tagCount {
+        font-size: 32px;
+        font-weight: 600;
+        color: $primary-blue;
+        line-height: 1;
+        margin-bottom: 8px;
+      }
+
+      .tagDesc {
+        color: $text-secondary;
+        font-size: 13px;
+      }
+    }
+  }
+
+  .systemCard {
+    height: 100%;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+
+    .systemHeader {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: $text-primary;
+      font-size: 16px;
+
+      .anticon {
+        color: $primary-blue;
+        font-size: 20px;
+      }
+    }
+
+    .osInfo {
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      border: 1px solid $border-color;
+
+      .osItem {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .osLabel {
+          color: $text-secondary;
+          font-size: 14px;
+        }
+
+        .osValue {
+          color: $text-primary;
+          font-size: 15px;
+          font-weight: 500;
+        }
+      }
+    }
+
+    .resourceItem {
+      margin-bottom: 16px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      border: 1px solid $border-color;
+
+      .resourceLabel {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        color: $text-secondary;
+
+        .anticon {
+          color: $primary-blue;
+          font-size: 18px;
+        }
+      }
+
+      :global {
+        .ant-progress {
+          line-height: 1;
+        }
+        .ant-progress-text {
+          font-size: 13px;
+        }
+      }
+    }
+  }
+
+  .secondRow {
+    margin-top: 24px;
+  }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 16px;
+
+    .secondRow {
+      margin-top: 8px;
+    }
+
+    .statCard {
+      .iconWrapper {
+        width: 60px;
+        height: 60px;
+        font-size: 30px;
+      }
+
+      :global {
+        .ant-statistic-content-value {
+          font-size: 24px;
+        }
+      }
+    }
+
+    .tagContent {
+      padding: 12px 0 !important;
+
+      .tagCount {
+        font-size: 28px !important;
+      }
+
+      .tagDesc {
+        font-size: 12px;
+      }
+    }
+
+    .resourceItem {
+      padding: 12px !important;
+    }
+
+    .osInfo {
+      padding: 12px !important;
+
+      .osItem {
+        .osValue {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}

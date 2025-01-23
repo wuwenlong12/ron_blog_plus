@@ -11,6 +11,7 @@ export const componentKey = {
   ArticleMainContent: "ArticleMainContent",
   Login: "Login",
   Init: "Init",
+  Admin: "Admin",
 };
 
 export const componentMap: Record<
@@ -54,6 +55,11 @@ export const componentMap: Record<
   ),
   Init: React.lazy(() =>
     import("../../pages/Init/Init").then((mod) => ({
+      default: withPageTransition(mod.default),
+    }))
+  ),
+  Admin: React.lazy(() =>
+    import("../../Admin/Admin").then((mod) => ({
       default: withPageTransition(mod.default),
     }))
   ),

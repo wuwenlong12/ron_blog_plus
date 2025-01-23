@@ -1,0 +1,233 @@
+.container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.carouselCard {
+  margin-bottom: 16px;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+
+  .cardContent {
+    display: flex;
+    gap: 24px;
+  }
+
+  .imageSection {
+    flex: 0 0 300px;
+
+    .backgroundImage {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #f0f0f0;
+    }
+
+    .placeholderImage {
+      width: 100%;
+      height: 200px;
+      border-radius: 8px;
+      border: 1px solid #f0f0f0;
+      background: linear-gradient(135deg, #f6f8fb 0%, #f0f5ff 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .infoSection {
+    flex: 1;
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #1f1f1f;
+    }
+
+    h4 {
+      margin: 0 0 16px;
+      font-size: 15px;
+      color: #666;
+    }
+
+    p {
+      margin: 0 0 20px;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 12px;
+
+      button {
+        color: #fff;
+        border: none;
+        padding: 4px 16px;
+        height: 32px;
+        border-radius: 4px;
+        transition: all 0.3s;
+
+        &:hover {
+          opacity: 0.9;
+        }
+      }
+    }
+  }
+
+  .actions {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: flex-start;
+  }
+}
+
+.uploadArea {
+  width: 20vw;
+  height: 15vw;
+  border: 2px dashed #e5e7eb;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #f6f8fb 0%, #f0f5ff 100%);
+  cursor: pointer;
+  transition: all 0.3s;
+
+  &:hover {
+    border-color: #1677ff;
+    background: linear-gradient(135deg, #f0f5ff 0%, #e6f4ff 100%);
+  }
+
+  .previewImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+}
+
+.placeholderContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: #8c8c8c;
+
+  .placeholderIcon {
+    font-size: 32px;
+    color: #bfbfbf;
+
+    .anticon {
+      transition: all 0.3s;
+    }
+  }
+
+  span {
+    font-size: 14px;
+  }
+
+  &:hover {
+    .placeholderIcon {
+      color: #1677ff;
+    }
+  }
+}
+
+.buttonItem {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: #fafafa;
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
+
+  .buttonHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    h4 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 500;
+      color: #1f1f1f;
+    }
+  }
+
+  .buttonForm {
+    display: grid;
+    grid-template-columns: 1.5fr 2fr 80px;
+    gap: 16px;
+    align-items: flex-start;
+
+    :global {
+      .ant-form-item {
+        margin-bottom: 0;
+      }
+
+      .ant-color-picker-trigger {
+        width: 100%;
+        height: 32px;
+        border-radius: 6px;
+      }
+    }
+  }
+}
+
+.addButton {
+  height: 40px;
+  margin-top: 8px;
+  border-style: dashed;
+
+  &:hover {
+    color: #1677ff;
+    border-color: #1677ff;
+  }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+
+  .carouselCard {
+    .cardContent {
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .imageSection {
+      flex: 0 0 auto;
+    }
+
+    .actions {
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+  }
+
+  .buttonForm {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .placeholderImage,
+  .backgroundImage {
+    height: 160px !important;
+  }
+
+  .uploadArea {
+    height: 200px;
+  }
+}

@@ -50,12 +50,10 @@ const IndexLayout = () => {
 
   const init = async () => {
     const res = await checkSystemInit();
-
     if (!res.data.initialized) {
       navigate("Init");
       return;
     }
-    dispatch(checkLoginStatus());
   };
   // 路由持久化
   useEffect(() => {
@@ -109,7 +107,7 @@ const IndexLayout = () => {
   return (
     <div style={{ overflow: "hidden" }}>
       <Header
-        logoUrl={setting.BLOG_HERO_LOGO_URL}
+        logoUrl={user.imgurl || setting.BLOG_HERO_DEFAULT_LOGO_URL}
         siteName="Ron 个人博客"
         menuItems={items}
         isDarkMode={isDarkMode}

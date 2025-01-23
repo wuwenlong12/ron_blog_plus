@@ -16,10 +16,12 @@ import { selectRoutes } from "./store/routersMapSlice";
 import useArticleRoutes from "./router/useArticleRoutes";
 import { App as AntdApp } from "antd"; // 引入 Ant Design 的 App
 import MouseParticles from "react-mouse-particles";
+import { checkLoginStatus } from "./store/authSlice";
+import { AppDispatch } from "./store";
 const App: React.FC = () => {
   const { isDarkMode } = useTheme(); // 确保在 Provider 内部
   const [currentTheme, setCurrentTheme] = useState<ThemeConfig>();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const Routes: RouteObject[] = useSelector(selectRoutes);
   const { isLoaded, loadArticleRoutes } = useArticleRoutes();
 
@@ -68,6 +70,7 @@ const App: React.FC = () => {
 
   // 创建静态路由
   useEffect(() => {
+    dispatch(checkLoginStatus());
     dispatch(setRoutesMap(StaticRoutesMap));
   }, [dispatch]);
 

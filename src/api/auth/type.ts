@@ -10,11 +10,19 @@ type CheckSystemInitData = {
 };
 
 export interface ResponseLogin extends ResponseBase {
-  data: userInfo;
+  data: User;
 }
 
-type userInfo = {
-  id: string;
-  imgurl: string;
-  username: string;
+export type User = {
+  id?: string;
+  username?: string;
+  email?: string;
+  password?: string;
+  github?: string;
+  wx?: string;
+  school?: string;
+  explain?: Array<string>;
+  imgurl?: string;
+  oldPassword?: string;
+  newPassword?: string;
 };

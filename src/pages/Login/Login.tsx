@@ -4,10 +4,11 @@ import styles from "./Login.module.scss";
 import img from "../../assets/bg.png";
 import { login } from "../../api/auth";
 import { message } from "antd";
+import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const navigate = useNavigate();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Add your form submission logic here
@@ -16,8 +17,7 @@ const Login = () => {
     const res = await login(email, password);
     if (res.code === 0) {
       message.success("登陆成功，跳转到个人设置页面");
-    } else {
-      message.error(res.message);
+      navigate("/admin");
     }
   };
   return (

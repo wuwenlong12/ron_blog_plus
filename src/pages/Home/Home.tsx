@@ -29,7 +29,7 @@ import BlogCard from "./components/BlogCard/BlogCard";
 
 const Main = () => {
   const mainContentRef = useRef<HTMLDivElement>(null);
-
+  const { user } = useSelector((state: RootState) => state.auth);
   const scrollToContent = () => {
     mainContentRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -53,20 +53,25 @@ const Main = () => {
           <Coder style={{ width: "clamp(400px, 50.2vw, 800px)" }}></Coder>
         </div>
         <div className={styles.desc}>
-          <Typist
-            avgTypingDelay={100}
-            cursor={{
-              show: true,
-              blink: true,
-              element: "_",
-              hideWhenDone: false,
-              hideWhenDoneDelay: 1000,
-            }}
-          >
-            <p>把初心别在袖口，任世事如流。</p>
-            <Typist.Delay ms={500} />
-            <p>清风拂过，衣角翻卷间，那抹最初的颜色，永远醒目。</p>
-          </Typist>
+          {user.explain.length > 0 && (
+            <Typist
+              avgTypingDelay={100}
+              cursor={{
+                show: true,
+                blink: true,
+                element: "_",
+                hideWhenDone: false,
+                hideWhenDoneDelay: 1000,
+              }}
+            >
+              {user.explain.map((message, index) => (
+                <div key={index}>
+                  <p>{message}</p>
+                  <Typist.Delay ms={500} />
+                </div>
+              ))}
+            </Typist>
+          )}
           <Button className={styles.rollBtn} onClick={scrollToContent}>
             <FaArrowDown className={styles.rollBtnIcon} />
           </Button>

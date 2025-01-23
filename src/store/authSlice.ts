@@ -1,13 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { auth } from "../api/auth";
 import type { AppDispatch } from "../store";
-
-// 定义用户类型
-interface User {
-  id: string;
-  email: string;
-  username: string;
-}
+import { User } from "../api/auth/type";
 
 interface AuthState {
   isAuthenticated: boolean;

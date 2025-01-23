@@ -1,0 +1,225 @@
+// 主题颜色
+$primary-blue: #1677ff;
+$primary-text: #1f1f1f;
+$secondary-text: #666;
+$border-color: #f0f0f0;
+$background: #f5f5f5;
+$menu-background: #fff;
+$hover-background: #f6f6f6;
+
+.layout {
+  min-height: 100vh;
+  background: $background;
+}
+
+.sider {
+  background: $menu-background !important;
+  border-right: 1px solid $border-color;
+  overflow: hidden;
+
+  .ant-layout-sider-trigger {
+    display: none;
+  }
+}
+
+.logo {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  border-bottom: 1px solid $border-color;
+
+  .logoText {
+    font-size: 18px;
+    font-weight: 600;
+    color: $primary-blue;
+  }
+
+  .logoVersion {
+    font-size: 12px;
+    color: $secondary-text;
+    margin-left: 8px;
+  }
+}
+
+.menu {
+  border-right: none !important;
+
+  :global {
+    .ant-menu-item {
+      height: 40px;
+      line-height: 40px;
+      margin: 4px 12px !important;
+      border-radius: 4px;
+
+      &:hover {
+        color: $primary-blue !important;
+        background: $hover-background !important;
+      }
+
+      &.ant-menu-item-selected {
+        background: #e6f4ff !important;
+        color: $primary-blue !important;
+        font-weight: 500;
+
+        &::after {
+          display: none;
+        }
+      }
+
+      .anticon {
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+.header {
+  background: #fff;
+  padding: 0;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid $border-color;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  width: 100%;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  padding-left: 16px;
+
+  .trigger {
+    font-size: 16px;
+    cursor: pointer;
+    color: $secondary-text;
+    padding: 8px;
+    margin-right: 8px;
+
+    &:hover {
+      color: $primary-blue;
+    }
+  }
+
+  .pageInfo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: $secondary-text;
+    font-size: 14px;
+
+    .pageTitle {
+      margin: 0;
+      color: $primary-text;
+      font-weight: normal;
+    }
+
+    .breadcrumb {
+      color: $secondary-text;
+    }
+  }
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  padding-right: 16px;
+  gap: 16px;
+}
+
+.notification {
+  cursor: pointer;
+
+  .icon {
+    font-size: 16px;
+    color: $secondary-text;
+    padding: 8px;
+
+    &:hover {
+      color: $primary-blue;
+    }
+  }
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+
+  &:hover {
+    background: $hover-background;
+  }
+
+  .userAvatar {
+    position: relative;
+
+    .userStatus {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #52c41a;
+      border: 1px solid #fff;
+    }
+  }
+
+  .userMeta {
+    .userName {
+      font-size: 14px;
+      color: $primary-text;
+    }
+
+    .userRole {
+      font-size: 12px;
+      color: $secondary-text;
+    }
+  }
+}
+
+.content {
+  padding: 16px;
+  background: $background;
+  min-height: calc(100vh - 56px);
+  overflow: auto;
+}
+
+.contentInner {
+  background: #fff;
+  border-radius: 4px;
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .logo {
+    padding: 0 16px;
+  }
+
+  .headerLeft {
+    padding-left: 12px;
+
+    .pageInfo {
+      font-size: 13px;
+    }
+  }
+
+  .headerRight {
+    padding-right: 12px;
+  }
+
+  .userMeta {
+    display: none;
+  }
+
+  .content {
+    padding: 12px;
+  }
+}

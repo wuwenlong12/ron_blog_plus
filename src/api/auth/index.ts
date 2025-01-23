@@ -1,19 +1,20 @@
 import http from "..";
 import { ResponseBase } from "../type";
-import { ResponseCheckSystemInit, ResponseLogin } from "./type";
+import { ResponseCheckSystemInit, ResponseLogin, User } from "./type";
 
 enum API {
-  CHECK = "users/check",
-  INIT = "users/init",
-  LOGIN = "users/login",
-  AUTH = "users/auth",
+  USERS_CHECK = "users/check",
+  USERS_INIT = "users/init",
+  USERS_LOGIN = "users/login",
+  USERS_AUTH = "users/auth",
+  USERS_DETAILS = "users/details",
 }
 
 export const checkSystemInit = () =>
-  http.get<any, ResponseCheckSystemInit>(API.CHECK, {});
+  http.get<any, ResponseCheckSystemInit>(API.USERS_CHECK, {});
 
 export const systemInit = (username: string, email: string, password: string) =>
-  http.post<any, ResponseBase>(API.INIT, {
+  http.post<any, ResponseBase>(API.USERS_INIT, {
     username,
     email,
     password,
@@ -21,7 +22,7 @@ export const systemInit = (username: string, email: string, password: string) =>
 
 export const login = (email: string, password: string) =>
   http.post<any, ResponseLogin>(
-    API.LOGIN,
+    API.USERS_LOGIN,
     {
       email,
       password,
@@ -30,4 +31,34 @@ export const login = (email: string, password: string) =>
   );
 
 export const auth = () =>
-  http.get<any, ResponseLogin>(API.AUTH, { withCredentials: true });
+  http.get<any, ResponseLogin>(API.USERS_AUTH, { withCredentials: true });
+
+export const getUserDetails = () =>
+  http.get<any, ResponseBase>(API.USERS_DETAILS, { withCredentials: true });
+
+export const updateUserDetails = ({
+  username,
+  email,
+  oldPassword,
+  newPassword,
+  github,
+  wx,
+  school,
+  explain,
+  imgurl,
+}: User) =>
+  http.patch<any, ResponseBase>(
+    API.USERS_DETAILS,
+    {
+      username,
+      email,
+      oldPassword,
+      newPassword,
+      github,
+      wx,
+      school,
+      explain,
+      imgurl,
+    },
+    { withCredentials: true }
+  );

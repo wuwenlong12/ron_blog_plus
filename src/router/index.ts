@@ -87,4 +87,14 @@ export const StaticRoutesMap: RouteObject[] = [
       requiresAuth: false,
     },
   },
+  {
+    path: "admin",
+    element: componentKey.Admin, // 用字符串表示组件
+    handle: {
+      key: "Admin",
+      label: "管理",
+      Icon: iconKey.FaMeteor, // 用字符串表示图标
+      requiresAuth: false,
+    },
+  },
 ];
