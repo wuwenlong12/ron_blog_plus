@@ -62,63 +62,61 @@ const Modal: React.FC<ModalProps> = ({
 
   return (
     <AnimatePresence>
-      <>
-        {isShowModal ? (
-          <motion.div
-            className={styles.container}
-            style={
-              direction === "center"
-                ? {
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    position: "fixed",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    zIndex: 9999,
-                  }
-                : {}
-            }
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            variants={directionVariants[direction]} // 根据传入的 direction 使用不同的动画
-            transition={transition}
-          >
-            <div className={styles.content} style={{ ...style }}>
-              {direction === "center" ? (
-                <>
-                  <ThemeView
-                    style={{
-                      height: 32,
-                      position: "relative",
-                      borderRadius: "10px 10px 0 0",
-                    }}
-                    lightStyle={{
-                      backgroundColor: "#eee",
-                    }}
-                    darkStyle={{
-                      backgroundColor: "#1f1f1f",
-                    }}
+      {isShowModal && (
+        <motion.div
+          className={styles.container}
+          style={
+            direction === "center"
+              ? {
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  position: "fixed",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  zIndex: 9999,
+                }
+              : {}
+          }
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          variants={directionVariants[direction]} // 根据传入的 direction 使用不同的动画
+          transition={transition}
+        >
+          <div className={styles.content} style={{ ...style }}>
+            {direction === "center" ? (
+              <>
+                <ThemeView
+                  style={{
+                    height: 32,
+                    position: "relative",
+                    borderRadius: "10px 10px 0 0",
+                  }}
+                  lightStyle={{
+                    backgroundColor: "#eee",
+                  }}
+                  darkStyle={{
+                    backgroundColor: "#1f1f1f",
+                  }}
+                >
+                  <Button
+                    onClick={onClose}
+                    style={{ position: "absolute", right: 0, zIndex: 10 }}
+                    shape="circle"
                   >
-                    <Button
-                      onClick={onClose}
-                      style={{ position: "absolute", right: 0, zIndex: 10 }}
-                      shape="circle"
-                    >
-                      <IoIosCloseCircle color="red" size={30} />
-                    </Button>
-                  </ThemeView>
-                </>
-              ) : null}
+                    <IoIosCloseCircle color="red" size={30} />
+                  </Button>
+                </ThemeView>
+              </>
+            ) : null}
 
-              {children}
-            </div>
-          </motion.div>
-        ) : null}
-      </>
+            {children}
+          </div>
+        </motion.div>
+      )}
     </AnimatePresence>
   );
 };
