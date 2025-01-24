@@ -23,6 +23,7 @@ const IndexLayout = () => {
   const { isDarkMode, handleToggleTheme } = useTheme();
   const [isLeftMenuOpen, setIsLeftMenuOpen] = useState(false);
   const [isRightMenuOpen, setIsRightMenuOpen] = useState(false);
+  const [systemIsInit, setSystemIsInit] = useState(false);
   const navigate = useNavigate();
   const [current, setCurrent] = useState("");
   const { pathname } = useLocation();
@@ -34,15 +35,6 @@ const IndexLayout = () => {
     (state: RootState) => state.auth
   );
 
-  useEffect(() => {
-    if (status === "succeeded") {
-      if (isAuthenticated) {
-        message.success("你好" + user?.username);
-      } else {
-        message.success("你好游客,欢迎来到我的博客");
-      }
-    }
-  }, [dispatch, isAuthenticated]);
   //检查系统初始化
   useEffect(() => {
     init();
@@ -53,8 +45,23 @@ const IndexLayout = () => {
     if (!res.data.initialized) {
       navigate("Init");
       return;
+    } else {
+      setSystemIsInit(true);
+      // navigate("/");
     }
   };
+
+  useEffect(() => {
+    if (systemIsInit === true && status === "succeeded") {
+      if (isAuthenticated) {
+        message.success("你好" + user?.username);
+        console.log(123123);
+      } else {
+        message.success("你好游客,欢迎来到我的博客");
+      }
+    }
+  }, [dispatch, isAuthenticated, systemIsInit]);
+
   // 路由持久化
   useEffect(() => {
     const currentPath = location.pathname;
@@ -82,9 +89,11 @@ const IndexLayout = () => {
     };
   });
 
+  //未初始化
+  if (!systemIsInit) return;
+
   const handleNavigate = (key: string) => {
     console.log(key);
-
     setCurrent(key);
     navigate(key === "Home" ? "/" : `/${key}`);
     setIsRightMenuOpen(false);
@@ -107,7 +116,7 @@ const IndexLayout = () => {
   return (
     <div style={{ overflow: "hidden" }}>
       <Header
-        logoUrl={user.imgurl || setting.BLOG_HERO_DEFAULT_LOGO_URL}
+        logoUrl={user?.imgurl || setting.BLOG_HERO_DEFAULT_LOGO_URL}
         siteName="Ron 个人博客"
         menuItems={items}
         isDarkMode={isDarkMode}

@@ -135,7 +135,7 @@ const Editor = forwardRef<EditorRef, EditorProps>(
             style={{ fontSize: "1rem" }}
             editor={editor}
             editable={true}
-            onChange={debounce(() => onChange(editor.document), 3000)}
+            onChange={() => onChange(editor.document)}
             theme={isDarkMode ? "dark" : "light"}
             formattingToolbar
             linkToolbar

@@ -5,9 +5,13 @@ import img from "../../assets/bg.png";
 import { login } from "../../api/auth";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store";
+import { checkLoginStatus } from "../../store/authSlice";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -21,13 +21,13 @@ import {
 } from "@ant-design/icons";
 import styles from "../styles/CarouselManager.module.scss";
 import { uploadFileInChunks } from "../../utils/uploadFileInChunks";
-import { CarouselItem } from "../../api/carouselManager/type";
+import { CarouselItem } from "../../api/carousel/type";
 import {
   addCarousel,
   deleteCarousel,
   getCarousel,
   updateCarousel,
-} from "../../api/carouselManager";
+} from "../../api/carousel";
 
 const CarouselManager: React.FC = () => {
   const [carousels, setCarousels] = useState<CarouselItem[]>([]);

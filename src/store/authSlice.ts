@@ -25,8 +25,9 @@ const authSlice = createSlice({
       state.user = action.payload;
       state.status = "succeeded";
     },
-    setUser: (state) => {
+    setUser: (state, action) => {
       state.isAuthenticated = false;
+      state.user = action.payload;
       state.status = "succeeded";
     },
     setLoading: (state) => {
@@ -56,8 +57,8 @@ export const checkLoginStatus = () => async (dispatch: AppDispatch) => {
     const res = await auth();
     if (res.code === 0) {
       dispatch(setAdmin(res.data));
-    } else {
-      dispatch(setUser());
+    } else if (res.code === 1) {
+      dispatch(setUser(res.data));
     }
   } catch (error) {
     dispatch(setError());

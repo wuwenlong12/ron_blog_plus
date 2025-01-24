@@ -1,4 +1,5 @@
 @import "../../../../setting/variables.scss";
+
 .container {
   .top {
     padding: 0 4vw;
@@ -12,11 +13,11 @@
     }
     .desc {
       font-size: clamp(12px, 1.6vw, 16px);
-      display: -webkit-box; /* 必须设置为 -webkit-box */
-      -webkit-box-orient: vertical; /* 设置盒子排列方向为垂直 */
-      -webkit-line-clamp: 1; /* 限制显示的行数 */
-      overflow: hidden; /* 隐藏溢出内容 */
-      text-overflow: ellipsis; /* 省略号显示溢出部分 */
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
   .list {
@@ -24,7 +25,7 @@
     justify-content: space-between;
     margin-top: 20px;
     overflow: auto;
-    scrollbar-width: none; /* 对 Firefox 隐藏滚动条 */
+    scrollbar-width: none;
     padding-left: 20px;
     .projectCard {
       background-color: #fff;
@@ -65,6 +66,68 @@
           border-radius: 10px;
           border: none;
           color: #fff;
+        }
+      }
+    }
+  }
+}
+
+.detailModal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .modalImage {
+    width: 100%;
+
+    max-height: 300px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    object-fit: cover;
+  }
+  .modalContent {
+    width: 100%;
+    max-width: 600px;
+    padding: 0 20px;
+    .infoRow {
+      display: flex;
+      justify-content: space-between;
+      p {
+        margin: 10px 0;
+        font-size: 16px;
+        line-height: 1.5;
+      }
+    }
+    .modalButtons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      .likeButton {
+        background-color: #f5f5f5;
+        padding: 10px 20px;
+        border-radius: 10px;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        transition: background-color 0.3s;
+        &:hover {
+          background-color: #e0e0e0;
+        }
+      }
+      .githubButton {
+        background-color: #24292e;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.3s;
+        &:hover {
+          background-color: #3c434a;
         }
       }
     }

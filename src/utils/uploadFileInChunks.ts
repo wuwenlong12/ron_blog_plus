@@ -9,7 +9,10 @@ const readFile = async (file: any) => {
     reader.readAsArrayBuffer(file);
   });
 };
-export const uploadFileInChunks = (file: File, chunkSize = 1024 * 1024) => {
+export const uploadFileInChunks = (
+  file: File,
+  chunkSize = 1024 * 1024
+): Promise<string> => {
   return new Promise(async (resolve, reject) => {
     const fileSize = file.size;
 

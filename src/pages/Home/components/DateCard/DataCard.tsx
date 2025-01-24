@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import styles from "./CataCard.module.scss";
 import { Button, Carousel } from "antd";
 import test from "../../../../assets/test.png";
-import { getCarousel } from "../../../../api/carouselManager";
+import { getCarousel } from "../../../../api/carousel";
 import { useScroll } from "framer-motion";
-import { CarouselItem } from "../../../../api/carouselManager/type";
+import { CarouselItem } from "../../../../api/carousel/type";
 export default function DataCard() {
   const [carousels, setCarousels] = useState<CarouselItem[]>([]);
   useEffect(() => {

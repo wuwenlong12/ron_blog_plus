@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Layout,
   Menu,
@@ -27,13 +27,20 @@ import CarouselManager from "./pages/CarouselManager";
 import ProductManager from "./pages/ProductManager";
 import Dashboard from "./pages/Dashboard";
 import styles from "./styles/Admin.module.scss";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../store";
+import { checkLoginStatus } from "../store/authSlice";
 
 const { Header, Sider, Content } = Layout;
 
 const Admin: React.FC = () => {
   const [selectedKey, setSelectedKey] = useState("dashboard");
   const [collapsed, setCollapsed] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
 
+  useEffect(() => {
+    dispatch(checkLoginStatus);
+  }, []);
   const menuItems = [
     {
       key: "dashboard",
