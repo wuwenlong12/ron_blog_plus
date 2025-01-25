@@ -1,9 +1,27 @@
 import axios from "axios";
 import { message } from "antd";
 
+const host = window.location.hostname;
+
+function removeText(input: string, textToRemove: string): string {
+  const regex = new RegExp(textToRemove, "g"); // 创建一个全局匹配的正则表达式
+  return input.replace(regex, ""); // 替换掉指定的文字
+}
+
+// 获取 subdomain，返回空字符串或二级域名
+const getSubdomain = () => {
+  return removeText(host, process.env.REACT_APP_ENV_HOSTNAME);
+};
+console.log(getSubdomain());
+const baseURL = `${process.env.REACT_APP_ENV_PROTOCOL}${getSubdomain()}${
+  process.env.REACT_APP_ENV_HOSTNAME
+}:${process.env.REACT_APP_ENV_PORT}${process.env.REACT_APP_ENV_PATH}`;
+
+console.log(baseURL);
+
 // 创建 axios 实例
 const http = axios.create({
-  baseURL: process.env.REACT_APP_ENV_BASE_URL, // 替换为你的 API 地址
+  baseURL: baseURL, // 使用拼接后的 baseURL
   timeout: 3000, // 请求超时时间
   headers: { "Content-Type": "application/json" },
 });
@@ -32,7 +50,13 @@ http.interceptors.response.use(
           message.error("没有权限访问");
           break;
         case 404:
-          message.error("请求资源未找到");
+          if (data?.code === 2) {
+            message.error("找不到此站点");
+          } else if (data?.code === 1) {
+            message.error("找不到页面");
+          } else {
+            message.error("请求资源未找到");
+          }
           break;
         case 500:
           message.error("服务器内部错误");

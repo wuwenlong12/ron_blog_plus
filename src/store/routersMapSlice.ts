@@ -2,10 +2,13 @@ import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RouteObject } from "react-router-dom";
 import { transformRoutes } from "../router/utils/transformRoutes";
 import { Key } from "react";
+import { AppDispatch } from ".";
+import { getActicalDirectory } from "../api/folder";
 
 // 定义状态的类型
 interface RoutesState {
   isLoaded: boolean; // 动态路由是否已加载
+  articleRouterIsLoaded: boolean; //article 动态路由是否已加载
   routesMap: RouteObject[]; // 静态路由映射
   articleRoutesMap: RouteObject[]; // 动态路由映射
   currentPath: string;
@@ -15,6 +18,7 @@ interface RoutesState {
 // 初始化状态
 const initialState: RoutesState = {
   isLoaded: false,
+  articleRouterIsLoaded: false,
   routesMap: [],
   articleRoutesMap: [],
   currentPath: "/", // 默认首页路径
@@ -58,6 +62,10 @@ const RoutesSlice = createSlice({
     setIsLoaded(state, action: PayloadAction<boolean>) {
       state.isLoaded = action.payload;
     },
+    // 设置article动态路由加载状态
+    setArticleRouterIsLoaded(state, action: PayloadAction<boolean>) {
+      state.articleRouterIsLoaded = action.payload;
+    },
     // 更新当前路径
     setCurrentPath(state, action: PayloadAction<string>) {
       state.currentPath = action.payload;
@@ -80,13 +88,11 @@ export const {
   setArticleRoutesMap,
   setRoutesMap,
   setIsLoaded,
+  setArticleRouterIsLoaded,
   // resetRoutesState,
   setCurrentPath,
   setSelectedKey,
 } = RoutesSlice.actions;
-
-// 导出 reducer
-export default RoutesSlice.reducer;
 
 export const selectRoutes = createSelector(
   // 第一个参数是依赖项，这里是 routesMap
@@ -97,3 +103,24 @@ export const selectRoutes = createSelector(
     return transformRoutes(routesMap); // 返回处理后的结果
   }
 );
+
+//加载文章router
+export const loadArticleRoutes = () => async (dispatch: AppDispatch) => {
+  dispatch(setArticleRouterIsLoaded(false)); // 请求开始时设置为加载中
+  try {
+    const res = await getActicalDirectory(); // 获取动态路由数据
+    if (res.code === 0) {
+      dispatch(setArticleRoutesMap(res.data));
+    } else if (res.code === 1) {
+      dispatch(setArticleRoutesMap([])); // 如果没有数据，清空动态路由
+    }
+  } catch (error) {
+    console.error("加载文章路由失败:", error); // 捕获并输出错误
+    dispatch(setArticleRoutesMap([])); // 如果出错，清空动态路由
+  } finally {
+    dispatch(setArticleRouterIsLoaded(true)); // 无论成功与否，标记加载结束
+  }
+};
+
+// 导出 reducer
+export default RoutesSlice.reducer;

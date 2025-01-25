@@ -9,7 +9,7 @@ export type ProjectItem = {
   img_url: string;
   title: string;
   category: string;
-  likes?: 0;
+  likes?: number;
   button_url: string;
   content: PartialBlock[];
   createdAt?: string;

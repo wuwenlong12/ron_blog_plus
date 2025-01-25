@@ -1,13 +1,13 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useCallback, useEffect, useState } from "react";
 import styles from "./Infolist.module.scss";
 import { Button, Modal } from "antd";
 import { FcLike } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
-import { getProject } from "../../../../api/project";
+import { getProject, likeProject } from "../../../../api/project";
 import { ProjectItem } from "../../../../api/project/type";
 import dayjs from "dayjs";
 import Editor from "../../../../components/Editor/Editor";
-
+import { debounce } from "lodash";
 interface InfoListProps {
   style?: React.CSSProperties;
 }
@@ -33,6 +33,37 @@ const InfoList: React.FC<InfoListProps> = ({ style }) => {
     setIsModalOpen(true);
   };
 
+  const hanlderLikeClick = useCallback(
+    debounce(
+      async (id: string, isModal: boolean = false) => {
+        setProjects((prevProjects) =>
+          prevProjects.map((project) =>
+            project._id === id
+              ? { ...project, likes: project.likes + 1 }
+              : project
+          )
+        );
+        if (isModal)
+          setSelectedProject((prev) => {
+            return { ...prev, likes: prev.likes + 1 };
+          });
+
+        const res = await likeProject(id);
+        if (res.code !== 0) {
+          setProjects((prevProjects) =>
+            prevProjects.map((project) =>
+              project._id === id
+                ? { ...project, likes: project.likes - 1 }
+                : project
+            )
+          );
+        }
+      },
+      1000,
+      { leading: true, trailing: false }
+    ),
+    []
+  );
   return (
     <div style={style} className={styles.container}>
       <div className={styles.top}>
@@ -51,7 +82,11 @@ const InfoList: React.FC<InfoListProps> = ({ style }) => {
             </div>
             <div className={styles.classify}>{info.category}</div>
             <div className={styles.bottomBtn}>
-              <Button icon={<FcLike />} className={styles.leftBtn}>
+              <Button
+                icon={<FcLike />}
+                className={styles.leftBtn}
+                onClick={() => hanlderLikeClick(info._id)}
+              >
                 {info.likes}
               </Button>
               <Button
@@ -98,7 +133,7 @@ const InfoList: React.FC<InfoListProps> = ({ style }) => {
                   icon={<FcLike />}
                   className={styles.likeButton}
                   onClick={() => {
-                    // 点赞逻辑
+                    hanlderLikeClick(selectedProject._id, true);
                   }}
                 >
                   {selectedProject.likes}

@@ -12,6 +12,11 @@ const useArticleRoutes = () => {
   const loadArticleRoutes = async () => {
     try {
       const res = await getActicalDirectory(); // 获取动态路由数据
+      if (res.code !== 0) {
+        dispatch(setArticleRoutesMap([]));
+        setIsLoaded(true);
+        return;
+      }
       const backendData = res.data;
       // 生成动态子路由
       const articalChildren = generateRoutesMap(backendData);

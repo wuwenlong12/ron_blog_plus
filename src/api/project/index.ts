@@ -4,6 +4,7 @@ import { ProjectItem, ResponseGetProject } from "./type";
 
 enum API {
   BASE_PROJECT = "base/project",
+  BASE_PROJECT_LIKE = "base/project/like",
 }
 
 export const getProject = () =>
@@ -30,3 +31,6 @@ export const updateProject = (id: string, updateValue: ProjectItem) =>
       withCredentials: true,
     }
   );
+
+export const likeProject = (id: string) =>
+  http.patch<any, ResponseBase>(API.BASE_PROJECT_LIKE, { id });

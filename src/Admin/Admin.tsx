@@ -30,6 +30,7 @@ import styles from "./styles/Admin.module.scss";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
 import { checkLoginStatus } from "../store/authSlice";
+import AboutManager from "./pages/AboutManager";
 
 const { Header, Sider, Content } = Layout;
 
@@ -65,6 +66,12 @@ const Admin: React.FC = () => {
       icon: <ShoppingOutlined />,
       label: "产品列表",
       component: <ProductManager />,
+    },
+    {
+      key: "about",
+      icon: <ShoppingOutlined />,
+      label: "关于页面",
+      component: <AboutManager />,
     },
   ];
 
