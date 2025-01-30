@@ -17,11 +17,13 @@ export type User = {
   id?: string;
   username?: string;
   email?: string;
+  role: {
+    _id: string;
+    name: "superAdmin" | "webMaster" | "user";
+    permissions: string[];
+  };
+  managedSites: [];
   password?: string;
-  github?: string;
-  wx?: string;
-  school?: string;
-  explain?: Array<string>;
   imgurl?: string;
   oldPassword?: string;
   newPassword?: string;

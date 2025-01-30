@@ -12,6 +12,13 @@ export const componentKey = {
   Login: "Login",
   Init: "Init",
   Admin: "Admin",
+  NotFound: "NotFound",
+  Greet: "Greet",
+  AboutManager: "AboutManager",
+  CarouselManager: "CarouselManager",
+  Dashboard: "Dashboard",
+  ProductManager: "ProductManager",
+  ProfileForm: "ProfileForm",
 };
 
 export const componentMap: Record<
@@ -58,8 +65,43 @@ export const componentMap: Record<
       default: withPageTransition(mod.default),
     }))
   ),
+  Greet: React.lazy(() =>
+    import("../../pages/Greet/Greet").then((mod) => ({
+      default: withPageTransition(mod.default),
+    }))
+  ),
   Admin: React.lazy(() =>
     import("../../Admin/Admin").then((mod) => ({
+      default: withPageTransition(mod.default),
+    }))
+  ),
+  AboutManager: React.lazy(() =>
+    import("../../Admin/pages/AboutManager").then((mod) => ({
+      default: withPageTransition(mod.default),
+    }))
+  ),
+  CarouselManager: React.lazy(() =>
+    import("../../Admin/pages/CarouselManager").then((mod) => ({
+      default: withPageTransition(mod.default),
+    }))
+  ),
+  Dashboard: React.lazy(() =>
+    import("../../Admin/pages/Dashboard").then((mod) => ({
+      default: withPageTransition(mod.default),
+    }))
+  ),
+  ProductManager: React.lazy(() =>
+    import("../../Admin/pages/ProductManager").then((mod) => ({
+      default: withPageTransition(mod.default),
+    }))
+  ),
+  ProfileForm: React.lazy(() =>
+    import("../../Admin/pages/ProfileForm").then((mod) => ({
+      default: withPageTransition(mod.default),
+    }))
+  ),
+  NotFound: React.lazy(() =>
+    import("../../pages/NotFound/NotFound").then((mod) => ({
       default: withPageTransition(mod.default),
     }))
   ),

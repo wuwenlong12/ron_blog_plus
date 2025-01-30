@@ -1,6 +1,5 @@
 import axios from "axios";
 import { message } from "antd";
-
 const host = window.location.hostname;
 
 function removeText(input: string, textToRemove: string): string {
@@ -51,9 +50,7 @@ http.interceptors.response.use(
           break;
         case 404:
           if (data?.code === 2) {
-            message.error("找不到此站点");
-          } else if (data?.code === 1) {
-            message.error("找不到页面");
+            message.error(data.message);
           } else {
             message.error("请求资源未找到");
           }

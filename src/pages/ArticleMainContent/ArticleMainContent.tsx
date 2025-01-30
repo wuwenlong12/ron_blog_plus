@@ -20,14 +20,13 @@ import {
   ReadOutlined,
 } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
-import useArticleRoutes from "../../router/useArticleRoutes";
 import { findFullPathByKey } from "../../router/utils/findFullPathByKey";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { AppDispatch, RootState } from "../../store";
 
 import { Tree } from "antd";
 import type { GetProps, TreeDataNode } from "antd";
-import { setSelectedKey } from "../../store/routersMapSlice";
+import { loadArticleRoutes, setSelectedKey } from "../../store/routersMapSlice";
 import {
   getArticleContentById,
   updateArticleContentById,
@@ -77,8 +76,7 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
 
   const editorRef = useRef<EditorRef>(null);
 
-  const { loadArticleRoutes } = useArticleRoutes();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const articleRoutesMap = useSelector(
     (state: RootState) => state.routesMap.articleRoutesMap
   );
@@ -240,7 +238,7 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
       const res = await patchFolderName(currentId, name);
       if (res.code === 0) {
         // 更新路由配置
-        await loadArticleRoutes();
+        await dispatch(loadArticleRoutes);
         message.success("保存成功！");
       } else {
         message.error("保存失败，请稍后重试");
@@ -257,7 +255,7 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
 
       if (res.code === 0) {
         // 更新路由配置
-        await loadArticleRoutes();
+        await dispatch(loadArticleRoutes);
 
         // navigate(path || "");
         message.success("保存成功！");
@@ -320,7 +318,7 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
     if (res.code === 0) {
       setIsDeleteModalOpen(false);
       message.success("删除成功");
-      loadArticleRoutes();
+      dispatch(loadArticleRoutes);
     } else {
       message.error("删除失败");
     }

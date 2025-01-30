@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Input, Button, Upload, message, Tabs } from "antd";
+import { Form, Input, Button, Upload, Tabs, App } from "antd";
 import {
   UploadOutlined,
   PlusOutlined,
@@ -20,7 +20,7 @@ const AboutManager: React.FC = () => {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [fileList, setFileList] = useState<any[]>([]);
   const [aboutContent, setAboutContent] = useState<PartialBlock[]>(undefined);
-
+  const { message } = App.useApp();
   useEffect(() => {
     // 初始化数据
     const initData = async () => {

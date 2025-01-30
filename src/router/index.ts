@@ -35,14 +35,14 @@ export const StaticRoutesMap: RouteObject[] = [
       },
       {
         path: "article",
-        element: "Article", // 用字符串表示组件
+        element: componentKey.Article, // 用字符串表示组件
         children: [
           {
             path: ":id",
             element: componentKey.ArticleMainContent, // 用字符串表示组件
             handle: {
               key: "MainPage",
-              label: "主页",
+              label: "知识库",
               Icon: iconKey.FaHome, // 用字符串表示图标
               requiresAuth: false,
             },
@@ -87,14 +87,91 @@ export const StaticRoutesMap: RouteObject[] = [
       requiresAuth: false,
     },
   },
+
   {
-    path: "admin",
-    element: componentKey.Admin, // 用字符串表示组件
+    path: "greet",
+    element: componentKey.Greet, // 用字符串表示组件
+    handle: {
+      key: "greet",
+      label: "greet",
+      Icon: iconKey.FaMeteor, // 用字符串表示图标
+      requiresAuth: false,
+    },
+  },
+  {
+    path: "admin/*", // 需要使用 * 处理子路由
+    element: componentKey.Admin, // 默认渲染的 admin 页面组件
     handle: {
       key: "Admin",
       label: "管理",
+      Icon: iconKey.FaMeteor,
+      requiresAuth: true,
+    },
+    children: [], // 动态加载后会被填充
+  },
+  {
+    path: "*",
+    element: componentKey.NotFound, // 用字符串表示组件
+    handle: {
+      key: "404",
+      label: "404",
       Icon: iconKey.FaMeteor, // 用字符串表示图标
       requiresAuth: false,
+    },
+  },
+];
+
+export const DynamicRoutes: RouteObject[] = [
+  {
+    path: "dashboard",
+    element: componentKey.Dashboard,
+    handle: {
+      key: "dashboard",
+      label: "仪表盘",
+      Icon: iconKey.FaHome,
+      requiresAuth: true,
+    },
+  },
+
+  {
+    path: "about",
+    element: componentKey.AboutManager,
+    handle: {
+      key: "About",
+      label: "关于页面",
+      Icon: iconKey.FaHome,
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "carousel",
+    element: componentKey.CarouselManager,
+    handle: {
+      key: "Carousel",
+      label: "主页轮播",
+      Icon: iconKey.FaHome,
+      requiresAuth: true,
+    },
+  },
+
+  {
+    path: "product",
+    element: componentKey.ProductManager,
+    handle: {
+      key: "Product",
+      label: "产品管理",
+      Icon: iconKey.FaHome,
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "profile",
+    element: componentKey.ProfileForm,
+    handle: {
+      key: "Profile",
+      label: "个人信息",
+      Icon: iconKey.FaHome,
+      requiresAuth: true,
     },
   },
 ];

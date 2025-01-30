@@ -1,9 +1,11 @@
-import { Button, Input, message, Modal } from "antd";
+import { App, Button, Input, Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import { getDirectoryInfoById, patchFolderName } from "../../../../api/folder";
 import { GetDirectoryInfoById } from "../../../../api/folder/type";
 import TextArea from "antd/es/input/TextArea";
-import useRoutes from "../../../../router/useArticleRoutes";
+import { loadArticleRoutes } from "../../../../store/routersMapSlice";
+import { AppDispatch } from "../../../../store";
+import { useDispatch } from "react-redux";
 
 interface EditModalProps {
   id: string;
@@ -24,9 +26,8 @@ const EditModal: React.FC<EditModalProps> = ({
   const [initInfo, setInitInfo] = useState<GetDirectoryInfoById | null>(null);
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
-  const [messageApi, contextHolder] = message.useMessage();
-  const { loadArticleRoutes } = useRoutes();
-
+  const dispatch = useDispatch<AppDispatch>();
+  const { message } = App.useApp();
   useEffect(() => {
     if (id) {
       init();
@@ -54,15 +55,15 @@ const EditModal: React.FC<EditModalProps> = ({
 
       if (res.code === 0) {
         // 更新路由配置
-        await loadArticleRoutes();
-        messageApi.success("保存成功！");
+        await dispatch(loadArticleRoutes());
+        message.success("保存成功！");
         onSuccess(name);
       } else {
-        messageApi.error("保存失败，请稍后重试");
+        message.error("保存失败，请稍后重试");
       }
     } catch (error) {
       console.error("保存失败:", error);
-      messageApi.error("保存失败，请稍后重试");
+      message.error("保存失败，请稍后重试");
     }
 
     // 假设我们保存成功后关闭 modal
@@ -84,7 +85,6 @@ const EditModal: React.FC<EditModalProps> = ({
 
   return (
     <>
-      {contextHolder}
       <Modal
         title={<p>{initInfo?.name}</p>}
         footer={

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Table, Button, Form, Input, Modal, message, Upload } from "antd";
+import { Table, Button, Form, Input, Modal, Upload, App } from "antd";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -27,7 +27,7 @@ const ProductManager: React.FC = () => {
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [editorKey, setEditorKey] = useState<number>(0); // 用于强制重建 Editor
   const [form] = Form.useForm();
-
+  const { message } = App.useApp();
   useEffect(() => {
     fetchProducts();
   }, []);

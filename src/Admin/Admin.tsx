@@ -1,97 +1,71 @@
 import React, { useEffect, useState } from "react";
-import {
-  Layout,
-  Menu,
-  Card,
-  Row,
-  Col,
-  Progress,
-  Badge,
-  Avatar,
-  Dropdown,
-} from "antd";
+import { Layout, Menu, Badge, MenuProps } from "antd";
 import { motion } from "framer-motion";
 import {
-  UserOutlined,
   DashboardOutlined,
-  PictureOutlined,
-  ShoppingOutlined,
   BellOutlined,
-  SettingOutlined,
-  LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
 } from "@ant-design/icons";
-import ProfileForm from "./pages/ProfileForm";
-import CarouselManager from "./pages/CarouselManager";
-import ProductManager from "./pages/ProductManager";
-import Dashboard from "./pages/Dashboard";
 import styles from "./styles/Admin.module.scss";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store";
 import { checkLoginStatus } from "../store/authSlice";
-import AboutManager from "./pages/AboutManager";
-
+import { Outlet, useNavigate } from "react-router-dom";
+import { loadAdminRoutes } from "../store/routersMapSlice";
+import { iconMap } from "../router/utils/iconMap";
+import { MenuItemType } from "antd/es/menu/interface";
+type MenuItem = Required<MenuProps>["items"][number];
 const { Header, Sider, Content } = Layout;
 
 const Admin: React.FC = () => {
   const [selectedKey, setSelectedKey] = useState("dashboard");
   const [collapsed, setCollapsed] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
-
+  const [menuItems, setMenuItems] = useState<MenuItemType[]>([]);
+  // const [isShowCreateSizemodal, SetIsShowCreateSizemodal] = useState(false);
+  const navigator = useNavigate();
+  const { adminRoutesMap } = useSelector((state: RootState) => state.routesMap);
+  const user = useSelector((state: RootState) => state.auth.user);
   useEffect(() => {
     dispatch(checkLoginStatus);
+    dispatch(loadAdminRoutes(user.role.name, user.role.permissions));
+    const savedSelectedKey = localStorage.getItem("selectedMenuKey");
+    if (savedSelectedKey) {
+      setSelectedKey(savedSelectedKey);
+    }
   }, []);
-  const menuItems = [
-    {
-      key: "dashboard",
-      icon: <DashboardOutlined />,
-      label: "仪表盘",
-      component: <Dashboard />,
-    },
-    {
-      key: "profile",
-      icon: <UserOutlined />,
-      label: "个人信息",
-      component: <ProfileForm />,
-    },
-    {
-      key: "carousel",
-      icon: <PictureOutlined />,
-      label: "主页轮播",
-      component: <CarouselManager />,
-    },
-    {
-      key: "products",
-      icon: <ShoppingOutlined />,
-      label: "产品列表",
-      component: <ProductManager />,
-    },
-    {
-      key: "about",
-      icon: <ShoppingOutlined />,
-      label: "关于页面",
-      component: <AboutManager />,
-    },
-  ];
 
-  const userMenuItems = [
-    {
-      key: "settings",
-      icon: <SettingOutlined />,
-      label: "设置",
-    },
-    {
-      key: "logout",
-      icon: <LogoutOutlined />,
-      label: "退出登录",
-    },
-  ];
-
-  const getCurrentComponent = () => {
-    return menuItems.find((item) => item.key === selectedKey)?.component;
+  useEffect(() => {
+    checkCreateSite();
+  }, []);
+  // 检查是否已经创建了站点，没有创建的话弹窗让用户创建
+  const checkCreateSite = () => {
+    if (!user.managedSites) {
+      // SetIsShowCreateSizemodal(true);
+      navigator("/init");
+    }
   };
 
+  useEffect(() => {
+    console.log(adminRoutesMap);
+    const menu: MenuItemType[] = adminRoutesMap.map((item) => {
+      if (!item.handle.key || !item.handle.label) return null; // 确保 key 和 label 存在
+      return {
+        key: item.handle.key,
+        icon: iconMap[item.handle.Icon] || <DashboardOutlined />,
+        label: item.handle.label || "未命名",
+      };
+    });
+    setMenuItems(menu);
+  }, [adminRoutesMap]);
+
+  const menuClickHandler = ({ key }) => {
+    // const savedSelectedKey = localStorage.getItem("selectedMenuKey");
+    setSelectedKey(key);
+    localStorage.setItem("selectedMenuKey", key);
+    navigator("/admin/" + key);
+  };
   return (
     <Layout className={styles.layout}>
       <Sider
@@ -110,7 +84,7 @@ const Admin: React.FC = () => {
           selectedKeys={[selectedKey]}
           mode="inline"
           className={styles.menu}
-          onClick={({ key }) => setSelectedKey(key)}
+          onClick={menuClickHandler}
           items={menuItems}
         />
       </Sider>
@@ -139,7 +113,7 @@ const Admin: React.FC = () => {
             <Badge count={3} className={styles.notification}>
               <BellOutlined className={styles.icon} />
             </Badge>
-            <Dropdown
+            {/* <Dropdown
               menu={{ items: userMenuItems }}
               placement="bottomRight"
               trigger={["click"]}
@@ -154,7 +128,7 @@ const Admin: React.FC = () => {
                   <span className={styles.userRole}>超级管理员</span>
                 </div>
               </div>
-            </Dropdown>
+            </Dropdown> */}
           </div>
         </Header>
 
@@ -167,7 +141,7 @@ const Admin: React.FC = () => {
             transition={{ duration: 0.2 }}
             className={styles.contentInner}
           >
-            {getCurrentComponent()}
+            <Outlet />
           </motion.div>
         </Content>
       </Layout>

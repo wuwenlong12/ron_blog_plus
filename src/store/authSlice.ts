@@ -4,12 +4,14 @@ import type { AppDispatch } from "../store";
 import { User } from "../api/auth/type";
 
 interface AuthState {
+  siteIsOpen: boolean;
   isAuthenticated: boolean;
   user: User | null;
   status: "idle" | "loading" | "succeeded" | "failed";
 }
 
 const initialState: AuthState = {
+  siteIsOpen: true,
   isAuthenticated: false,
   user: null,
   status: "idle",
@@ -38,8 +40,15 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.user = null;
     },
-    logout: (state) => {
+    setSiteIsNotOpen: (state) => {
+      state.status = "failed";
+      state.siteIsOpen = false;
       state.isAuthenticated = false;
+      state.user = null;
+      state.status = "succeeded";
+    },
+    logout: (state) => {
+      state.siteIsOpen = false;
       state.user = null;
       state.status = "idle";
     },
@@ -47,8 +56,14 @@ const authSlice = createSlice({
 });
 
 // Action Creators
-export const { setUser, setAdmin, setLoading, setError, logout } =
-  authSlice.actions;
+export const {
+  setUser,
+  setAdmin,
+  setLoading,
+  setError,
+  logout,
+  setSiteIsNotOpen,
+} = authSlice.actions;
 
 // **手动处理异步检查登录状态**
 export const checkLoginStatus = () => async (dispatch: AppDispatch) => {
@@ -59,6 +74,8 @@ export const checkLoginStatus = () => async (dispatch: AppDispatch) => {
       dispatch(setAdmin(res.data));
     } else if (res.code === 1) {
       dispatch(setUser(res.data));
+    } else {
+      dispatch(setSiteIsNotOpen());
     }
   } catch (error) {
     dispatch(setError());

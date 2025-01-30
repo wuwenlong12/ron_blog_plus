@@ -15,13 +15,13 @@ import { RootState } from "../../store";
 import { useDispatch, useSelector } from "react-redux";
 import { Tree } from "antd";
 import type { GetProps, TreeDataNode, TreeProps } from "antd";
-import { setSelectedKey } from "../../store/routersMapSlice";
+import { loadArticleRoutes, setSelectedKey } from "../../store/routersMapSlice";
 import { patchFolderOrder } from "../../api/folder";
-import useArticleRoutes from "../../router/useArticleRoutes";
 import RightMenu from "./components/RightMenu/RightMenu";
 import { FaAngleDown, FaChevronDown, FaFolderMinus } from "react-icons/fa";
 import { IoFolderOutline } from "react-icons/io5";
 import { RiBook2Line } from "react-icons/ri";
+import { AppDispatch } from "../../store";
 type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
 
 const { DirectoryTree } = Tree;
@@ -31,7 +31,7 @@ const Actical = ({}) => {
   const [isOpenMenu, setIsOpenMenu] = useState(true);
   const [isOpenAddFolder, setIsOpenAddFolder] = useState(false);
   const [folderName, setFolderName] = useState("");
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const articleRoutesMap = useSelector(
     (state: RootState) => state.routesMap.articleRoutesMap
@@ -40,7 +40,6 @@ const Actical = ({}) => {
     (state: RootState) => state.routesMap.selectedKey
   );
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
-  const { loadArticleRoutes } = useArticleRoutes();
 
   const [contextMenu, setContextMenu] = useState<{
     visible: boolean;
@@ -180,7 +179,7 @@ const Actical = ({}) => {
     );
 
     // 重新加载
-    loadArticleRoutes();
+    dispatch(loadArticleRoutes());
   };
 
   const allowDrop = ({

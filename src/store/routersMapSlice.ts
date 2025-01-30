@@ -4,23 +4,26 @@ import { transformRoutes } from "../router/utils/transformRoutes";
 import { Key } from "react";
 import { AppDispatch } from ".";
 import { getActicalDirectory } from "../api/folder";
+import { DynamicRoutes } from "../router";
 
 // 定义状态的类型
 interface RoutesState {
   isLoaded: boolean; // 动态路由是否已加载
   articleRouterIsLoaded: boolean; //article 动态路由是否已加载
   routesMap: RouteObject[]; // 静态路由映射
-  articleRoutesMap: RouteObject[]; // 动态路由映射
+  articleRoutesMap: RouteObject[]; // article动态路由映射
+  adminRoutesMap: RouteObject[];
   currentPath: string;
   selectedKey: Key;
 }
 
 // 初始化状态
 const initialState: RoutesState = {
-  isLoaded: false,
-  articleRouterIsLoaded: false,
   routesMap: [],
   articleRoutesMap: [],
+  adminRoutesMap: [],
+  isLoaded: false,
+  articleRouterIsLoaded: false,
   currentPath: "/", // 默认首页路径
   selectedKey: "",
 };
@@ -57,6 +60,15 @@ const RoutesSlice = createSlice({
       state.routesMap = action.payload;
       state.isLoaded = true;
     },
+    setAdminRoutesMap(state, action: PayloadAction<RouteObject[]>) {
+      state.adminRoutesMap = action.payload;
+      const adminRouteIndex = state.routesMap.findIndex(
+        (route) => route.path === "admin/*"
+      );
+      if (adminRouteIndex !== -1) {
+        state.routesMap[adminRouteIndex].children = action.payload; // 将子路由添加到 admin 路由
+      }
+    },
 
     // 设置加载状态
     setIsLoaded(state, action: PayloadAction<boolean>) {
@@ -87,6 +99,7 @@ const RoutesSlice = createSlice({
 export const {
   setArticleRoutesMap,
   setRoutesMap,
+  setAdminRoutesMap,
   setIsLoaded,
   setArticleRouterIsLoaded,
   // resetRoutesState,
@@ -122,5 +135,13 @@ export const loadArticleRoutes = () => async (dispatch: AppDispatch) => {
   }
 };
 
+// 动态加载Admin router
+export const loadAdminRoutes =
+  (role: string, permissions: string[]) => async (dispatch: AppDispatch) => {
+    // dispatch(setAdminRouterIsLoaded(false)); // 请求开始时设置为加载中
+    if (role === "superAdmin") {
+      dispatch(setAdminRoutesMap(DynamicRoutes));
+    }
+  };
 // 导出 reducer
 export default RoutesSlice.reducer;

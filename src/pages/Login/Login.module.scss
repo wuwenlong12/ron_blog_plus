@@ -2,6 +2,8 @@
 .loginPage {
   display: flex;
   height: 100vh; // 确保整个页面占满视口
+  width: 100vw;
+  overflow: hidden;
 }
 
 .imageContainer {
@@ -30,10 +32,9 @@
 .formContainer {
   background: #ffffff;
   padding: 40px;
-  border-radius: 8px;
+  // border-radius: 8px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 380px;
+  width: 380px;
   margin: auto;
   position: relative;
   z-index: 2;
@@ -41,6 +42,10 @@
   display: flex;
   flex-direction: column;
   justify-content: center; // 使表单内容垂直居中
+  position: absolute;
+  .registerCard,
+  .loginCard {
+  }
 }
 
 .title {
@@ -74,6 +79,31 @@ input {
   &:focus {
     border-color: #007bff;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+}
+
+.verificationContainer {
+  display: flex;
+  align-items: center;
+}
+
+.getCodeButton {
+  margin-left: 10px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
   }
 }
 

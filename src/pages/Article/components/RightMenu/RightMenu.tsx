@@ -11,9 +11,11 @@ import {
   deleteDirectoryInfoById,
   postDirectoryInfoById,
 } from "../../../../api/folder";
-import useArticleRoutes from "../../../../router/useArticleRoutes";
 import ChooseTag from "../../../../components/ChooseTag";
 import { tag } from "../../../../api/tag/type";
+import { loadArticleRoutes } from "../../../../store/routersMapSlice";
+import { AppDispatch } from "../../../../store";
+import { useDispatch } from "react-redux";
 
 type content = {
   visible: boolean;
@@ -38,9 +40,9 @@ const RightMenu: React.FC<RightMenuProps> = ({
   const [newFolderName, setNewFolderName] = useState("");
   const [newFileName, setNewFileName] = useState("");
   const [tags, setTags] = useState<tag[]>([]);
-  const { loadArticleRoutes } = useArticleRoutes();
-  const { message } = App.useApp();
 
+  const { message } = App.useApp();
+  const dispatch = useDispatch<AppDispatch>();
   const menuItems = () => {
     if (contextMenu.node && contextMenu.node.type === "article") {
       return [
@@ -134,7 +136,7 @@ const RightMenu: React.FC<RightMenuProps> = ({
       setIsAddFolderModalOpen(false);
       setNewFolderName(""); // 清空输入框
       message.success("文件夹已创建");
-      loadArticleRoutes();
+      dispatch(loadArticleRoutes());
     } else {
       message.error("文件创建失败");
     }
@@ -162,7 +164,8 @@ const RightMenu: React.FC<RightMenuProps> = ({
       // const _id = res.data._id
 
       message.success("文件已创建");
-      loadArticleRoutes();
+
+      dispatch(loadArticleRoutes);
     } else {
       message.error("创建失败");
     }
@@ -176,7 +179,7 @@ const RightMenu: React.FC<RightMenuProps> = ({
     if (res.code === 0) {
       setIsDeleteModalOpen(false);
       message.success("删除成功");
-      loadArticleRoutes();
+      dispatch(loadArticleRoutes);
     } else {
       message.error("删除失败");
     }

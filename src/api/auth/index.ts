@@ -4,20 +4,34 @@ import { ResponseCheckSystemInit, ResponseLogin, User } from "./type";
 
 enum API {
   USERS_CHECK = "users/check",
-  USERS_INIT = "users/init",
+  USERS_REGISTER = "users/register",
   USERS_LOGIN = "users/login",
   USERS_AUTH = "users/auth",
   USERS_DETAILS = "users/details",
+  USERS_EMAIL = "users/email",
 }
 
 export const checkSystemInit = () =>
   http.get<any, ResponseCheckSystemInit>(API.USERS_CHECK, {});
 
-export const systemInit = (username: string, email: string, password: string) =>
-  http.post<any, ResponseBase>(API.USERS_INIT, {
+export const register = (
+  username: string,
+  email: string,
+  password: string,
+  auth_code: string
+) =>
+  http.post<any, ResponseBase>(API.USERS_REGISTER, {
     username,
     email,
     password,
+    auth_code,
+  });
+
+export const getVerificationCode = (email: string) =>
+  http.get<any, ResponseBase>(API.USERS_EMAIL, {
+    params: {
+      email,
+    },
   });
 
 export const login = (email: string, password: string) =>
@@ -41,10 +55,6 @@ export const updateUserDetails = ({
   email,
   oldPassword,
   newPassword,
-  github,
-  wx,
-  school,
-  explain,
   imgurl,
 }: User) =>
   http.patch<any, ResponseBase>(
@@ -54,10 +64,6 @@ export const updateUserDetails = ({
       email,
       oldPassword,
       newPassword,
-      github,
-      wx,
-      school,
-      explain,
       imgurl,
     },
     { withCredentials: true }

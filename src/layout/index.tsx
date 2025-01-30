@@ -7,7 +7,7 @@ import {
   useMatches,
 } from "react-router-dom";
 import Header from "../components/Header/Header";
-import { MenuProps, message } from "antd";
+import { App, MenuProps } from "antd";
 import useTheme from "../hook/useTheme";
 import { setting } from "../setting";
 import Modal from "../components/Modal/Modal";
@@ -34,22 +34,30 @@ const IndexLayout = () => {
   const { isAuthenticated, user, status } = useSelector(
     (state: RootState) => state.auth
   );
+  const { siteIsOpen } = useSelector((state: RootState) => state.auth);
+  useEffect(() => {
+    console.log(siteIsOpen);
 
+    if (!siteIsOpen) {
+      navigate("404");
+    }
+  }, [siteIsOpen]);
+  const { message } = App.useApp();
   //检查系统初始化
   useEffect(() => {
-    init();
+    // init();
   }, []);
 
-  const init = async () => {
-    const res = await checkSystemInit();
-    if (!res.data.initialized) {
-      navigate("Init");
-      return;
-    } else {
-      setSystemIsInit(true);
-      // navigate("/");
-    }
-  };
+  // const init = async () => {
+  //   const res = await checkSystemInit();
+  //   if (!res.data.initialized) {
+  //     navigate("Init");
+  //     return;
+  //   } else {
+  //     setSystemIsInit(true);
+  //     // navigate("/");
+  //   }
+  // };
 
   useEffect(() => {
     if (systemIsInit === true && status === "succeeded") {
@@ -88,9 +96,6 @@ const IndexLayout = () => {
       icon: item.handle.Icon, // 映射为图标组件
     };
   });
-
-  //未初始化
-  if (!systemIsInit) return;
 
   const handleNavigate = (key: string) => {
     console.log(key);

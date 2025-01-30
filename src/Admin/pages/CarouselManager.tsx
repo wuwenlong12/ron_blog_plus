@@ -3,7 +3,6 @@ import {
   Upload,
   Button,
   List,
-  message,
   Form,
   Input,
   Modal,
@@ -11,6 +10,7 @@ import {
   Card,
   Popconfirm,
   ColorPicker,
+  App,
 } from "antd";
 import {
   UploadOutlined,
@@ -35,7 +35,7 @@ const CarouselManager: React.FC = () => {
   const [editingItem, setEditingItem] = useState<CarouselItem | null>(null);
   const [form] = Form.useForm();
   const [uploadUrl, setUploadUrl] = useState<string>("");
-
+  const { message } = App.useApp();
   useEffect(() => {
     fetchCarousels();
   }, []);

@@ -11,8 +11,7 @@ import "remixicon/fonts/remixicon.css";
 import "@blocknote/mantine/style.css";
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
-// // 适配移动端
-// setRem();
+import { BrowserRouter } from "react-router-dom";
 
 const Root = () => {
   return <App />;
@@ -24,7 +23,11 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <Provider store={store}>
-    <Root />
+    <BrowserRouter>
+      {" "}
+      {/* ✅ 确保 App 在 Router 里面 */}
+      <Root />
+    </BrowserRouter>
   </Provider>
 );
 

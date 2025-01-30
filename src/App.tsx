@@ -5,6 +5,8 @@ import {
   RouteObject,
   RouterProvider,
   createBrowserRouter,
+  useNavigate,
+  useRoutes,
 } from "react-router-dom";
 import { ConfigProvider, theme, ThemeConfig } from "antd";
 import useTheme from "./hook/useTheme";
@@ -13,18 +15,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { setRoutesMap } from "./store/routersMapSlice";
 import { StaticRoutesMap } from "./router";
 import { selectRoutes } from "./store/routersMapSlice";
-import useArticleRoutes from "./router/useArticleRoutes";
 import { App as AntdApp } from "antd"; // 引入 Ant Design 的 App
 import MouseParticles from "react-mouse-particles";
 import { checkLoginStatus } from "./store/authSlice";
-import { AppDispatch } from "./store";
+import { AppDispatch, RootState } from "./store";
 const App: React.FC = () => {
   const { isDarkMode } = useTheme(); // 确保在 Provider 内部
   const [currentTheme, setCurrentTheme] = useState<ThemeConfig>();
   const dispatch = useDispatch<AppDispatch>();
-  const Routes: RouteObject[] = useSelector(selectRoutes);
-  const { isLoaded, loadArticleRoutes } = useArticleRoutes();
+  const { isLoaded } = useSelector((state: RootState) => state.routesMap);
 
+  const Routes: RouteObject[] = useSelector(selectRoutes);
+  // todo ROuter 为空
   useEffect(() => {
     if (isDarkMode) {
       setCurrentTheme({
@@ -70,30 +72,27 @@ const App: React.FC = () => {
 
   // 创建静态路由
   useEffect(() => {
-    dispatch(checkLoginStatus());
     dispatch(setRoutesMap(StaticRoutesMap));
+    dispatch(checkLoginStatus());
   }, [dispatch]);
 
   // 缓冲路由结果
-  const router = useMemo(() => {
-    if (Routes.length === 0) return null;
-    return createBrowserRouter(Routes);
-  }, [Routes]);
+  // const router = useMemo(() => {
+  //   if (isLoaded === false) return null;
+  //   return createBrowserRouter(Routes);
+  // }, [isLoaded, Routes]);
 
-  useEffect(() => {
-    loadArticleRoutes();
-  }, []);
+  const router = useRoutes(Routes);
 
-  if (!isLoaded) {
-    return <Loading />;
+  if (isLoaded === false) {
+    return <Loading></Loading>;
   }
-
   return (
     <ConfigProvider theme={currentTheme}>
       <AntdApp>
         {/* @ts-ignore */}
         <MouseParticles g={1} color="random" cull="col,image-wrapper" />
-        <RouterProvider router={router} future={{ v7_startTransition: true }} />
+        {router}
       </AntdApp>
     </ConfigProvider>
   );

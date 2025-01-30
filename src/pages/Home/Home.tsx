@@ -52,7 +52,7 @@ const Main = () => {
         <div className={styles.svgImg}>
           <Coder style={{ width: "clamp(400px, 50.2vw, 800px)" }}></Coder>
         </div>
-        <div className={styles.desc}>
+        {/* <div className={styles.desc}>
           {user.explain.length > 0 && (
             <Typist
               avgTypingDelay={100}
@@ -75,7 +75,7 @@ const Main = () => {
           <Button className={styles.rollBtn} onClick={scrollToContent}>
             <FaArrowDown className={styles.rollBtnIcon} />
           </Button>
-        </div>
+        </div> */}
       </div>
 
       <div ref={mainContentRef} className={styles.main}>
