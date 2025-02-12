@@ -5,9 +5,9 @@
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
     "@ant-design/plots": "^2.3.3",
-    "@blocknote/core": "^0.22.0",
-    "@blocknote/mantine": "^0.22.0",
-    "@blocknote/react": "^0.22.0",
+    "@blocknote/core": "^0.23.4",
+    "@blocknote/mantine": "^0.23.4",
+    "@blocknote/react": "^0.23.4",
     "@reduxjs/toolkit": "^2.3.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
