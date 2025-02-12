@@ -16,7 +16,7 @@ import LeftModalDom from "../components/LeftModalDom/LeftModalDom";
 import { checkSystemInit } from "../api/auth";
 import { AppDispatch, RootState } from "../store";
 import { checkLoginStatus } from "../store/authSlice";
-import { fetchSiteInfo } from "../store/slices/siteSlice";
+import { fetchSiteInfo } from "../store/siteSlice";
 
 const IndexLayout = () => {
   const { isDarkMode, handleToggleTheme } = useTheme();

@@ -1,14 +1,3 @@
-// 主题颜色
-$primary-blue: #1677ff;
-$success-green: #52c41a;
-$warning-yellow: #faad14;
-$error-red: #ff4d4f;
-$purple: #722ed1;
-$pink: #eb2f96;
-$text-primary: #1f1f1f;
-$text-secondary: #666;
-$border-color: #f0f0f0;
-
 .dashboard {
   padding: 24px;
 
@@ -42,7 +31,7 @@ $border-color: #f0f0f0;
     .statTrend {
       margin-top: 8px;
       font-size: 13px;
-      color: $text-secondary;
+      color: #666;
     }
 
     :global {
@@ -51,7 +40,7 @@ $border-color: #f0f0f0;
       }
 
       .ant-statistic-title {
-        color: $text-secondary;
+        color: #666;
         font-size: 14px;
         margin-bottom: 12px;
       }
@@ -73,28 +62,28 @@ $border-color: #f0f0f0;
   .visitCard {
     background: linear-gradient(135deg, #e6f4ff 0%, #ffffff 100%);
     .iconWrapper {
-      color: $primary-blue;
+      color: #1677ff;
     }
   }
 
   .totalCard {
     background: linear-gradient(135deg, #f6ffed 0%, #ffffff 100%);
     .iconWrapper {
-      color: $success-green;
+      color: #52c41a;
     }
   }
 
   .articleCard {
     background: linear-gradient(135deg, #f9f0ff 0%, #ffffff 100%);
     .iconWrapper {
-      color: $purple;
+      color: #722ed1;
     }
   }
 
   .diaryCard {
     background: linear-gradient(135deg, #fff0f6 0%, #ffffff 100%);
     .iconWrapper {
-      color: $pink;
+      color: #eb2f96;
     }
   }
 
@@ -111,13 +100,13 @@ $border-color: #f0f0f0;
       display: flex;
       align-items: center;
       gap: 8px;
-      color: $text-primary;
+      color: #1f1f1f;
       font-size: 15px;
       font-weight: 500;
       margin-bottom: 16px;
 
       .anticon {
-        color: $primary-blue;
+        color: #1677ff;
         font-size: 18px;
       }
     }
@@ -134,7 +123,7 @@ $border-color: #f0f0f0;
         right: -40px;
         width: 80px;
         height: 80px;
-        background: $primary-blue;
+        background: #1677ff;
         border-radius: 50%;
         opacity: 0.1;
       }
@@ -142,13 +131,13 @@ $border-color: #f0f0f0;
       .tagCount {
         font-size: 32px;
         font-weight: 600;
-        color: $primary-blue;
+        color: #1677ff;
         line-height: 1;
         margin-bottom: 8px;
       }
 
       .tagDesc {
-        color: $text-secondary;
+        color: #666;
         font-size: 13px;
       }
     }
@@ -163,11 +152,11 @@ $border-color: #f0f0f0;
       display: flex;
       align-items: center;
       gap: 8px;
-      color: $text-primary;
+      color: #1f1f1f;
       font-size: 16px;
 
       .anticon {
-        color: $primary-blue;
+        color: #1677ff;
         font-size: 20px;
       }
     }
@@ -176,7 +165,7 @@ $border-color: #f0f0f0;
       padding: 16px;
       background: rgba(255, 255, 255, 0.8);
       border-radius: 8px;
-      border: 1px solid $border-color;
+      border: 1px solid #f0f0f0;
 
       .osItem {
         display: flex;
@@ -184,12 +173,12 @@ $border-color: #f0f0f0;
         gap: 8px;
 
         .osLabel {
-          color: $text-secondary;
+          color: #666;
           font-size: 14px;
         }
 
         .osValue {
-          color: $text-primary;
+          color: #1f1f1f;
           font-size: 15px;
           font-weight: 500;
         }
@@ -201,17 +190,17 @@ $border-color: #f0f0f0;
       padding: 16px;
       background: rgba(255, 255, 255, 0.8);
       border-radius: 8px;
-      border: 1px solid $border-color;
+      border: 1px solid #f0f0f0;
 
       .resourceLabel {
         display: flex;
         align-items: center;
         gap: 8px;
         margin-bottom: 12px;
-        color: $text-secondary;
+        color: #666;
 
         .anticon {
-          color: $primary-blue;
+          color: #1677ff;
           font-size: 18px;
         }
       }

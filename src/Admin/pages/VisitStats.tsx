@@ -3,7 +3,7 @@ import { Card, Row, Col, List, Typography, Statistic, DatePicker } from "antd";
 import { getRealtimeVisit, getVisitStats } from "../../api/site";
 import { RealtimeVisitResponse, VisitStatsResponse } from "../../api/site/type";
 import dayjs from "dayjs";
-import styles from "./VisitStats.module.scss";
+import styles from "../styles/VisitStats.module.scss";
 import ReactECharts from "echarts-for-react";
 import type { RangePickerProps } from "antd/es/date-picker";
 

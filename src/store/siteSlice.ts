@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getSiteInfo, updateSite } from "../../api/site";
-import { UpdateSiteParams } from "../../api/site/type";
+import { getSiteInfo, updateSite } from "../api/site";
+import { UpdateSiteParams } from "../api/site/type";
 import { PartialBlock } from "@blocknote/core";
-import { AppDispatch } from "..";
+import { AppDispatch } from ".";
 
 interface SiteState {
   siteInfo: {
