@@ -17,14 +17,15 @@ export type User = {
   id?: string;
   username?: string;
   email?: string;
-  role: {
-    _id: string;
-    name: "superAdmin" | "webMaster" | "user";
-    permissions: string[];
-  };
+  role: Role;
   managedSites: [];
   password?: string;
   imgurl?: string;
   oldPassword?: string;
   newPassword?: string;
+};
+export type Role = {
+  _id: string;
+  name: "superAdmin" | "webMaster" | "user";
+  permissions: string[];
 };

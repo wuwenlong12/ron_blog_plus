@@ -40,34 +40,77 @@
 
   .menu {
     height: calc(100vh - 60px);
-    // overflow: hidden;
     overflow-y: auto;
-    font-size: 1rem;
-    font-family: inherit;
-    color: #2c3e50;
-    // min-width: 400px;
-    white-space: nowrap; /* 禁止文本换行 */
-    padding: 20px 20px;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.85);
+    white-space: nowrap;
+    padding: 16px;
+
+    :global {
+      .ant-tree-node-selected {
+        background: rgba(0, 0, 0, 0.03) !important;
+      }
+      .ant-tree {
+        .ant-tree-node-content-wrapper {
+          padding: 8px 12px;
+          margin: 2px 0;
+          border-radius: 6px;
+          transition: all 0.2s ease;
+
+          &:hover {
+            background: rgba(0, 0, 0, 0.03) !important;
+          }
+
+          &.ant-tree-node-selected {
+            background: rgba(0, 0, 0, 0.06) !important;
+            color: rgba(0, 0, 0, 0.95) !important;
+          }
+
+          .ant-tree-title {
+            div {
+              display: flex;
+              align-items: center;
+              gap: 12px;
+
+              svg {
+                font-size: 16px;
+                opacity: 0.8;
+              }
+            }
+          }
+        }
+
+        .ant-tree-switcher {
+          width: 24px;
+          height: 24px;
+          line-height: 24px;
+
+          .ant-tree-switcher-icon {
+            font-size: 12px;
+            transition: transform 0.2s ease;
+          }
+        }
+      }
+    }
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 4px;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.3);
+      }
+    }
   }
 
-  /* Webkit 浏览器（Chrome, Safari）滚动条样式 */
-  .menu::-webkit-scrollbar {
-    width: 2px; /* 设置滚动条宽度 */
-  }
-
-  .menu::-webkit-scrollbar-track {
-    background: #f0f0f0; /* 设置滚动条轨道背景 */
-    border-radius: 10px;
-  }
-
-  .menu::-webkit-scrollbar-thumb {
-    background-color: #929292; /* 滚动条滑块颜色 */
-    border-radius: 10px; /* 滚动条滑块圆角 */
-  }
-
-  .menu::-webkit-scrollbar-thumb:hover {
-    background-color: #bab9b9; /* 滚动条滑块悬浮时颜色 */
-  }
   .articleMainContent {
     flex: 1;
   }

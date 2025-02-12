@@ -28,7 +28,8 @@
     scrollbar-width: none;
     padding-left: 20px;
     .projectCard {
-      background-color: #fff;
+      background-color: rgba($color: #ffffff, $alpha: 0.6);
+      box-shadow: $box-shadow-light;
       border-radius: 20px;
       padding: 20px;
       margin-right: 20px;
@@ -53,7 +54,7 @@
         display: flex;
         margin-top: 20px;
         .leftBtn {
-          background-color: #f5f5f5;
+          background-color: rgba($color: #f5f5f5, $alpha: 0.6);
           padding: 20px 40px;
           border-radius: 10px;
           border: none;
@@ -132,4 +133,35 @@
       }
     }
   }
+}
+
+.emptyContainer {
+  margin: 20px 4vw 0;
+  padding: 60px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+  :global {
+    .ant-empty {
+      margin: 0;
+    }
+  }
+}
+
+.emptyContent {
+  text-align: center;
+}
+
+.emptyText {
+  color: #262626;
+  font-size: 16px;
+  margin: 0;
+  margin-bottom: 4px;
+}
+
+.emptySubText {
+  color: #8c8c8c;
+  font-size: 14px;
+  margin: 0;
 }

@@ -12,6 +12,7 @@ import {
   theme,
   Timeline,
   Tree,
+  Empty,
 } from "antd";
 import ParticlesBg from "particles-bg";
 import styles from "./Diary.module.scss";
@@ -53,6 +54,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import dayjs from "dayjs";
 import { RiSendPlaneFill } from "react-icons/ri";
 import { FcTimeline } from "react-icons/fc";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 const MyTree: React.FC = () => {
   const [datePickerIsOpen, setDatePickerIsOpen] = useState(false); //是否为今日
   const [timelineOpen, setTimelineOpen] = useState(false); //是否为今日
@@ -65,7 +68,9 @@ const MyTree: React.FC = () => {
   const [title, setTitle] = useState(""); //输入的title
   const [tags, setTags] = useState<tag[]>([]); //输入的tags数据
   const [content, setContent] = useState<PartialBlock[] | undefined>(undefined); //输入的富文本内容
-
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
   const { message } = App.useApp();
   const { token } = theme.useToken();
 
@@ -263,36 +268,48 @@ const MyTree: React.FC = () => {
       </div>
 
       <Timeline mode="left" className={styles.timeLine}>
-        {Object.entries(timelineData || []).map(([year, entries]) => (
-          <React.Fragment key={year}>
-            {/* 年份节点（颜色不同） */}
-            <Timeline.Item color="red">
-              <h3 style={{ fontWeight: "bold", color: "#555" }}>{year}</h3>
-            </Timeline.Item>
+        {timelineData && Object.keys(timelineData).length > 0 ? (
+          Object.entries(timelineData).map(([year, entries]) => (
+            <React.Fragment key={year}>
+              <Timeline.Item color="red">
+                <h3 style={{ fontWeight: "bold", color: "#555" }}>{year}</h3>
+              </Timeline.Item>
 
-            {/* 日记节点（正常显示） */}
-            {entries.map((entry) => (
-              <Timeline.Item
-                key={entry._id}
-                label={
+              {entries.map((entry) => (
+                <Timeline.Item
+                  key={entry._id}
+                  label={
+                    <Tag
+                      onClick={() => timeLineClick(dayjs(entry.createdAt))}
+                      color="purple"
+                    >
+                      {dayjs(entry.createdAt).format("YYYY-MM-DD")}
+                    </Tag>
+                  }
+                >
                   <Tag
                     onClick={() => timeLineClick(dayjs(entry.createdAt))}
-                    color="purple"
+                    color="cyan"
                   >
-                    {dayjs(entry.createdAt).format("YYYY-MM-DD")}
+                    {entry.title}
                   </Tag>
-                }
-              >
-                <Tag
-                  onClick={() => timeLineClick(dayjs(entry.createdAt))}
-                  color="cyan"
-                >
-                  {entry.title}
-                </Tag>
-              </Timeline.Item>
-            ))}
-          </React.Fragment>
-        ))}
+                </Timeline.Item>
+              ))}
+            </React.Fragment>
+          ))
+        ) : (
+          <div className={styles.emptyTimeline}>
+            <Empty
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+              description={
+                <div className={styles.emptyContent}>
+                  <p className={styles.emptyText}>作者很懒，居然不写日记</p>
+                  <p className={styles.emptySubText}>期待作者勤奋起来~</p>
+                </div>
+              }
+            />
+          </div>
+        )}
       </Timeline>
       <div className={styles.calendarBtn}>
         <Button
@@ -398,19 +415,20 @@ const MyTree: React.FC = () => {
                   <>
                     <div>
                       {isToday
-                        ? "今日未发布日记哦，可以点击编辑，编辑你要发布的内容～～"
-                        : "补签未发布的日记哦，可以点击编辑，编辑你要补签的内容～～"}
+                        ? "作者今日未发布日记哦，可以右上角查看点击时间轴查看过去日记"
+                        : "作者当天未发布日记，可以右上角查看点击时间轴查看过去日记"}
                     </div>
-                    <div>{isToday.toString()}</div>
-                    <Button
-                      onClick={diaryEditClick}
-                      style={{ position: "absolute", right: 20 }}
-                      color="default"
-                      variant="solid"
-                      icon={<BiSolidMessageSquareEdit />}
-                    >
-                      {isToday ? "签到" : "补签"}
-                    </Button>
+                    {isAuthenticated && (
+                      <Button
+                        onClick={diaryEditClick}
+                        style={{ position: "absolute", right: 20 }}
+                        color="default"
+                        variant="solid"
+                        icon={<BiSolidMessageSquareEdit />}
+                      >
+                        {isToday ? "签到" : "补签"}
+                      </Button>
+                    )}
                   </>
                 )}
               </>

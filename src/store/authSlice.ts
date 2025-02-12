@@ -24,11 +24,13 @@ const authSlice = createSlice({
   reducers: {
     setAdmin: (state, action) => {
       state.isAuthenticated = true;
+      state.siteIsOpen = true;
       state.user = action.payload;
       state.status = "succeeded";
     },
     setUser: (state, action) => {
       state.isAuthenticated = false;
+      state.siteIsOpen = true;
       state.user = action.payload;
       state.status = "succeeded";
     },
@@ -74,8 +76,10 @@ export const checkLoginStatus = () => async (dispatch: AppDispatch) => {
       dispatch(setAdmin(res.data));
     } else if (res.code === 1) {
       dispatch(setUser(res.data));
-    } else {
+    } else if (res.code === 2) {
       dispatch(setSiteIsNotOpen());
+    } else {
+      dispatch(setError());
     }
   } catch (error) {
     dispatch(setError());

@@ -4,8 +4,8 @@ import styles from "./Login.module.scss";
 import img from "../../assets/bg.png";
 import { login, register, getVerificationCode } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store";
 import { checkLoginStatus } from "../../store/authSlice";
 import { App } from "antd";
 
@@ -20,9 +20,17 @@ const Login = () => {
   const [verificationCode, setVerificationCode] = useState("");
   const [isCodeSent, setIsCodeSent] = useState(false);
   const [countdown, setCountdown] = useState(60);
-
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { message } = App.useApp();
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/admin");
+    }
+  }, [isAuthenticated]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -40,6 +48,7 @@ const Login = () => {
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const res = await login(email, password);
+    dispatch(checkLoginStatus());
     if (res.code === 0) {
       message.success("登陆成功，跳转到个人设置页面");
       navigate("/admin");

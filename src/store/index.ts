@@ -4,11 +4,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import themeReducer from "./themeSlice";
 import routesReducer from "./routersMapSlice";
 import authReducer from "./authSlice";
+import siteReducer from "./slices/siteSlice";
+
 const store = configureStore({
   reducer: {
     theme: themeReducer,
     routesMap: routesReducer,
     auth: authReducer,
+    site: siteReducer,
   },
 });
 

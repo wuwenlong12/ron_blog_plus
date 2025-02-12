@@ -1,6 +1,11 @@
 import { Input, Button, App, Tooltip, Modal, QRCode } from "antd";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { RouteObject, useMatches, useNavigate } from "react-router-dom";
+import {
+  RouteObject,
+  useLocation,
+  useMatches,
+  useNavigate,
+} from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { BiSolidMessageSquareEdit } from "react-icons/bi";
 import { MdDelete, MdUpdate } from "react-icons/md";
@@ -40,6 +45,10 @@ import { formatTimestampToDay, formatTimestampToTime } from "../../utils/date";
 import { IoFolderOutline } from "react-icons/io5";
 import { tag } from "../../api/tag/type";
 import DesField from "./DesField";
+import {
+  findRouterMatches,
+  parsePath,
+} from "../../router/utils/findRouterMatches";
 
 type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
 
@@ -52,7 +61,7 @@ interface ArticleMainContentProps {
 const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
   const { message } = App.useApp();
   const breadcrumbRef = useRef<any>(null);
-  const matches = useMatches();
+  const location = useLocation();
   const [currentId, setCurrentId] = useState("");
   const [currentType, setCurrentType] = useState<"article" | "folder">(
     "folder"
@@ -73,20 +82,32 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
   const [content, setContent] = useState<PartialBlock[] | undefined>(undefined);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
   const editorRef = useRef<EditorRef>(null);
 
   const dispatch = useDispatch<AppDispatch>();
   const articleRoutesMap = useSelector(
     (state: RootState) => state.routesMap.articleRoutesMap
   );
+  const routesMap = useSelector(
+    (state: RootState) => state.routesMap.routesMap
+  );
   // const [folderTree,setFolderTree] = useState<TreeDataNode[]>([])
   const navigate = useNavigate();
   useEffect(() => {
-    const cur: any = matches[matches.length - 1];
-    setCurrentId(cur.handle.key);
-    setCurrentType(cur.handle.type);
-  }, [matches]);
+    const pathArray = parsePath(location.pathname).slice(1);
+    if (pathArray.length === 0) {
+      setCurrentId("default-index");
+      setCurrentType("folder");
+      return;
+    }
+    const cur = findRouterMatches(pathArray, articleRoutesMap);
+    const curItem = cur[cur.length - 1];
+    setCurrentId(curItem.key);
+    setCurrentType(curItem.type as "article" | "folder");
+  }, [location]);
   // 当searchParams变化时，重新加载数据
   useEffect(() => {
     if (currentId) {
@@ -105,7 +126,7 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
             key: "default-index",
             label: "index",
             type: "folder",
-            Icon: <HomeOutlined />, // 用字符串表示图标
+            Icon: <HomeOutlined />,
             requiresAuth: false,
           },
           children: nodes,
@@ -176,8 +197,10 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
   // 初始化目录信息
   const init = async (id: string) => {
     if (id === "default-index") {
-      setName("首页");
-      setDesc("描述");
+      setName("欢迎来到我的个人知识库");
+      setDesc(
+        "这里是我珍藏的知识笔记，记录着我在学习和探索过程中积累的经验、见解和灵感。无论是技术要点、实践技巧，还是解决问题的思路，这里都承载着我的成长轨迹。希望这些笔记不仅能帮助我回顾和巩固知识，也能为未来的探索提供指引。"
+      );
       return;
     }
 
@@ -186,6 +209,9 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
       if (res.code === 0) {
         setName(res.data.name);
         setDesc(res.data.desc);
+        setCreatedAt(res.data.createdAt);
+
+        setUpdatedAt(res.data.updatedAt);
       } else {
         message.error("加载数据失败，请稍后重试");
       }
@@ -202,12 +228,11 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
       if (res.code === 0) {
         setName(res.data.title);
         setInitContent(res.data.content);
-        console.log("res.data.tags" + JSON.stringify(tags));
 
         setTags(res.data.tags || []);
         setCreatedAt(res.data.createdAt);
+
         setUpdatedAt(res.data.updatedAt);
-        console.log(res.data.tags);
 
         setIsLoadingContent(false);
         if (!curJson) setContent(res.data.content);
@@ -217,9 +242,6 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
     }
   };
 
-  useEffect(() => {
-    console.log(isLoadingContent);
-  }, [isLoadingContent]);
   const initalizeData = () => {
     setTags([]);
     setInitContent(undefined);
@@ -275,9 +297,6 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
     const path = findFullPathByKey(articleRoutesMap, info.node.key as string);
     navigate("/Article/" + path || "");
   };
-  const onExpand: DirectoryTreeProps["onExpand"] = (keys, info) => {
-    console.log("Trigger Expand", keys, info);
-  };
 
   const EditorChange = (content: any) => {
     if (isEditable) {
@@ -290,15 +309,11 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
   const deleteFolderOrArticle = () => {};
   const publishArticle = async () => {
     const res = await updateArticleContentById(currentId, content);
-    console.log(res);
 
     if (res.code === 0) {
-      console.log("发布成功");
       setIsEditable(false);
       setInitContent(content);
       localStorage.removeItem(currentId);
-    } else {
-      console.log("发布失败");
     }
   };
   const blocksToMarkdown = () => {
@@ -316,6 +331,7 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
   const handleDeleteOk = async () => {
     const res = await deleteDirectoryInfoById(currentId, currentType);
     if (res.code === 0) {
+      navigate("/Article");
       setIsDeleteModalOpen(false);
       message.success("删除成功");
       dispatch(loadArticleRoutes);
@@ -351,17 +367,19 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
         <AppBreadcrumb isDarkMode={true}></AppBreadcrumb>
         <div className={styles.title}>
           <div style={{ display: "flex" }}>
-            <Button
-              type="text"
-              className={styles.Btn}
-              onClick={() => setIsEditNameing(true)}
-              icon={
-                <EditFilled
-                  className={styles.editIcon}
-                  style={{ fontSize: 28 }}
-                />
-              }
-            />
+            {currentId !== "default-index" && (
+              <Button
+                type="text"
+                className={styles.Btn}
+                onClick={() => setIsEditNameing(true)}
+                icon={
+                  <EditFilled
+                    className={styles.editIcon}
+                    style={{ fontSize: 28 }}
+                  />
+                }
+              />
+            )}
             {isEditNameing ? (
               <Input
                 showCount
@@ -372,63 +390,49 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
                 placeholder="请输入名称"
               />
             ) : (
-              <span> {name ? name : "未命名"}</span>
+              <span>{name ? name : "未命名"}</span>
             )}
           </div>
-          <div>
-            {currentType === "article" ? (
-              <Tooltip title="下载markdown文件">
-                <Button
-                  type="primary"
-                  style={{ marginRight: 10, backgroundColor: "#52c41a" }}
-                  icon={<FaMarkdown />}
-                  onClick={blocksToMarkdown}
-                >
-                  下载
-                </Button>
-              </Tooltip>
-            ) : null}
-            <Tooltip title="下载markdown文件">
+          <div className={styles.buttonGroup}>
+            {currentType === "article" && (
               <Button
-                type="primary"
-                style={{ marginRight: 10 }}
-                icon={<FaMarkdown />}
-                onClick={handleShare}
+                className={styles.downloadBtn}
+                icon={<FaMarkdown size={14} />}
+                onClick={blocksToMarkdown}
+                size="middle"
               >
-                分享
+                下载
               </Button>
-            </Tooltip>
-            {currentType === "article" ? (
-              isEditable ? (
+            )}
+            <Button
+              type="primary"
+              icon={<FaMarkdown size={14} />}
+              onClick={handleShare}
+              size="middle"
+            >
+              分享
+            </Button>
+            {currentType === "article" &&
+              isAuthenticated &&
+              (isEditable ? (
                 <Button
                   onClick={publishArticle}
-                  style={{ marginRight: 10 }}
-                  color="primary"
-                  variant="solid"
-                  icon={<RiSendPlaneFill />}
+                  type="primary"
+                  icon={<RiSendPlaneFill size={14} />}
+                  size="middle"
                 >
                   发布
                 </Button>
               ) : (
                 <Button
                   onClick={() => setIsEditable(true)}
-                  style={{ marginRight: 10 }}
-                  color="default"
-                  variant="solid"
-                  icon={<BiSolidMessageSquareEdit />}
+                  className={styles.editBtn}
+                  icon={<BiSolidMessageSquareEdit size={14} />}
+                  size="middle"
                 >
                   编辑
                 </Button>
-              )
-            ) : null}
-            <Button
-              onClick={handleDelete}
-              color="danger"
-              variant="solid"
-              icon={<MdDelete />}
-            >
-              删除
-            </Button>
+              ))}
           </div>
         </div>
         <DesField
@@ -442,17 +446,19 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
         <hr className={styles.hr} />
         {currentType === "folder" ? (
           <div className={styles.desc}>
-            <Button
-              type="text"
-              className={styles.Btn}
-              onClick={() => setIsEditDescing(true)}
-              icon={
-                <EditFilled
-                  className={styles.editIcon}
-                  style={{ fontSize: 22 }}
-                />
-              }
-            />
+            {currentId !== "default-index" && (
+              <Button
+                type="text"
+                className={styles.Btn}
+                onClick={() => setIsEditDescing(true)}
+                icon={
+                  <EditFilled
+                    className={styles.editIcon}
+                    style={{ fontSize: 22 }}
+                  />
+                }
+              />
+            )}
             {isEditDescing ? (
               <TextArea
                 showCount
@@ -480,7 +486,6 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
               defaultExpandAll
               showIcon={false}
               onSelect={onSelect}
-              onExpand={onExpand}
               treeData={folderTree}
               rootStyle={{ fontSize: 20 }}
             />
@@ -530,7 +535,7 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
             </motion.div>
           </AnimatePresence>
         ) : null}
-        <Modal
+        {/* <Modal
           title="确认删除"
           open={isDeleteModalOpen}
           onOk={handleDeleteOk}
@@ -540,7 +545,7 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
           cancelText="取消"
         >
           <p>你确定要删除这个项目吗？</p>
-        </Modal>
+        </Modal> */}
 
         {/* 分享弹出框 */}
         <Modal

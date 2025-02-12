@@ -77,11 +77,6 @@ const RightMenu: React.FC<RightMenuProps> = ({
           label: "新建文件夹",
           icon: <FolderOutlined />,
         },
-        {
-          key: "delete",
-          label: "删除",
-          icon: <DeleteOutlined />,
-        },
       ];
     }
   };
@@ -161,11 +156,8 @@ const RightMenu: React.FC<RightMenuProps> = ({
     if (res.code === 0) {
       setIsAddFileModalOpen(false);
       setNewFileName(""); // 清空输入框
-      // const _id = res.data._id
-
-      message.success("文件已创建");
-
-      dispatch(loadArticleRoutes);
+      message.success("文件已创建123123");
+      dispatch(loadArticleRoutes());
     } else {
       message.error("创建失败");
     }
@@ -179,7 +171,7 @@ const RightMenu: React.FC<RightMenuProps> = ({
     if (res.code === 0) {
       setIsDeleteModalOpen(false);
       message.success("删除成功");
-      dispatch(loadArticleRoutes);
+      dispatch(loadArticleRoutes());
     } else {
       message.error("删除失败");
     }

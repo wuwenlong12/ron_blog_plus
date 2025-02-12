@@ -5,7 +5,12 @@ import { MdUpdate } from "react-icons/md";
 import { formatTimestampToDay, formatTimestampToTime } from "../../utils/date";
 import ChooseTag from "../../components/ChooseTag";
 import { tag } from "../../api/tag/type";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/zh-cn";
+import dayjs from "dayjs";
 
+dayjs.extend(relativeTime);
+dayjs.locale("zh-cn");
 interface DesFieldProps {
   createdAt?: Date; // 创建时间的时间戳
   updatedAt?: Date; // 更新时间的时间戳
@@ -22,37 +27,43 @@ const DesField: React.FC<DesFieldProps> = ({
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
       {/* 创建时间 */}
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <Tooltip title={formatTimestampToTime(createdAt)}>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Button type="text" icon={<FaClock color="#383a42" />}>
-              {formatTimestampToDay(createdAt)}
-            </Button>
-          </div>
-        </Tooltip>
-      </div>
-
+      {createdAt && (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Tooltip title={dayjs(createdAt).fromNow()}>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Button type="text" icon={<FaClock color="#383a42" />}>
+                {dayjs(createdAt).fromNow()}
+              </Button>
+            </div>
+          </Tooltip>
+        </div>
+      )}
       {/* 更新时间 */}
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <Tooltip title={formatTimestampToTime(updatedAt)}>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Button type="text" icon={<MdUpdate color="#383a42" />}>
-              {formatTimestampToDay(updatedAt)}
-            </Button>
-          </div>
-        </Tooltip>
-      </div>
+      {updatedAt && (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Tooltip title={dayjs(updatedAt).fromNow()}>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Button type="text" icon={<MdUpdate color="#383a42" />}>
+                {dayjs(updatedAt).fromNow()}
+              </Button>
+            </div>
+          </Tooltip>
+        </div>
+      )}
       {/* 标签 */}
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <Button type="link" icon={<FaTags color="#383a42" />}></Button>
-        <ChooseTag
-          initTags={initTags}
-          onChange={(e) => {
-            if (!onChange) return;
-            onChange(e);
-          }}
-        />
-      </div>
+      {initTags && initTags.length > 0 && (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Button type="link" icon={<FaTags color="#383a42" />}></Button>
+          <div>{initTags.length}</div>
+          <ChooseTag
+            initTags={initTags}
+            onChange={(e) => {
+              if (!onChange) return;
+              onChange(e);
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 };

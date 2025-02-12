@@ -19,6 +19,8 @@ export const componentKey = {
   Dashboard: "Dashboard",
   ProductManager: "ProductManager",
   ProfileForm: "ProfileForm",
+  VisitStats: "VisitStats",
+  SettingManager: "SettingManager",
 };
 
 export const componentMap: Record<
@@ -75,8 +77,8 @@ export const componentMap: Record<
       default: withPageTransition(mod.default),
     }))
   ),
-  AboutManager: React.lazy(() =>
-    import("../../Admin/pages/AboutManager").then((mod) => ({
+  SettingManager: React.lazy(() =>
+    import("../../Admin/pages/SettingManager").then((mod) => ({
       default: withPageTransition(mod.default),
     }))
   ),
@@ -85,6 +87,7 @@ export const componentMap: Record<
       default: withPageTransition(mod.default),
     }))
   ),
+
   Dashboard: React.lazy(() =>
     import("../../Admin/pages/Dashboard").then((mod) => ({
       default: withPageTransition(mod.default),
@@ -97,6 +100,16 @@ export const componentMap: Record<
   ),
   ProfileForm: React.lazy(() =>
     import("../../Admin/pages/ProfileForm").then((mod) => ({
+      default: withPageTransition(mod.default),
+    }))
+  ),
+  VisitStats: React.lazy(() =>
+    import("../../Admin/pages/VisitStats").then((mod) => ({
+      default: withPageTransition(mod.default),
+    }))
+  ),
+  AboutManager: React.lazy(() =>
+    import("../../Admin/pages/AboutManager").then((mod) => ({
       default: withPageTransition(mod.default),
     }))
   ),

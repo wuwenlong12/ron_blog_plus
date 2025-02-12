@@ -12,6 +12,8 @@ import styles from "./Header.module.scss";
 import LeftModalDom from "../LeftModalDom/LeftModalDom";
 import Modal from "../Modal/Modal";
 import RightModalDom from "../RightModalDom/RightModalDom";
+import { RootState } from "../../store";
+import { useSelector } from "react-redux";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -42,6 +44,7 @@ const Header: React.FC<HeaderProps> = ({
   onClickLeftMenu,
   onClickRightMenu,
 }) => {
+  const siteInfo = useSelector((state: RootState) => state.site.siteInfo);
   const handleMenuClick: MenuProps["onClick"] = (e) => {
     onNavigate(e.key); // 调用父组件传入的 onNavigate
   };
@@ -80,6 +83,7 @@ const Header: React.FC<HeaderProps> = ({
       <div className={styles.containerRight}>
         <Button
           type="text"
+          onClick={() => window.open(siteInfo && siteInfo.github)}
           className={isDarkMode ? styles.BtnDark : styles.BtnLight}
           icon={<GithubOutlined style={{ fontSize: "20px" }} />}
         />

@@ -1,0 +1,106 @@
+.container {
+  padding: 24px;
+  background: #f5f7fa;
+
+  .card {
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    border: none;
+
+    :global(.ant-card-head) {
+      padding: 16px 24px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    :global(.ant-card-head-title) {
+      font-size: 16px;
+      font-weight: 500;
+      color: #1f2937;
+    }
+
+    :global(.ant-card-body) {
+      padding: 24px;
+    }
+
+    :global(.ant-statistic-title) {
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    :global(.ant-statistic-content) {
+      color: #111827;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    :global(.ant-list-item) {
+      padding: 16px;
+      border-radius: 8px;
+      background: #fafafa;
+      margin-bottom: 8px;
+      border: none;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .visitItem {
+    width: 100%;
+
+    > div {
+      margin: 6px 0;
+      display: flex;
+      gap: 12px;
+      color: #4b5563;
+
+      :global(.ant-typography-strong) {
+        color: #374151;
+        min-width: 70px;
+      }
+    }
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  .recentVisits {
+    margin-top: 24px;
+
+    h5 {
+      margin-bottom: 16px;
+    }
+  }
+
+  .dailyStats {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .datePicker {
+    :global(.ant-picker-input > input) {
+      color: #4b5563;
+    }
+
+    :global(.ant-picker) {
+      border-color: #e5e7eb;
+
+      &:hover {
+        border-color: #3b82f6;
+      }
+    }
+  }
+}
+
+:global(.echarts-for-react) {
+  height: 300px !important;
+}

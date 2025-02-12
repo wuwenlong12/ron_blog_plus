@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Route,
-  useNavigate,
-  Outlet,
-  useLocation,
-  useMatches,
-} from "react-router-dom";
+import { Route, useNavigate, Outlet, useLocation } from "react-router-dom";
 import Header from "../components/Header/Header";
 import { App, MenuProps } from "antd";
 import useTheme from "../hook/useTheme";
@@ -13,11 +7,16 @@ import { setting } from "../setting";
 import Modal from "../components/Modal/Modal";
 import RightModalDom from "../components/RightModalDom/RightModalDom";
 import { useDispatch, useSelector } from "react-redux";
-import { selectRoutes, setCurrentPath } from "../store/routersMapSlice";
+import {
+  loadArticleRoutes,
+  selectRoutes,
+  setCurrentPath,
+} from "../store/routersMapSlice";
 import LeftModalDom from "../components/LeftModalDom/LeftModalDom";
 import { checkSystemInit } from "../api/auth";
 import { AppDispatch, RootState } from "../store";
 import { checkLoginStatus } from "../store/authSlice";
+import { fetchSiteInfo } from "../store/slices/siteSlice";
 
 const IndexLayout = () => {
   const { isDarkMode, handleToggleTheme } = useTheme();
@@ -27,7 +26,7 @@ const IndexLayout = () => {
   const navigate = useNavigate();
   const [current, setCurrent] = useState("");
   const { pathname } = useLocation();
-
+  const siteInfo = useSelector((state: RootState) => state.site.siteInfo);
   const location = useLocation();
 
   const dispatch = useDispatch<AppDispatch>();
@@ -45,7 +44,7 @@ const IndexLayout = () => {
   const { message } = App.useApp();
   //检查系统初始化
   useEffect(() => {
-    // init();
+    dispatch(fetchSiteInfo());
   }, []);
 
   // const init = async () => {
@@ -121,8 +120,8 @@ const IndexLayout = () => {
   return (
     <div style={{ overflow: "hidden" }}>
       <Header
-        logoUrl={user?.imgurl || setting.BLOG_HERO_DEFAULT_LOGO_URL}
-        siteName="Ron 个人博客"
+        logoUrl={siteInfo?.avatar || setting.BLOG_HERO_DEFAULT_LOGO_URL}
+        siteName={siteInfo?.site_name || "个人知识库"}
         menuItems={items}
         isDarkMode={isDarkMode}
         isLeftMenuOpen={isLeftMenuOpen}

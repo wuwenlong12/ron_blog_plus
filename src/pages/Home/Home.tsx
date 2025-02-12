@@ -30,6 +30,7 @@ import BlogCard from "./components/BlogCard/BlogCard";
 const Main = () => {
   const mainContentRef = useRef<HTMLDivElement>(null);
   const { user } = useSelector((state: RootState) => state.auth);
+  const siteInfo = useSelector((state: RootState) => state.site.siteInfo);
   const scrollToContent = () => {
     mainContentRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -52,8 +53,8 @@ const Main = () => {
         <div className={styles.svgImg}>
           <Coder style={{ width: "clamp(400px, 50.2vw, 800px)" }}></Coder>
         </div>
-        {/* <div className={styles.desc}>
-          {user.explain.length > 0 && (
+        <div className={styles.desc}>
+          {siteInfo && siteInfo.homepage_signature.length > 0 && (
             <Typist
               avgTypingDelay={100}
               cursor={{
@@ -64,7 +65,7 @@ const Main = () => {
                 hideWhenDoneDelay: 1000,
               }}
             >
-              {user.explain.map((message, index) => (
+              {siteInfo.homepage_signature.map((message, index) => (
                 <div key={index}>
                   <p>{message}</p>
                   <Typist.Delay ms={500} />
@@ -75,7 +76,7 @@ const Main = () => {
           <Button className={styles.rollBtn} onClick={scrollToContent}>
             <FaArrowDown className={styles.rollBtnIcon} />
           </Button>
-        </div> */}
+        </div>
       </div>
 
       <div ref={mainContentRef} className={styles.main}>
@@ -85,15 +86,6 @@ const Main = () => {
           title="博客文章"
           desc="我的所思、所想，像模像样的文章..."
         ></BlogCard>
-
-        <div className={styles.rightCardList}>
-          <div className={styles.rightCardItem}>
-            <SelfInfoCard></SelfInfoCard>
-          </div>
-          <div className={styles.rightCardItem}>
-            <LeftModalDom></LeftModalDom>
-          </div>
-        </div>
       </div>
     </div>
   );

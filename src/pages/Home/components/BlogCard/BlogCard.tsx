@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import styles from "./BlogCard.module.scss";
-import { Button, Pagination, PaginationProps } from "antd";
+import { Button, Pagination, PaginationProps, Empty } from "antd";
 import { Articles } from "../../../../api/article/type";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
@@ -49,7 +49,9 @@ const BlogCard: React.FC<InfoListProps> = ({ title, desc, style }) => {
           <div className={styles.title}>{title}</div>
           <div className={styles.desc}>{desc}</div>
         </div>
-        <Button className={styles.rightBtn}>更多</Button>
+        {articles.length > 0 && (
+          <Button className={styles.rightBtn}>更多</Button>
+        )}
       </div>
 
       <AnimatePresence>
@@ -61,45 +63,64 @@ const BlogCard: React.FC<InfoListProps> = ({ title, desc, style }) => {
           transition={{ duration: 0.3 }}
           className={styles.cardList}
         >
-          {articles.map((item, index) => (
-            <div
-              key={item._id}
-              className={styles.card}
-              onClick={() => navigateArticle(item._id)}
-            >
-              <div className={styles.cardTopImage}></div>
-              <div style={{ padding: 20 }}>
-                <div className={styles.cardTitle}>{item.title}</div>
-                <hr className={styles.hr} />
-                <Editor
-                  isSummary={true}
-                  initialContent={item.summary}
-                  editable={false}
-                ></Editor>
-                <DesField
-                  initTags={item.tags}
-                  createdAt={item.createdAt}
-                  updatedAt={item.updatedAt}
-                ></DesField>
+          {articles.length > 0 ? (
+            articles.map((item, index) => (
+              <div
+                key={item._id}
+                className={styles.card}
+                onClick={() => navigateArticle(item._id)}
+              >
+                <div className={styles.cardTopImage}></div>
+                <div style={{ padding: 20 }}>
+                  <div className={styles.cardTitle}>{item.title}</div>
+                  <hr className={styles.hr} />
+                  <Editor
+                    isSummary={true}
+                    initialContent={item.summary}
+                    editable={false}
+                  ></Editor>
+                  <DesField
+                    initTags={item.tags}
+                    createdAt={item.createdAt}
+                    updatedAt={item.updatedAt}
+                  ></DesField>
+                </div>
+                <div className={styles.bottomBtn}>
+                  <Button
+                    icon={<TiStarFullOutline />}
+                    className={styles.leftBtn}
+                  >
+                    星标
+                  </Button>
+                  <Button className={styles.rightBtn}>阅读/复习</Button>
+                </div>
               </div>
-              <div className={styles.bottomBtn}>
-                <Button icon={<TiStarFullOutline />} className={styles.leftBtn}>
-                  星标
-                </Button>
-                <Button className={styles.rightBtn}>阅读/复习</Button>
-              </div>
+            ))
+          ) : (
+            <div className={styles.emptyContainer}>
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description={
+                  <div className={styles.emptyContent}>
+                    <p className={styles.emptyText}>作者还没有发布任何文章</p>
+                    <p className={styles.emptySubText}>先去看看其他内容吧~</p>
+                  </div>
+                }
+              />
             </div>
-          ))}
+          )}
         </motion.div>
       </AnimatePresence>
 
-      <Pagination
-        style={{ marginTop: 30 }}
-        align="center"
-        onChange={paginationChange}
-        defaultCurrent={1}
-        total={pagination?.total}
-      />
+      {/* {articles.length > 0 && (
+        <Pagination
+          style={{ marginTop: 30 }}
+          align="center"
+          onChange={paginationChange}
+          defaultCurrent={1}
+          total={pagination?.total}
+        />
+      )} */}
     </div>
   );
 };

@@ -1,0 +1,46 @@
+.container {
+  padding: 24px;
+  background: #fff;
+  border-radius: 8px;
+  min-height: calc(100vh - 100px);
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 500;
+    }
+  }
+
+  .formRow {
+    width: 100%;
+    display: flex;
+    gap: 24px;
+
+    .formItem {
+      flex: 1;
+    }
+  }
+
+  :global {
+    .avatar-uploader {
+      .ant-upload {
+        width: 128px;
+        height: 128px;
+        margin-bottom: 20px;
+      }
+
+      img {
+        width: 128px;
+        height: 128px;
+        object-fit: cover;
+        border-radius: 4px;
+      }
+    }
+  }
+}

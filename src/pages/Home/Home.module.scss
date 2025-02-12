@@ -61,7 +61,11 @@
     .rollBtn {
       height: 80px;
       border-radius: 20px;
-      background: linear-gradient(135deg, #ffb6c1, #87cefa);
+      background: linear-gradient(
+        135deg,
+        rgba($color: #ffb6c1, $alpha: 0.88),
+        rgba($color: #87cefa, $alpha: 0.88)
+      );
       position: absolute;
       // left: 200px;
       bottom: 20px;

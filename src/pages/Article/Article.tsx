@@ -40,7 +40,9 @@ const Actical = ({}) => {
     (state: RootState) => state.routesMap.selectedKey
   );
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
-
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
   const [contextMenu, setContextMenu] = useState<{
     visible: boolean;
     x: number;
@@ -55,12 +57,16 @@ const Actical = ({}) => {
 
   useEffect(() => {
     const savedSelectedKey = localStorage.getItem("selectedMenuKey");
+    console.log("savedSelectedKey", savedSelectedKey);
+
     if (savedSelectedKey) {
       setSelectedKey(savedSelectedKey);
     }
   }, []);
 
   useEffect(() => {
+    console.log(articleRoutesMap);
+
     const items = transformDataToMenuItems(articleRoutesMap as RouteObject[]);
     // 删除第一条数据
     const updatedItems = items.slice(1);
@@ -259,7 +265,7 @@ const Actical = ({}) => {
           className={styles.menu}
           style={{ opacity: isOpenMenu ? 1 : 0 }}
           multiple
-          defaultExpandAll
+          defaultExpandAll={true}
           onSelect={onSelect}
           selectedKeys={[selectedKey]}
           switcherIcon={
@@ -269,14 +275,15 @@ const Actical = ({}) => {
           }
           onExpand={onExpand}
           showIcon={false}
-          onRightClick={onRightClick}
+          onRightClick={isAuthenticated ? onRightClick : null}
           expandedKeys={expandedKeys} // 受控展开的节点
           draggable={{
             icon: false, // 关闭拖拽图标
+            nodeDraggable: () => isAuthenticated, // 只有有权限的用户才能拖拽
           }}
           allowDrop={allowDrop}
           treeData={directory}
-          onDrop={onDrop}
+          onDrop={isAuthenticated ? onDrop : null}
         />
 
         <RightMenu

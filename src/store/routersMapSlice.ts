@@ -4,8 +4,25 @@ import { transformRoutes } from "../router/utils/transformRoutes";
 import { Key } from "react";
 import { AppDispatch } from ".";
 import { getActicalDirectory } from "../api/folder";
-import { DynamicRoutes } from "../router";
+import {
+  DynamicRoutes,
+  StaticMainSiteRoutesMap,
+  StaticRoutesMap,
+} from "../router";
+import { Role } from "../api/auth/type";
+import { generateRoutesMap } from "../router/generaterRoutes";
 
+const host = window.location.hostname;
+
+function removeText(input: string, textToRemove: string): string {
+  const regex = new RegExp(textToRemove, "g"); // 创建一个全局匹配的正则表达式
+  return input.replace(regex, ""); // 替换掉指定的文字
+}
+
+// 获取 subdomain，返回空字符串或二级域名
+const getSubdomain = () => {
+  return removeText(host, process.env.REACT_APP_ENV_HOSTNAME);
+};
 // 定义状态的类型
 interface RoutesState {
   isLoaded: boolean; // 动态路由是否已加载
@@ -119,11 +136,14 @@ export const selectRoutes = createSelector(
 
 //加载文章router
 export const loadArticleRoutes = () => async (dispatch: AppDispatch) => {
+  console.log("loadArticleRoutes");
+
   dispatch(setArticleRouterIsLoaded(false)); // 请求开始时设置为加载中
   try {
     const res = await getActicalDirectory(); // 获取动态路由数据
+    const routes = generateRoutesMap(res.data);
     if (res.code === 0) {
-      dispatch(setArticleRoutesMap(res.data));
+      dispatch(setArticleRoutesMap(routes));
     } else if (res.code === 1) {
       dispatch(setArticleRoutesMap([])); // 如果没有数据，清空动态路由
     }
@@ -137,11 +157,23 @@ export const loadArticleRoutes = () => async (dispatch: AppDispatch) => {
 
 // 动态加载Admin router
 export const loadAdminRoutes =
-  (role: string, permissions: string[]) => async (dispatch: AppDispatch) => {
+  (role: Role, permissions: string[]) => async (dispatch: AppDispatch) => {
     // dispatch(setAdminRouterIsLoaded(false)); // 请求开始时设置为加载中
-    if (role === "superAdmin") {
+    if (role.name === "superAdmin") {
+      dispatch(setAdminRoutesMap(DynamicRoutes));
+    }
+    if (role.name === "webMaster") {
       dispatch(setAdminRoutesMap(DynamicRoutes));
     }
   };
+
+// 动态加载Admin router
+export const loadMainSiteRoutes = () => async (dispatch: AppDispatch) => {
+  if (getSubdomain() === "") {
+    dispatch(setRoutesMap(StaticMainSiteRoutesMap));
+  } else {
+    dispatch(setRoutesMap(StaticRoutesMap));
+  }
+};
 // 导出 reducer
 export default RoutesSlice.reducer;

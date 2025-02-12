@@ -23,6 +23,7 @@ const http = axios.create({
   baseURL: baseURL, // 使用拼接后的 baseURL
   timeout: 3000, // 请求超时时间
   headers: { "Content-Type": "application/json" },
+  withCredentials: true,
 });
 
 // 响应拦截器
@@ -50,10 +51,13 @@ http.interceptors.response.use(
           break;
         case 404:
           if (data?.code === 2) {
-            message.error(data.message);
+            // message.error(data.message);
           } else {
             message.error("请求资源未找到");
           }
+          break;
+        case 420:
+          // window.location.href = "/404";
           break;
         case 500:
           message.error("服务器内部错误");

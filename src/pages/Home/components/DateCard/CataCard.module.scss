@@ -22,11 +22,21 @@
       border-radius: 30px;
       /* 背景渐变 */
       &.first {
-        background: linear-gradient(45deg, #ff6a00, #ee0979, #ff6a00, #ffd200);
+        background: linear-gradient(
+          45deg,
+          rgba($color: #ff6a00, $alpha: 0.8),
+          rgba($color: #ee0979, $alpha: 0.8),
+          rgba($color: #ff6a00, $alpha: 0.8),
+          rgba($color: #ffd200, $alpha: 0.8)
+        );
       }
 
       &.second {
-        background: linear-gradient(90deg, #ffee58, #64dd17);
+        background: linear-gradient(
+          90deg,
+          rgba($color: #ffee58, $alpha: 0.8),
+          rgba($color: #64dd17, $alpha: 0.8)
+        );
       }
       .num {
         font-size: 30px;
@@ -42,7 +52,7 @@
     height: 100%;
     flex: 1;
     border-radius: 30px;
-    background-color: #ff9a8b;
+    background-color: rgba($color: #ff9a8b, $alpha: 0.8);
     overflow: hidden;
 
     .sliderItem {
@@ -52,11 +62,11 @@
       padding: 20px 40px;
       background: linear-gradient(
         45deg,
-        #ff9a9e,
-        #fad0c4,
-        #fbc2eb,
-        #a18cd1,
-        #fbc2eb
+        rgba($color: #ff9a9e, $alpha: 0.8),
+        rgba($color: #fad0c4, $alpha: 0.8),
+        rgba($color: #fbc2eb, $alpha: 0.8),
+        rgba($color: #a18cd1, $alpha: 0.8),
+        rgba($color: #fbc2eb, $alpha: 0.8)
       );
       .title {
         position: relative;
@@ -117,4 +127,53 @@
       }
     }
   }
+}
+
+.emptyContainer {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  padding: 40px 0;
+
+  :global {
+    .ant-empty {
+      margin: 0;
+    }
+  }
+}
+
+.emptySlider {
+  height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fbc2eb);
+  border-radius: 30px;
+
+  :global {
+    .ant-empty {
+      margin: 0;
+    }
+  }
+}
+
+.emptyContent {
+  text-align: center;
+}
+
+.emptyText {
+  color: #262626;
+  font-size: 16px;
+  margin: 0;
+  margin-bottom: 4px;
+}
+
+.emptySubText {
+  color: #8c8c8c;
+  font-size: 14px;
+  margin: 0;
 }

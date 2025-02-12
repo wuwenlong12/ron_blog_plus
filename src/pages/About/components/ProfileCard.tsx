@@ -2,7 +2,10 @@ import React from "react";
 import styles from "./ProfileCard.module.scss";
 import { FaGithub, FaTwitter, FaEnvelope, FaLinkedin } from "react-icons/fa";
 import img from "../../../assets/logo.png";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store";
 const ProfileCard: React.FC = () => {
+  const { siteInfo } = useSelector((state: RootState) => state.site);
   return (
     <div className={styles.cardWrapper}>
       <div className={styles.card}>
@@ -10,37 +13,24 @@ const ProfileCard: React.FC = () => {
         <div className={styles.front}>
           <img className={styles.img} src={img} alt="" />
           <h1>Mr.Ron</h1>
-          <h2>前端开发工程师</h2>
-          <p>热爱 Web 技术，致力于打造高质量应用</p>
+          <h2>{siteInfo && siteInfo.profession}</h2>
+          <p>{siteInfo && siteInfo.card_message}</p>
         </div>
 
         {/* 背面 */}
         <div className={styles.back}>
           <h2>联系我</h2>
-          <p>欢迎交流前端开发、技术架构、开源项目等内容！</p>
+          <p>{siteInfo && siteInfo.card_signature}</p>
           <div className={styles.icons}>
             <a
-              href="https://github.com/your-profile"
+              href={siteInfo && siteInfo.github}
               target="_blank"
               rel="noopener noreferrer"
             >
               <FaGithub />
             </a>
-            <a
-              href="https://linkedin.com/in/your-profile"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FaLinkedin />
-            </a>
-            <a
-              href="https://twitter.com/your-profile"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FaTwitter />
-            </a>
-            <a href="mailto:your.email@example.com">
+
+            <a href={`mailto:${siteInfo && siteInfo.email}`}>
               <FaEnvelope />
             </a>
           </div>

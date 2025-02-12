@@ -3,14 +3,15 @@
   margin-top: 60px;
   padding: 2rem;
   // text-align: center;
-  color: #333;
+  // color: #333;
+}
+.topInfo {
   display: flex;
   .left {
     flex: 1;
     margin-right: 4rem;
   }
 }
-
 // 个人简介
 .hero {
   .avatar {
@@ -28,7 +29,7 @@
 .section {
   margin-top: 2rem;
   padding: 1.5rem;
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.1);
   border-radius: 10px;
 
   h2 {
@@ -139,12 +140,85 @@ ul {
     align-items: center;
     gap: 5px;
     text-decoration: none;
-    color: #333;
+    // color: #333;
     font-size: 16px;
     transition: color 0.2s;
 
     &:hover {
       color: #0078ff;
+    }
+  }
+}
+.rollBtn {
+  height: 80px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #ffb6c1, #87cefa);
+  position: absolute;
+  // left: 200px;
+  bottom: 20px;
+  right: 40px;
+  .rollBtnIcon {
+    position: relative;
+    top: 0;
+    animation: moveUpDown 2s infinite ease-in-out;
+
+    @keyframes moveUpDown {
+      0% {
+        top: 0;
+      }
+      50% {
+        top: 10px; // 向上移动10px
+      }
+      100% {
+        top: 0;
+      }
+    }
+  }
+}
+.bottomInfo {
+  margin-top: 80px;
+}
+
+.about {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .featureCard {
+    height: 100%;
+    transition: all 0.3s;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    :global {
+      .ant-card-body {
+        height: 100%;
+      }
+
+      .anticon {
+        font-size: 20px;
+        color: #1890ff;
+      }
+    }
+  }
+
+  :global {
+    .ant-typography {
+      ul {
+        padding-left: 20px;
+
+        li {
+          margin: 8px 0;
+          color: #666;
+        }
+      }
+    }
+
+    .ant-tag {
+      margin: 4px;
     }
   }
 }

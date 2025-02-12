@@ -6,6 +6,7 @@ enum API {
   USERS_CHECK = "users/check",
   USERS_REGISTER = "users/register",
   USERS_LOGIN = "users/login",
+  USERS_LOGOUT = "users/logout",
   USERS_AUTH = "users/auth",
   USERS_DETAILS = "users/details",
   USERS_EMAIL = "users/email",
@@ -43,6 +44,9 @@ export const login = (email: string, password: string) =>
     },
     { withCredentials: true }
   );
+
+export const logout = () =>
+  http.get<any, ResponseBase>(API.USERS_LOGOUT, { withCredentials: true });
 
 export const auth = () =>
   http.get<any, ResponseLogin>(API.USERS_AUTH, { withCredentials: true });
