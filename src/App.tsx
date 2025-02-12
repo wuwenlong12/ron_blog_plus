@@ -47,7 +47,7 @@ const App: React.FC = () => {
           // },
           Tree: {
             /* 树形控件的样式 */
-            directoryNodeSelectedBg: "rgba(56, 178, 172, 0.12)", // 选中背景色：深绿松石色半透明
+            directoryNodeSelectedBg: "rgba(0, 0, 0, 0.82)", // 选中背景色：深绿松石色半透明
             directoryNodeSelectedColor: "#4fd1c5", // 选中文字颜色：亮绿松石色
             nodeHoverBg: "rgba(255, 255, 255, 0.03)", // 悬浮背景色：更柔和的白色半透明
             nodeHoverColor: "#81e6d9", // 悬浮文字颜色：淡绿松石色

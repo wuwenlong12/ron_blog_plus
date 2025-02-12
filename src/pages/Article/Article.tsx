@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Article.module.scss";
-import useTheme from "../../hook/useTheme";
 import { Button, Input } from "antd";
 import Icon, {
   RightOutlined,
@@ -43,6 +42,8 @@ const Actical = ({}) => {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
+  const isDarkMode = useSelector((state: RootState) => state.theme.isDarkMode);
+
   const [contextMenu, setContextMenu] = useState<{
     visible: boolean;
     x: number;
@@ -260,10 +261,12 @@ const Actical = ({}) => {
             onPressEnter={handleAddFolder}
           />
         ) : null}
-
         <DirectoryTree
           className={styles.menu}
-          style={{ opacity: isOpenMenu ? 1 : 0 }}
+          style={{
+            color: isDarkMode ? "#fff" : "#000",
+            opacity: isOpenMenu ? 1 : 0,
+          }}
           multiple
           defaultExpandAll={true}
           onSelect={onSelect}

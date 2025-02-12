@@ -76,7 +76,7 @@ const TableOfContents: React.FC<{ html: string }> = ({ html }) => {
         activeKey={activeKey}
         onChange={(key) => setActiveKey(key as unknown as string)}
         accordion
-        style={{ background: "#f7f7f7", borderRadius: 6, border: "none" }}
+        style={{ borderRadius: 6, border: "none" }}
       >
         <Collapse.Panel header="此页内容" key="1">
           {renderTree(headingsTree)}
