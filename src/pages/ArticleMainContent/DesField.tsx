@@ -8,7 +8,8 @@ import { tag } from "../../api/tag/type";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/zh-cn";
 import dayjs from "dayjs";
-
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 dayjs.extend(relativeTime);
 dayjs.locale("zh-cn");
 interface DesFieldProps {
@@ -24,6 +25,7 @@ const DesField: React.FC<DesFieldProps> = ({
   initTags,
   onChange,
 }) => {
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
       {/* 创建时间 */}
@@ -54,8 +56,9 @@ const DesField: React.FC<DesFieldProps> = ({
       {initTags && initTags.length > 0 && (
         <div style={{ display: "flex", alignItems: "center" }}>
           <Button type="link" icon={<FaTags color="#383a42" />}></Button>
-          <div>{initTags.length}</div>
+
           <ChooseTag
+            auth={isAuthenticated}
             initTags={initTags}
             onChange={(e) => {
               if (!onChange) return;

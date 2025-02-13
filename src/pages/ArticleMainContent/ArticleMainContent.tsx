@@ -35,6 +35,7 @@ import { loadArticleRoutes, setSelectedKey } from "../../store/routersMapSlice";
 import {
   getArticleContentById,
   updateArticleContentById,
+  updateArticleTagsById,
 } from "../../api/article";
 import Editor, { EditorRef } from "../../components/Editor/Editor";
 import { PartialBlock } from "@blocknote/core";
@@ -49,6 +50,7 @@ import {
   findRouterMatches,
   parsePath,
 } from "../../router/utils/findRouterMatches";
+import { debounce } from "lodash";
 
 type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
 
@@ -308,7 +310,10 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
 
   const deleteFolderOrArticle = () => {};
   const publishArticle = async () => {
-    const res = await updateArticleContentById(currentId, content);
+    const res = await updateArticleContentById({
+      id: currentId,
+      content,
+    });
 
     if (res.code === 0) {
       setIsEditable(false);
@@ -351,7 +356,18 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
       });
     setIsShareModalOpen(false);
   };
-
+  const editTags = async (tags: tag[]) => {
+    const res = await updateArticleTagsById({
+      id: currentId,
+      tags,
+    });
+    if (res.code === 0) {
+      setTags(tags);
+      message.success("保存成功");
+    } else {
+      message.error("保存失败");
+    }
+  };
   return (
     <AnimatePresence>
       <motion.div
@@ -440,7 +456,7 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
           updatedAt={updatedAt}
           createdAt={createdAt}
           initTags={tags}
-          onChange={(e) => setTags(e)}
+          onChange={(e) => editTags(e)}
         ></DesField>
 
         <hr className={styles.hr} />

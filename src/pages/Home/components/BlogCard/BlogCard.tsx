@@ -35,7 +35,7 @@ const BlogCard: React.FC<InfoListProps> = ({ title, desc, style }) => {
     setPagination(res.data.pagination);
   };
   const navigateArticle = (id: string) => {
-    const path = "/Article/" + findFullPathByKey(articleRoutesMap, id);
+    const path = "/article/" + findFullPathByKey(articleRoutesMap, id);
     navigate(path || "");
   };
   const paginationChange: PaginationProps["onChange"] = (page) => {

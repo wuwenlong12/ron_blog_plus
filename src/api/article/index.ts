@@ -1,4 +1,5 @@
 import http from "..";
+import { tag } from "../tag/type";
 import {
   ResponseGetAllArticleInfo,
   ResponseGetArticleContent,
@@ -10,6 +11,7 @@ enum API {
   ARTICLE_CONTENT = "/article/content",
   ARTICLE = "/article",
   ARTICLE_SUMMARY = "/article/summary",
+  ARTICLE_TAGS = "/article/tags",
 }
 
 //根据目录id获取w文章内容
@@ -20,11 +22,15 @@ export const getArticleContentById = (id: string) =>
     },
   });
 
-export const updateArticleContentById = (id: string, content: unknown) =>
-  http.post<any, ResponseUpdateArticleContent>(API.ARTICLE_CONTENT, {
-    id,
-    content,
-  });
+export const updateArticleContentById = (params: {
+  id: string;
+  content?: unknown;
+  tags?: tag[];
+}) => http.post<any, ResponseUpdateArticleContent>(API.ARTICLE_CONTENT, params);
+
+// 更新文章标签
+export const updateArticleTagsById = (params: { id: string; tags: tag[] }) =>
+  http.post<any, ResponseUpdateArticleContent>(API.ARTICLE_TAGS, params);
 
 export const getAllArticleInfo = () =>
   http.get<any, ResponseGetAllArticleInfo>(API.ARTICLE);
