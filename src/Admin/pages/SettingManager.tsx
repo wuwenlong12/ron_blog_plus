@@ -5,7 +5,12 @@ import {
   PlusOutlined,
   MinusCircleOutlined,
   LoadingOutlined,
+  UserOutlined,
+  WechatOutlined,
+  GithubOutlined,
+  MailOutlined,
 } from "@ant-design/icons";
+import { BsBriefcase } from "react-icons/bs";
 import type { UploadChangeParam } from "antd/es/upload";
 import type { RcFile, UploadFile, UploadProps } from "antd/es/upload/interface";
 import { uploadFileInChunks } from "../../utils/uploadFileInChunks";
@@ -15,6 +20,7 @@ import { PartialBlock } from "@blocknote/core";
 import { getSiteInfo, updateSite } from "../../api/site";
 import { SiteInfoResponse, UpdateSiteParams } from "../../api/site/type";
 import { debounce } from "lodash";
+import { motion } from "framer-motion";
 
 const SettingManager: React.FC = () => {
   const [form] = Form.useForm();
@@ -175,68 +181,94 @@ const SettingManager: React.FC = () => {
     {
       key: "basic",
       label: "基本信息",
+      icon: <UserOutlined />,
       children: (
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={(values) => handleFinish(values, "basic")}
-          initialValues={{ avatar: form.getFieldValue("avatar") }}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
         >
-          <Form.Item label="头像" name="avatar">
-            <Upload
-              name="avatar"
-              listType="picture-card"
-              className="avatar-uploader"
-              showUploadList={false}
-              beforeUpload={beforeUpload}
-              onChange={handleAvatarChange}
-              customRequest={customRequest}
-            >
-              {form.getFieldValue("avatar") ? (
-                <img
-                  src={form.getFieldValue("avatar")}
-                  alt="avatar"
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
-              ) : (
-                <div>
-                  {avatarLoading ? <LoadingOutlined /> : <PlusOutlined />}
-                  <div style={{ marginTop: 8 }}>上传头像</div>
-                </div>
-              )}
-            </Upload>
-          </Form.Item>
-
-          <Form.Item label="姓名" name="name">
-            <Input placeholder="请输入姓名" />
-          </Form.Item>
-
-          <Form.Item label="职业" name="profession">
-            <Input placeholder="请输入职业" />
-          </Form.Item>
-
-          <Form.Item label="微信号" name="wechat">
-            <Input placeholder="请输入微信号" />
-          </Form.Item>
-
-          <Form.Item label="GitHub" name="github">
-            <Input placeholder="请输入 GitHub 地址" />
-          </Form.Item>
-
-          <Form.Item
-            label="邮箱"
-            name="email"
-            rules={[{ type: "email", message: "请输入有效的邮箱地址" }]}
+          <Form
+            form={form}
+            layout="vertical"
+            onFinish={(values) => handleFinish(values, "basic")}
+            initialValues={{ avatar: form.getFieldValue("avatar") }}
           >
-            <Input placeholder="请输入邮箱地址" />
-          </Form.Item>
+            <div className={styles.formSection}>
+              <div className={styles.avatarSection}>
+                <Form.Item label="头像" name="avatar">
+                  <Upload
+                    name="avatar"
+                    listType="picture-card"
+                    className="avatar-uploader"
+                    showUploadList={false}
+                    beforeUpload={beforeUpload}
+                    onChange={handleAvatarChange}
+                    customRequest={customRequest}
+                  >
+                    {form.getFieldValue("avatar") ? (
+                      <motion.img
+                        src={form.getFieldValue("avatar")}
+                        alt="avatar"
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ duration: 0.2 }}
+                      />
+                    ) : (
+                      <div className={styles.uploadPlaceholder}>
+                        {avatarLoading ? <LoadingOutlined /> : <PlusOutlined />}
+                        <div>上传头像</div>
+                      </div>
+                    )}
+                  </Upload>
+                </Form.Item>
+              </div>
 
-          <Form.Item>
-            <Button type="primary" htmlType="submit" loading={loading}>
-              保存基本信息
-            </Button>
-          </Form.Item>
-        </Form>
+              <div className={styles.formGrid}>
+                <Form.Item label="姓名" name="name">
+                  <Input prefix={<UserOutlined />} placeholder="请输入姓名" />
+                </Form.Item>
+
+                <Form.Item label="职业" name="profession">
+                  <Input
+                    prefix={<BsBriefcase className={styles.reactIcon} />}
+                    placeholder="请输入职业"
+                  />
+                </Form.Item>
+
+                <Form.Item label="微信号" name="wechat">
+                  <Input
+                    prefix={<WechatOutlined />}
+                    placeholder="请输入微信号"
+                  />
+                </Form.Item>
+
+                <Form.Item label="GitHub" name="github">
+                  <Input
+                    prefix={<GithubOutlined />}
+                    placeholder="请输入 GitHub 地址"
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  label="邮箱"
+                  name="email"
+                  rules={[{ type: "email", message: "请输入有效的邮箱地址" }]}
+                >
+                  <Input
+                    prefix={<MailOutlined />}
+                    placeholder="请输入邮箱地址"
+                  />
+                </Form.Item>
+              </div>
+            </div>
+
+            <Form.Item>
+              <Button type="primary" htmlType="submit" loading={loading}>
+                保存基本信息
+              </Button>
+            </Form.Item>
+          </Form>
+        </motion.div>
       ),
     },
     {
@@ -447,11 +479,22 @@ const SettingManager: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <h2>关于页面管理</h2>
-      </div>
+      <motion.div
+        className={styles.header}
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <h2>个人信息设置</h2>
+        <p className={styles.subtitle}>管理您的个人信息和偏好设置</p>
+      </motion.div>
 
-      <Tabs defaultActiveKey="basic" items={tabItems} />
+      <Tabs
+        defaultActiveKey="basic"
+        items={tabItems}
+        className={styles.tabs}
+        tabBarGutter={32}
+      />
     </div>
   );
 };

@@ -100,7 +100,12 @@ export interface TopStats {
 // 访问统计响应
 export interface VisitStatsResponse extends ResponseBase {
   data: {
-    dailyStats: DailyStats[];
+    dailyStats: Array<{
+      date: string;
+      pv: number;
+      uv: number;
+      ip: number;
+    }>;
     topPaths: TopStats[];
     topReferers: TopStats[];
   };

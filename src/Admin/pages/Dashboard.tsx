@@ -1,192 +1,285 @@
 import React, { useEffect, useState } from "react";
-import { Card, Row, Col, Progress, Statistic, Tooltip, Divider } from "antd";
+import { Card, DatePicker, Typography, Tooltip, Spin } from "antd";
+import { motion } from "framer-motion";
+import ReactECharts from "echarts-for-react";
+import dayjs, { Dayjs } from "dayjs";
 import {
+  LineChartOutlined,
   UserOutlined,
-  EyeOutlined,
   FileTextOutlined,
-  BookOutlined,
   TagsOutlined,
-  DesktopOutlined,
-  HddOutlined,
-  DatabaseOutlined,
+  BookOutlined,
+  ArrowUpOutlined,
+  ArrowDownOutlined,
 } from "@ant-design/icons";
-import styles from "../styles/Dashboard.module.scss";
-import { getPageStats } from "../../api/site";
-import { PageStats } from "../../api/site/type";
+import styles from "../styles/VisitStats.module.scss";
+import { getPageStats, getVisitStats, getRealtimeVisit } from "../../api/site";
+import type {
+  PageStatsResponse,
+  VisitStatsResponse,
+  RealtimeVisitResponse,
+} from "../../api/site/type";
 
-interface SystemInfo {
-  cpu: number;
-  memory: {
-    total: number;
-    used: number;
-    free: number;
-  };
-  disk: {
-    total: number;
-    used: number;
-    free: number;
-  };
-  os: {
-    type: string;
-    platform: string;
-    version: string;
-    uptime: number;
-  };
-}
+const { RangePicker } = DatePicker;
+const { Text } = Typography;
 
-interface DashboardData {
-  todayVisits: number;
-  totalVisits: number;
-  articlesCount: number;
-  diariesCount: number;
-  tagsCount: number;
-  system: SystemInfo;
-}
+const VisitStats: React.FC = () => {
+  const [pageStats, setPageStats] = useState<PageStatsResponse["data"]>(null);
+  const [visitStats, setVisitStats] =
+    useState<VisitStatsResponse["data"]>(null);
+  const [realtimeStats, setRealtimeStats] =
+    useState<RealtimeVisitResponse["data"]>(null);
+  const [dateRange, setDateRange] = useState<[Dayjs, Dayjs]>([
+    dayjs().subtract(7, "day"),
+    dayjs(),
+  ]);
+  const [loading, setLoading] = useState(true);
 
-// 模拟数据
-const mockData: DashboardData = {
-  todayVisits: 156,
-  totalVisits: 25678,
-  articlesCount: 42,
-  diariesCount: 18,
-  tagsCount: 24,
-  system: {
-    cpu: 45,
-    memory: {
-      total: 16 * 1024 * 1024 * 1024, // 16GB
-      used: 8 * 1024 * 1024 * 1024, // 8GB
-      free: 8 * 1024 * 1024 * 1024, // 8GB
-    },
-    disk: {
-      total: 512 * 1024 * 1024 * 1024, // 512GB
-      used: 200 * 1024 * 1024 * 1024, // 200GB
-      free: 312 * 1024 * 1024 * 1024, // 312GB
-    },
-    os: {
-      type: "Linux",
-      platform: "x64",
-      version: "Ubuntu 20.04 LTS",
-      uptime: 1234567, // 示例运行时间
-    },
-  },
-};
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-const Dashboard: React.FC = () => {
-  const [pageStats, setPageStats] = useState<PageStats | null>(null);
-
-  const fetchPageStats = async () => {
+  const fetchData = async () => {
     try {
-      const res = await getPageStats();
-      if (res.code === 0) {
-        setPageStats(res.data);
-      }
+      setLoading(true);
+      const [pageStatsRes, visitStatsRes, realtimeRes] = await Promise.all([
+        getPageStats(),
+        getVisitStats({
+          startDate: dateRange[0].format("YYYY-MM-DD"),
+          endDate: dateRange[1].format("YYYY-MM-DD"),
+        }),
+        getRealtimeVisit(),
+      ]);
+      setPageStats(pageStatsRes.data);
+      setVisitStats(visitStatsRes.data);
+      setRealtimeStats(realtimeRes.data);
     } catch (error) {
-      console.error("获取页面统计失败:", error);
+      console.error("获取统计数据失败:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
+  // 定时刷新实时数据
   useEffect(() => {
-    fetchPageStats();
-  }, []);
+    fetchData();
+    const timer = setInterval(fetchData, 30000); // 每30秒刷新一次
+    return () => clearInterval(timer);
+  }, [dateRange]);
 
-  const formatBytes = (bytes: number) => {
-    if (bytes === 0) return "0 B";
-    const k = 1024;
-    const sizes = ["B", "KB", "MB", "GB", "TB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+  const statsCards = [
+    {
+      title: "今日访问量",
+      value: realtimeStats?.today?.pv || 0,
+      icon: <LineChartOutlined className={styles.icon} />,
+    },
+    {
+      title: "独立访客数",
+      value: realtimeStats?.today?.uv || 0,
+      icon: <UserOutlined className={styles.icon} />,
+    },
+    {
+      title: "总访问量",
+      value: pageStats?.totalPageView || 0,
+      icon: <LineChartOutlined className={styles.icon} />,
+    },
+    {
+      title: "文章总数",
+      value: pageStats?.articleCount || 0,
+      icon: <FileTextOutlined className={styles.icon} />,
+    },
+    {
+      title: "标签总数",
+      value: pageStats?.tagCount || 0,
+      icon: <TagsOutlined className={styles.icon} />,
+    },
+    {
+      title: "日记总数",
+      value: pageStats?.diaryCount || 0,
+      icon: <BookOutlined className={styles.icon} />,
+    },
+  ];
+
+  const getChartOption = () => ({
+    tooltip: {
+      trigger: "axis",
+      backgroundColor: "rgba(255, 255, 255, 0.9)",
+      borderColor: "#f1f5f9",
+      textStyle: { color: "#1e293b" },
+      borderWidth: 1,
+    },
+    grid: {
+      left: "3%",
+      right: "4%",
+      bottom: "3%",
+      top: "3%",
+      containLabel: true,
+    },
+    xAxis: {
+      type: "category",
+      boundaryGap: false,
+      data: visitStats?.dailyStats?.map((item) => item.date) || [],
+      axisLine: { lineStyle: { color: "#e2e8f0" } },
+      axisLabel: { color: "#64748b" },
+    },
+    yAxis: {
+      type: "value",
+      axisLine: { show: false },
+      axisTick: { show: false },
+      splitLine: { lineStyle: { color: "#f1f5f9" } },
+      axisLabel: { color: "#64748b" },
+    },
+    series: [
+      {
+        name: "访问量",
+        type: "line",
+        smooth: true,
+        data: visitStats?.dailyStats?.map((item) => item.pv) || [],
+        areaStyle: {
+          color: {
+            type: "linear",
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              { offset: 0, color: "rgba(59, 130, 246, 0.2)" },
+              { offset: 1, color: "rgba(59, 130, 246, 0.02)" },
+            ],
+          },
+        },
+        lineStyle: { color: "#3b82f6", width: 2 },
+        itemStyle: { color: "#3b82f6" },
+      },
+      {
+        name: "访客数",
+        type: "line",
+        smooth: true,
+        data: visitStats?.dailyStats?.map((item) => item.uv) || [],
+        areaStyle: {
+          color: {
+            type: "linear",
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              { offset: 0, color: "rgba(16, 185, 129, 0.2)" },
+              { offset: 1, color: "rgba(16, 185, 129, 0.02)" },
+            ],
+          },
+        },
+        lineStyle: { color: "#10b981", width: 2 },
+        itemStyle: { color: "#10b981" },
+      },
+    ],
+  });
+
+  const renderVisitList = () => {
+    if (!visitStats?.dailyStats?.length) return null;
+
+    return visitStats.dailyStats.map((stat, index) => (
+      <motion.div
+        key={stat.date}
+        className={styles.dailyStats}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.2, delay: index * 0.05 }}
+      >
+        <div>
+          <Text strong>{stat.date}</Text>
+          <Text type="secondary">访问量: {stat.pv}</Text>
+          <Text type="secondary">访客数: {stat.uv}</Text>
+          <Text type="secondary">IP数: {stat.ip}</Text>
+        </div>
+      </motion.div>
+    ));
   };
 
-  const formatUptime = (seconds: number) => {
-    const days = Math.floor(seconds / (24 * 60 * 60));
-    const hours = Math.floor((seconds % (24 * 60 * 60)) / (60 * 60));
-    const minutes = Math.floor((seconds % (60 * 60)) / 60);
-    return `${days}天 ${hours}小时 ${minutes}分钟`;
+  const renderRecentVisits = () => {
+    if (!realtimeStats?.recentVisits?.length) return null;
+
+    return (
+      <div className={styles.recentVisits}>
+        <Typography.Title level={5}>最近访问记录</Typography.Title>
+        {realtimeStats.recentVisits.map((visit, index) => (
+          <motion.div
+            key={index}
+            className={styles.visitItem}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, delay: index * 0.05 }}
+          >
+            <div>
+              <Text strong>{visit.path}</Text>
+              <div className={styles.visitInfo}>
+                <span className={styles.label}>IP 地址：</span>
+                <span className={styles.value}>{visit.ip}</span>
+                <span className={styles.label}>User Agent：</span>
+                <span className={styles.value}>{visit.userAgent}</span>
+              </div>
+            </div>
+            <div className={styles.visitMeta}>
+              <span>
+                {dayjs(visit.createdAt).format("YYYY-MM-DD HH:mm:ss")}
+              </span>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    );
   };
 
   return (
-    <div className={styles.dashboard}>
-      {/* 第一行：访问统计 */}
-      <Row gutter={[16, 24]} className={styles.firstRow}>
-        <Col xs={24} sm={12}>
-          <Card className={`${styles.statCard} ${styles.visitCard}`}>
-            <div className={styles.iconWrapper}>
-              <EyeOutlined />
-            </div>
-            <Statistic
-              title="今日访问"
-              value={pageStats?.todayPageView || 0}
-              valueStyle={{ color: "#1890ff" }}
-            />
-            <div className={styles.statTrend}>
-              <span>UV: {pageStats?.todayUniqueView || 0}</span>
-            </div>
-          </Card>
-        </Col>
-        <Col xs={24} sm={12}>
-          <Card className={`${styles.statCard} ${styles.totalCard}`}>
-            <div className={styles.iconWrapper}>
-              <UserOutlined />
-            </div>
-            <Statistic
-              title="总访问量"
-              value={pageStats?.totalPageView || 0}
-              valueStyle={{ color: "#52c41a" }}
-            />
-            <div className={styles.statTrend}>
-              <span>累计</span>
-            </div>
-          </Card>
-        </Col>
-      </Row>
+    <Spin spinning={loading}>
+      <div className={styles.container}>
+        <motion.div
+          className={styles.statsGrid}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {statsCards.map((stat, index) => (
+            <motion.div
+              key={stat.title}
+              className={styles.statCard}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
+            >
+              {stat.icon}
+              <div className={styles.statTitle}>{stat.title}</div>
+              <div className={styles.statValue}>{stat.value}</div>
+            </motion.div>
+          ))}
+        </motion.div>
 
-      {/* 第二行：内容统计 */}
-      <Row gutter={[16, 24]} className={styles.secondRow}>
-        <Col xs={24} sm={8}>
-          <Card className={`${styles.statCard} ${styles.articleCard}`}>
-            <div className={styles.iconWrapper}>
-              <FileTextOutlined />
-            </div>
-            <Statistic
-              title="文章数量"
-              value={pageStats?.articleCount || 0}
-              valueStyle={{ color: "#722ed1" }}
+        <div className={styles.chartSection}>
+          <div className={styles.chartHeader}>
+            <div className={styles.title}>访问趋势</div>
+            <RangePicker
+              value={dateRange}
+              onChange={(dates) => {
+                if (dates) {
+                  setDateRange(dates as [Dayjs, Dayjs]);
+                }
+              }}
+              className={styles.datePicker}
             />
-            <div className={styles.statTrend}>
-              <span>总计</span>
-            </div>
-          </Card>
-        </Col>
-        <Col xs={24} sm={8}>
-          <Card className={`${styles.statCard} ${styles.diaryCard}`}>
-            <div className={styles.iconWrapper}>
-              <BookOutlined />
-            </div>
-            <Statistic
-              title="日记数量"
-              value={pageStats?.diaryCount || 0}
-              valueStyle={{ color: "#eb2f96" }}
-            />
-            <div className={styles.statTrend}>
-              <span>总计</span>
-            </div>
-          </Card>
-        </Col>
-        <Col xs={24} sm={8}>
-          <Card className={`${styles.tagCard} ${styles.gradientBg}`}>
-            <div className={styles.tagHeader}>
-              <TagsOutlined />
-              <span>标签统计</span>
-            </div>
-            <div className={styles.tagContent}>
-              <div className={styles.tagCount}>{pageStats?.tagCount || 0}</div>
-              <div className={styles.tagDesc}>当前使用的标签总数</div>
-            </div>
-          </Card>
-        </Col>
-      </Row>
-    </div>
+          </div>
+          <ReactECharts option={getChartOption()} />
+        </div>
+
+        <div className={styles.visitList}>
+          <div className={styles.listHeader}>
+            <div className={styles.title}>访问记录</div>
+          </div>
+          {renderVisitList()}
+          {renderRecentVisits()}
+        </div>
+      </div>
+    </Spin>
   );
 };
 
-export default Dashboard;
+export default VisitStats;

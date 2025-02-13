@@ -43,14 +43,14 @@ export const updateSite = (params: UpdateSiteParams) => {
   return http.put<any, ResponseBase>(API.UPDATE, params);
 };
 
-// 获取页面访问量
-export const getPageStats = () => {
-  return http.get<any, PageStatsResponse>(API.PAGE_STATS);
-};
-
 // 记录访问统计
 export const recordVisit = (params: VisitRecordParams) => {
   return http.post<VisitRecordParams, ResponseBase>(API.RECORD_VISIT, params);
+};
+
+// 获取页面访问量
+export const getPageStats = () => {
+  return http.get<any, PageStatsResponse>(API.PAGE_STATS);
 };
 
 // 获取访问统计

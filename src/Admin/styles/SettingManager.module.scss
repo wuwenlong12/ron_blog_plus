@@ -1,45 +1,335 @@
 .container {
-  padding: 24px;
-  background: #fff;
-  border-radius: 8px;
+  padding: 32px;
+  background: #f8fafc;
   min-height: calc(100vh - 100px);
 
   .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
+    margin-bottom: 40px;
+    text-align: center;
+    animation: fadeInDown 0.5s ease;
 
     h2 {
       margin: 0;
-      font-size: 20px;
-      font-weight: 500;
+      font-size: 32px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      color: #64748b;
+      font-size: 16px;
+      margin: 0;
+      letter-spacing: 0.5px;
     }
   }
 
-  .formRow {
-    width: 100%;
-    display: flex;
-    gap: 24px;
+  .tabs {
+    background: #fff;
+    padding: 40px;
+    border-radius: 28px;
+    box-shadow: 0 4px 40px rgba(0, 0, 0, 0.03);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
 
-    .formItem {
-      flex: 1;
-    }
-  }
+    :global {
+      .ant-tabs-nav {
+        &::before {
+          display: none;
+        }
 
-  :global {
-    .avatar-uploader {
-      .ant-upload {
-        width: 128px;
-        height: 128px;
-        margin-bottom: 20px;
+        .ant-tabs-tab {
+          padding: 12px 24px;
+          margin: 0 8px !important;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          border-radius: 14px;
+          border: 1px solid transparent;
+
+          .ant-tabs-tab-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            color: #64748b;
+            transition: all 0.3s ease;
+
+            .anticon {
+              font-size: 18px;
+            }
+          }
+
+          &:hover {
+            background: #f8fafc;
+            border-color: #e2e8f0;
+          }
+
+          &.ant-tabs-tab-active {
+            background: #eef2ff;
+            border-color: #c7d2fe;
+
+            .ant-tabs-tab-btn {
+              color: #3b82f6;
+              font-weight: 600;
+            }
+          }
+        }
+
+        .ant-tabs-ink-bar {
+          display: none;
+        }
       }
 
-      img {
-        width: 128px;
-        height: 128px;
-        object-fit: cover;
-        border-radius: 4px;
+      .ant-tabs-content {
+        margin-top: 40px;
+      }
+    }
+  }
+
+  .formSection {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 48px;
+    margin-bottom: 40px;
+
+    .avatarSection {
+      .avatar-uploader {
+        .ant-upload {
+          width: 200px;
+          height: 200px;
+          border-radius: 24px;
+          background: #f8fafc;
+          border: 2px dashed #e2e8f0;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          overflow: hidden;
+          position: relative;
+
+          &::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            transition: all 0.3s ease;
+          }
+
+          &:hover {
+            border-color: #3b82f6;
+            background: #f1f5f9;
+            transform: translateY(-2px);
+
+            &::after {
+              box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            }
+          }
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 22px;
+          }
+
+          .uploadPlaceholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            color: #94a3b8;
+
+            .anticon {
+              font-size: 32px;
+              background: #f1f5f9;
+              padding: 16px;
+              border-radius: 16px;
+              transition: all 0.3s ease;
+            }
+
+            div {
+              font-size: 15px;
+              font-weight: 500;
+            }
+          }
+        }
+      }
+    }
+
+    .formGrid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+
+      .ant-form-item {
+        margin-bottom: 0;
+
+        .ant-form-item-label {
+          padding-bottom: 8px;
+
+          label {
+            font-size: 14px;
+            color: #1e293b;
+            font-weight: 500;
+          }
+        }
+
+        .ant-input-affix-wrapper {
+          padding: 14px 18px;
+          border-radius: 14px;
+          border: 1px solid #e2e8f0;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          background: #f8fafc;
+
+          &:hover {
+            border-color: #3b82f6;
+            transform: translateY(-1px);
+          }
+
+          &:focus-within {
+            border-color: #3b82f6;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+          }
+
+          .ant-input {
+            font-size: 14px;
+            background: transparent;
+
+            &::placeholder {
+              color: #94a3b8;
+            }
+          }
+
+          .anticon,
+          .reactIcon {
+            font-size: 16px;
+            color: #64748b;
+            margin-right: 12px;
+            transition: all 0.3s ease;
+          }
+        }
+      }
+    }
+  }
+
+  // 动态表单项的样式优化
+  .dynamic-form-items {
+    .ant-form-item {
+      background: #f8fafc;
+      padding: 20px;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      transition: all 0.3s ease;
+
+      &:hover {
+        border-color: #c7d2fe;
+        background: #f1f5f9;
+      }
+
+      .ant-input {
+        border-radius: 12px;
+      }
+
+      .anticon-minus-circle {
+        font-size: 20px;
+        color: #ef4444;
+        transition: all 0.3s ease;
+        opacity: 0.8;
+
+        &:hover {
+          opacity: 1;
+          transform: scale(1.1) rotate(90deg);
+        }
+      }
+    }
+
+    .ant-btn-dashed {
+      width: 100%;
+      height: 48px;
+      border-radius: 14px;
+      border-color: #c7d2fe;
+      color: #3b82f6;
+      font-weight: 500;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: #eef2ff;
+        border-color: #3b82f6;
+        transform: translateY(-1px);
+      }
+
+      .anticon {
+        font-size: 18px;
+      }
+    }
+  }
+
+  // 提交按钮样式优化
+  .ant-btn-primary {
+    height: 48px;
+    padding: 0 36px;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border: none;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+
+    .header {
+      text-align: left;
+      margin-bottom: 32px;
+
+      h2 {
+        font-size: 28px;
+      }
+    }
+
+    .tabs {
+      padding: 24px;
+      border-radius: 24px;
+
+      .ant-tabs-tab {
+        padding: 10px 16px;
+      }
+    }
+
+    .formSection {
+      grid-template-columns: 1fr;
+      gap: 32px;
+
+      .avatarSection {
+        display: flex;
+        justify-content: center;
+      }
+
+      .formGrid {
+        grid-template-columns: 1fr;
       }
     }
   }

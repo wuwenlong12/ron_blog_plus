@@ -54,6 +54,7 @@ const authSlice = createSlice({
       state.status = "succeeded";
     },
     clearUser: (state) => {
+      state.isAuthenticated = false;
       state.user = null;
       state.status = "idle";
     },

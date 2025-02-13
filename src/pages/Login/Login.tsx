@@ -29,7 +29,7 @@ const Login = () => {
   const { message } = App.useApp();
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/admin");
+      navigate(-1);
     }
   }, [isAuthenticated]);
 
@@ -52,7 +52,6 @@ const Login = () => {
     dispatch(checkLoginStatus());
     if (res.code === 0) {
       message.success("登陆成功");
-      navigate(-1);
     }
   };
 

@@ -1,324 +1,284 @@
 import React, { useEffect, useState } from "react";
-import { Card, Row, Col, List, Typography, Statistic, DatePicker } from "antd";
-import { getRealtimeVisit, getVisitStats } from "../../api/site";
-import { RealtimeVisitResponse, VisitStatsResponse } from "../../api/site/type";
-import dayjs from "dayjs";
-import styles from "../styles/VisitStats.module.scss";
+import { Card, DatePicker, Typography, Tooltip, Spin } from "antd";
+import { motion } from "framer-motion";
 import ReactECharts from "echarts-for-react";
-import type { RangePickerProps } from "antd/es/date-picker";
+import dayjs, { Dayjs } from "dayjs";
+import {
+  LineChartOutlined,
+  UserOutlined,
+  FileTextOutlined,
+  TagsOutlined,
+  BookOutlined,
+  ArrowUpOutlined,
+  ArrowDownOutlined,
+} from "@ant-design/icons";
+import styles from "../styles/VisitStats.module.scss";
+import { getPageStats, getVisitStats, getRealtimeVisit } from "../../api/site";
+import type {
+  PageStatsResponse,
+  VisitStatsResponse,
+  RealtimeVisitResponse,
+} from "../../api/site/type";
+
+const { RangePicker } = DatePicker;
+const { Text } = Typography;
 
 const VisitStats: React.FC = () => {
-  const [realtimeData, setRealtimeData] =
-    useState<RealtimeVisitResponse["data"]>();
-  const [visitStats, setVisitStats] = useState<VisitStatsResponse["data"]>();
-  const [dateRange, setDateRange] = useState<[string, string]>([
-    dayjs().subtract(7, "day").format("YYYY-MM-DD"),
-    dayjs().format("YYYY-MM-DD"),
+  const [pageStats, setPageStats] = useState<PageStatsResponse["data"]>(null);
+  const [visitStats, setVisitStats] =
+    useState<VisitStatsResponse["data"]>(null);
+  const [realtimeStats, setRealtimeStats] =
+    useState<RealtimeVisitResponse["data"]>(null);
+  const [dateRange, setDateRange] = useState<[Dayjs, Dayjs]>([
+    dayjs().subtract(7, "day"),
+    dayjs(),
   ]);
-
-  // 获取实时数据
-  const fetchRealtimeData = async () => {
-    try {
-      const res = await getRealtimeVisit();
-      if (res.code === 0) {
-        setRealtimeData(res.data);
-      }
-    } catch (error) {
-      console.error("获取实时访问数据失败:", error);
-    }
-  };
-
-  // 获取历史统计数据
-  const fetchVisitStats = async () => {
-    try {
-      const [startDate, endDate] = dateRange;
-      const res = await getVisitStats({
-        startDate,
-        endDate,
-      });
-
-      if (res.code === 0) {
-        setVisitStats(res.data);
-      }
-    } catch (error) {
-      console.error("获取访问统计失败:", error);
-    }
-  };
-
-  // 日期范围变化处理
-  const handleRangeChange: RangePickerProps["onChange"] = (dates) => {
-    if (dates) {
-      const [start, end] = dates;
-      setDateRange([start!.format("YYYY-MM-DD"), end!.format("YYYY-MM-DD")]);
-    }
-  };
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchRealtimeData();
-    fetchVisitStats();
+    fetchData();
+  }, []);
 
-    // 实时数据每分钟更新
-    const timer = setInterval(fetchRealtimeData, 60000);
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const [pageStatsRes, visitStatsRes, realtimeRes] = await Promise.all([
+        getPageStats(),
+        getVisitStats({
+          startDate: dateRange[0].format("YYYY-MM-DD"),
+          endDate: dateRange[1].format("YYYY-MM-DD"),
+        }),
+        getRealtimeVisit(),
+      ]);
+      setPageStats(pageStatsRes.data);
+      setVisitStats(visitStatsRes.data);
+      setRealtimeStats(realtimeRes.data);
+    } catch (error) {
+      console.error("获取统计数据失败:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 定时刷新实时数据
+  useEffect(() => {
+    fetchData();
+    const timer = setInterval(fetchData, 30000); // 每30秒刷新一次
     return () => clearInterval(timer);
   }, [dateRange]);
 
-  // 处理访问趋势数据
-  const trendData = React.useMemo(() => {
-    if (!visitStats?.dailyStats) return [];
+  const statsCards = [
+    {
+      title: "今日访问量",
+      value: realtimeStats?.today?.pv || 0,
+      icon: <LineChartOutlined className={styles.icon} />,
+    },
+    {
+      title: "独立访客数",
+      value: realtimeStats?.today?.uv || 0,
+      icon: <UserOutlined className={styles.icon} />,
+    },
+    {
+      title: "总访问量",
+      value: pageStats?.totalPageView || 0,
+      icon: <LineChartOutlined className={styles.icon} />,
+    },
+    {
+      title: "文章总数",
+      value: pageStats?.articleCount || 0,
+      icon: <FileTextOutlined className={styles.icon} />,
+    },
+    {
+      title: "标签总数",
+      value: pageStats?.tagCount || 0,
+      icon: <TagsOutlined className={styles.icon} />,
+    },
+    {
+      title: "日记总数",
+      value: pageStats?.diaryCount || 0,
+      icon: <BookOutlined className={styles.icon} />,
+    },
+  ];
 
-    const pvData = visitStats.dailyStats.map((item) => ({
-      date: item.date,
-      value: item.pv,
-      category: "PV",
-    }));
-
-    const uvData = visitStats.dailyStats.map((item) => ({
-      date: item.date,
-      value: item.uv,
-      category: "UV",
-    }));
-
-    return [...pvData, ...uvData];
-  }, [visitStats?.dailyStats]);
-
-  // 处理热门页面数据
-  const topPathsData = React.useMemo(() => {
-    if (!visitStats?.topPaths) return [];
-
-    return visitStats.topPaths.map((item) => ({
-      type: item._id,
-      value: item.count,
-    }));
-  }, [visitStats?.topPaths]);
-
-  // 处理来源网站数据
-  const topReferersData = React.useMemo(() => {
-    if (!visitStats?.topReferers) return [];
-
-    return visitStats.topReferers.map((item) => ({
-      type: item._id || "直接访问",
-      value: item.count,
-    }));
-  }, [visitStats?.topReferers]);
-
-  // 访问趋势图表配置
-  const getTrendOption = (data: any[]) => ({
+  const getChartOption = () => ({
     tooltip: {
       trigger: "axis",
       backgroundColor: "rgba(255, 255, 255, 0.9)",
-      borderColor: "#f0f0f0",
-      textStyle: {
-        color: "#1f2937",
-      },
-    },
-    legend: {
-      data: ["PV", "UV"],
-      top: 0,
-      textStyle: {
-        color: "#4b5563",
-      },
+      borderColor: "#f1f5f9",
+      textStyle: { color: "#1e293b" },
+      borderWidth: 1,
     },
     grid: {
-      top: 40,
-      left: 50,
-      right: 20,
-      bottom: 40,
+      left: "3%",
+      right: "4%",
+      bottom: "3%",
+      top: "3%",
+      containLabel: true,
     },
     xAxis: {
       type: "category",
-      data: data.map((item) => item.date),
-      axisLine: {
-        lineStyle: {
-          color: "#e5e7eb",
-        },
-      },
-      axisLabel: {
-        color: "#6b7280",
-      },
+      boundaryGap: false,
+      data: visitStats?.dailyStats?.map((item) => item.date) || [],
+      axisLine: { lineStyle: { color: "#e2e8f0" } },
+      axisLabel: { color: "#64748b" },
     },
     yAxis: {
       type: "value",
-      splitLine: {
-        lineStyle: {
-          color: "#f3f4f6",
-        },
-      },
-      axisLabel: {
-        color: "#6b7280",
-      },
+      axisLine: { show: false },
+      axisTick: { show: false },
+      splitLine: { lineStyle: { color: "#f1f5f9" } },
+      axisLabel: { color: "#64748b" },
     },
     series: [
       {
-        name: "PV",
+        name: "访问量",
         type: "line",
-        data: data.map((item) => item.pv),
         smooth: true,
-        symbolSize: 6,
-        lineStyle: {
-          width: 3,
-        },
-        itemStyle: {
-          color: "#3b82f6",
-        },
-      },
-      {
-        name: "UV",
-        type: "line",
-        data: data.map((item) => item.uv),
-        smooth: true,
-        symbolSize: 6,
-        lineStyle: {
-          width: 3,
-        },
-        itemStyle: {
-          color: "#10b981",
-        },
-      },
-    ],
-  });
-
-  // 饼图配置
-  const getPieOption = (data: any[], title: string) => ({
-    title: {
-      text: title,
-      left: "center",
-      top: 20,
-      textStyle: {
-        color: "#1f2937",
-        fontSize: 16,
-        fontWeight: 500,
-      },
-    },
-    tooltip: {
-      trigger: "item",
-      backgroundColor: "rgba(255, 255, 255, 0.9)",
-      borderColor: "#f0f0f0",
-      textStyle: {
-        color: "#1f2937",
-      },
-    },
-    series: [
-      {
-        type: "pie",
-        radius: ["40%", "70%"],
-        center: ["50%", "55%"],
-        avoidLabelOverlap: true,
-        itemStyle: {
-          borderRadius: 4,
-          borderColor: "#fff",
-          borderWidth: 2,
-        },
-        label: {
-          show: true,
-          formatter: "{b}: {d}%",
-        },
-        emphasis: {
-          label: {
-            show: true,
-            fontSize: 14,
-            fontWeight: "bold",
+        data: visitStats?.dailyStats?.map((item) => item.pv) || [],
+        areaStyle: {
+          color: {
+            type: "linear",
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              { offset: 0, color: "rgba(59, 130, 246, 0.2)" },
+              { offset: 1, color: "rgba(59, 130, 246, 0.02)" },
+            ],
           },
         },
-        data: data.map((item) => ({
-          name: item.type,
-          value: item.value,
-        })),
+        lineStyle: { color: "#3b82f6", width: 2 },
+        itemStyle: { color: "#3b82f6" },
+      },
+      {
+        name: "访客数",
+        type: "line",
+        smooth: true,
+        data: visitStats?.dailyStats?.map((item) => item.uv) || [],
+        areaStyle: {
+          color: {
+            type: "linear",
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              { offset: 0, color: "rgba(16, 185, 129, 0.2)" },
+              { offset: 1, color: "rgba(16, 185, 129, 0.02)" },
+            ],
+          },
+        },
+        lineStyle: { color: "#10b981", width: 2 },
+        itemStyle: { color: "#10b981" },
       },
     ],
   });
 
+  const renderVisitList = () => {
+    if (!visitStats?.dailyStats?.length) return null;
+
+    return visitStats.dailyStats.map((stat, index) => (
+      <motion.div
+        key={stat.date}
+        className={styles.dailyStats}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.2, delay: index * 0.05 }}
+      >
+        <div>
+          <Text strong>{stat.date}</Text>
+          <Text type="secondary">访问量: {stat.pv}</Text>
+          <Text type="secondary">访客数: {stat.uv}</Text>
+          <Text type="secondary">IP数: {stat.ip}</Text>
+        </div>
+      </motion.div>
+    ));
+  };
+
+  const renderRecentVisits = () => {
+    if (!realtimeStats?.recentVisits?.length) return null;
+
+    return (
+      <div className={styles.recentVisits}>
+        <Typography.Title level={5}>最近访问记录</Typography.Title>
+        {realtimeStats.recentVisits.map((visit, index) => (
+          <motion.div
+            key={index}
+            className={styles.visitItem}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, delay: index * 0.05 }}
+          >
+            <div>
+              <Text strong>{visit.path}</Text>
+              <div className={styles.visitInfo}>
+                <span className={styles.label}>IP 地址：</span>
+                <span className={styles.value}>{visit.ip}</span>
+                <span className={styles.label}>User Agent：</span>
+                <span className={styles.value}>{visit.userAgent}</span>
+              </div>
+            </div>
+            <div className={styles.visitMeta}>
+              <span>
+                {dayjs(visit.createdAt).format("YYYY-MM-DD HH:mm:ss")}
+              </span>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    );
+  };
+
   return (
-    <div className={styles.container}>
-      <Row gutter={[16, 16]}>
-        {/* 实时访问数据 */}
-        <Col span={24}>
-          <Card title="实时访问数据" className={styles.card}>
-            <Row gutter={16} align="middle" justify="space-between">
-              <Col>
-                <Row gutter={16}>
-                  <Col>
-                    <Statistic
-                      title="今日PV"
-                      value={realtimeData?.today?.pv || 0}
-                    />
-                  </Col>
-                  <Col>
-                    <Statistic
-                      title="今日UV"
-                      value={realtimeData?.today?.uv || 0}
-                    />
-                  </Col>
-                </Row>
-              </Col>
-              <Col>
-                <DatePicker.RangePicker
-                  value={[dayjs(dateRange[0]), dayjs(dateRange[1])]}
-                  onChange={handleRangeChange}
-                  allowClear={false}
-                  className={styles.datePicker}
-                />
-              </Col>
-            </Row>
-          </Card>
-        </Col>
+    <Spin spinning={loading}>
+      <div className={styles.container}>
+        <motion.div
+          className={styles.statsGrid}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {statsCards.map((stat, index) => (
+            <motion.div
+              key={stat.title}
+              className={styles.statCard}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
+            >
+              {stat.icon}
+              <div className={styles.statTitle}>{stat.title}</div>
+              <div className={styles.statValue}>{stat.value}</div>
+            </motion.div>
+          ))}
+        </motion.div>
 
-        {/* 最近访问记录 */}
-        <Col span={24} lg={12}>
-          <Card title="最近访问记录" className={styles.card}>
-            <List
-              dataSource={realtimeData?.recentVisits || []}
-              renderItem={(item) => (
-                <List.Item>
-                  <div className={styles.visitItem}>
-                    <div>
-                      <Typography.Text strong>路径：</Typography.Text>
-                      <Typography.Text>{item.path}</Typography.Text>
-                    </div>
-                    <div>
-                      <Typography.Text strong>IP：</Typography.Text>
-                      <Typography.Text>{item.ip}</Typography.Text>
-                    </div>
-                    <div>
-                      <Typography.Text strong>浏览器：</Typography.Text>
-                      <Typography.Text>{item.userAgent}</Typography.Text>
-                    </div>
-                    <div>
-                      <Typography.Text strong>访问时间：</Typography.Text>
-                      <Typography.Text>
-                        {dayjs(item.createdAt).format("YYYY-MM-DD HH:mm:ss")}
-                      </Typography.Text>
-                    </div>
-                  </div>
-                </List.Item>
-              )}
+        <div className={styles.chartSection}>
+          <div className={styles.chartHeader}>
+            <div className={styles.title}>访问趋势</div>
+            <RangePicker
+              value={dateRange}
+              onChange={(dates) => {
+                if (dates) {
+                  setDateRange(dates as [Dayjs, Dayjs]);
+                }
+              }}
+              className={styles.datePicker}
             />
-          </Card>
-        </Col>
+          </div>
+          <ReactECharts option={getChartOption()} />
+        </div>
 
-        {/* 访问趋势图表 */}
-        <Col span={24}>
-          <Card title="访问趋势" className={styles.card}>
-            <ReactECharts
-              option={getTrendOption(visitStats?.dailyStats || [])}
-            />
-          </Card>
-        </Col>
-
-        {/* 热门页面分布 */}
-        <Col span={24} lg={12}>
-          <Card title="热门页面分布" className={styles.card}>
-            <ReactECharts option={getPieOption(topPathsData, "热门页面")} />
-          </Card>
-        </Col>
-
-        {/* 访问来源分布 */}
-        <Col span={24} lg={12}>
-          <Card title="访问来源分布" className={styles.card}>
-            <ReactECharts option={getPieOption(topReferersData, "访问来源")} />
-          </Card>
-        </Col>
-      </Row>
-    </div>
+        <div className={styles.visitList}>
+          <div className={styles.listHeader}>
+            <div className={styles.title}>访问记录</div>
+          </div>
+          {renderVisitList()}
+          {renderRecentVisits()}
+        </div>
+      </div>
+    </Spin>
   );
 };
 

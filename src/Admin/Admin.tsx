@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Layout, Menu, Badge, MenuProps, Button, theme } from "antd";
+import { Layout, Menu, Button, theme, Avatar, Tooltip } from "antd";
 import { motion } from "framer-motion";
 import {
   DashboardOutlined,
-  BellOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   LogoutOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import styles from "./styles/Admin.module.scss";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,21 +17,19 @@ import { loadAdminRoutes } from "../store/routersMapSlice";
 import { iconMap } from "../router/utils/iconMap";
 import { MenuItemType } from "antd/es/menu/interface";
 import { toggleTheme } from "../store/themeSlice";
-type MenuItem = Required<MenuProps>["items"][number];
-const { Header, Sider, Content } = Layout;
+
+const { Content } = Layout;
 
 const Admin: React.FC = () => {
   const [selectedKey, setSelectedKey] = useState("dashboard");
   const [collapsed, setCollapsed] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const [menuItems, setMenuItems] = useState<MenuItemType[]>([]);
-  // const [isShowCreateSizemodal, SetIsShowCreateSizemodal] = useState(false);
-  const navigator = useNavigate();
+  const navigate = useNavigate();
   const { adminRoutesMap } = useSelector((state: RootState) => state.routesMap);
   const { user, isAuthenticated, status, siteIsInit } = useSelector(
     (state: RootState) => state.auth
   );
-  const navigate = useNavigate();
   const { isDarkMode } = useSelector((state: RootState) => state.theme);
   const { token } = theme.useToken();
 
@@ -50,12 +48,12 @@ const Admin: React.FC = () => {
     if (status !== "succeeded") return;
     if (isAuthenticated) {
       if (!user.role || !user.managedSites || !siteIsInit) {
-        navigator("/init");
+        navigate("/init");
         return;
       }
       dispatch(loadAdminRoutes(user.role, user.role.permissions));
     } else {
-      navigator("/login");
+      navigate("/login");
     }
   }, [user, isAuthenticated]);
 
@@ -72,13 +70,6 @@ const Admin: React.FC = () => {
     setMenuItems(menu);
   }, [adminRoutesMap]);
 
-  const menuClickHandler = ({ key }) => {
-    // const savedSelectedKey = localStorage.getItem("selectedMenuKey");
-    setSelectedKey(key);
-    localStorage.setItem("selectedMenuKey", key);
-    navigator("/admin/" + key);
-  };
-
   const handleLogout = async () => {
     try {
       dispatch(logoutHandle());
@@ -88,90 +79,111 @@ const Admin: React.FC = () => {
     }
   };
 
+  const renderMobileNav = () => {
+    return (
+      <div className={styles.mobileNav}>
+        <div className={styles.navContent}>
+          {menuItems.map((item: any) => (
+            <div
+              key={item.key}
+              className={`${styles.navItem} ${
+                selectedKey === item.key ? styles.active : ""
+              }`}
+              onClick={() => {
+                setSelectedKey(item.key);
+                localStorage.setItem("selectedMenuKey", item.key);
+                if (item.key === "dashboard") {
+                  navigate("/admin");
+                } else {
+                  navigate("/admin/" + item.key);
+                }
+              }}
+            >
+              <span className={styles.icon}>{item.icon}</span>
+              <span className={styles.label}>{item.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <Layout className={styles.layout}>
       <div className={`${styles.sider} ${collapsed ? styles.collapsed : ""}`}>
-        <div className={styles.logo}>
-          <span className={styles.logoText}>ADMIN</span>
-          {!collapsed && <span className={styles.logoVersion}>v2.0</span>}
+        <div className={styles.siderTop}>
+          <div className={styles.logo}>
+            <span className={styles.logoText}>KUBEO</span>
+            {!collapsed && <span className={styles.logoVersion}>1.0</span>}
+          </div>
+          <div className={styles.userInfo}>
+            <Avatar
+              src={user?.imgurl}
+              icon={<UserOutlined />}
+              className={styles.avatar}
+            />
+            {!collapsed && (
+              <div className={styles.userMeta}>
+                <span className={styles.userName}>{user?.username}</span>
+                <span className={styles.userRole}>管理员</span>
+              </div>
+            )}
+          </div>
         </div>
+
         <Menu
           theme="light"
           selectedKeys={[selectedKey]}
           mode="inline"
           className={styles.menu}
-          onClick={menuClickHandler}
+          onClick={({ key }) => {
+            setSelectedKey(key);
+            localStorage.setItem("selectedMenuKey", key);
+            if (key === "dashboard") {
+              navigate("/admin");
+            } else {
+              navigate("/admin/" + key);
+            }
+          }}
           items={menuItems}
           inlineCollapsed={collapsed}
         />
-      </div>
-      <div
-        className={`${styles.mainContent} ${collapsed ? styles.expanded : ""}`}
-      >
-        <Header
-          className={styles.header}
-          style={{
-            background: isDarkMode
-              ? "rgba(0, 0, 0, 0.2)"
-              : "rgba(255, 255, 255, 0.8)",
-            backdropFilter: "blur(10px)",
-          }}
-        >
-          <div className={styles.headerLeft}>
-            {React.createElement(
-              collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-              {
-                className: styles.trigger,
-                onClick: () => setCollapsed(!collapsed),
-                style: { color: token.colorText },
-              }
-            )}
-            <div className={styles.pageInfo}>
-              <h2
-                className={styles.pageTitle}
-                style={{ color: token.colorText }}
-              >
-                {menuItems.find((item) => item.key === selectedKey)?.label}
-              </h2>
-              <span
-                className={styles.breadcrumb}
-                style={{ color: token.colorTextSecondary }}
-              >
-                首页 /{" "}
-                {menuItems.find((item) => item.key === selectedKey)?.label}
-              </span>
-            </div>
-          </div>
-          <div className={styles.headerRight}>
-            {/* <Badge count={3} className={styles.notification}>
-              <BellOutlined className={styles.icon} />
-            </Badge> */}
+
+        <div className={styles.siderBottom}>
+          <Tooltip
+            title={collapsed ? "展开菜单" : "收起菜单"}
+            placement="right"
+          >
+            <Button
+              type="text"
+              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={() => setCollapsed(!collapsed)}
+              className={styles.collapseBtn}
+            />
+          </Tooltip>
+          <Tooltip title="退出登录" placement="right">
             <Button
               type="text"
               icon={<LogoutOutlined />}
               onClick={handleLogout}
               className={styles.logoutBtn}
-            >
-              退出登录
-            </Button>
-            {/* <Dropdown
-              menu={{ items: userMenuItems }}
-              placement="bottomRight"
-              trigger={["click"]}
-            >
-              <div className={styles.userInfo}>
-                <div className={styles.userAvatar}>
-                  <Avatar icon={<UserOutlined />} />
-                  <span className={styles.userStatus} />
-                </div>
-                <div className={styles.userMeta}>
-                  <span className={styles.userName}>Admin User</span>
-                  <span className={styles.userRole}>超级管理员</span>
-                </div>
-              </div>
-            </Dropdown> */}
+            />
+          </Tooltip>
+        </div>
+      </div>
+
+      <div
+        className={`${styles.mainContent} ${collapsed ? styles.expanded : ""}`}
+      >
+        <div className={styles.pageHeader}>
+          <h1 className={styles.pageTitle}>
+            {menuItems.find((item) => item.key === selectedKey)?.label}
+          </h1>
+          <div className={styles.breadcrumb}>
+            首页 / {menuItems.find((item) => item.key === selectedKey)?.label}
           </div>
-        </Header>
+        </div>
+
         <Content className={styles.content}>
           <motion.div
             key={selectedKey}
@@ -185,6 +197,8 @@ const Admin: React.FC = () => {
           </motion.div>
         </Content>
       </div>
+
+      {renderMobileNav()}
     </Layout>
   );
 };

@@ -6,45 +6,7 @@
     border-radius: 12px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
     border: none;
-
-    :global(.ant-card-head) {
-      padding: 16px 24px;
-      border-bottom: 1px solid #f0f0f0;
-    }
-
-    :global(.ant-card-head-title) {
-      font-size: 16px;
-      font-weight: 500;
-      color: #1f2937;
-    }
-
-    :global(.ant-card-body) {
-      padding: 24px;
-    }
-
-    :global(.ant-statistic-title) {
-      color: #6b7280;
-      font-size: 14px;
-      margin-bottom: 8px;
-    }
-
-    :global(.ant-statistic-content) {
-      color: #111827;
-      font-size: 24px;
-      font-weight: 600;
-    }
-
-    :global(.ant-list-item) {
-      padding: 16px;
-      border-radius: 8px;
-      background: #fafafa;
-      margin-bottom: 8px;
-      border: none;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-    }
+    width: 100%;
   }
 
   .visitItem {
@@ -58,7 +20,7 @@
 
       :global(.ant-typography-strong) {
         color: #374151;
-        min-width: 70px;
+        // min-width: 70px;
       }
     }
 
@@ -69,20 +31,38 @@
 
   .recentVisits {
     margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #f1f5f9;
 
-    h5 {
+    :global(.ant-typography) {
       margin-bottom: 16px;
+      color: #1e293b;
     }
   }
 
   .dailyStats {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    padding: 16px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid #f1f5f9;
+
+    &:hover {
+      background: #f8fafc;
+    }
 
     &:last-child {
       border-bottom: none;
+    }
+
+    > div {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+
+      :global(.ant-typography) {
+        margin: 0;
+      }
     }
   }
 
@@ -99,8 +79,270 @@
       }
     }
   }
+
+  .statsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+
+    .statCard {
+      background: #fff;
+      border-radius: 20px;
+      padding: 28px;
+      transition: all 0.3s ease;
+      border: 1px solid #f1f5f9;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 140px;
+        height: 140px;
+        background: linear-gradient(
+          45deg,
+          transparent,
+          rgba(59, 130, 246, 0.02)
+        );
+        border-radius: 50%;
+        transform: translate(30%, -30%);
+      }
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+      }
+
+      .icon {
+        font-size: 24px;
+        color: #3b82f6;
+        margin-bottom: 16px;
+      }
+
+      .statTitle {
+        font-size: 15px;
+        color: #64748b;
+        margin-bottom: 12px;
+      }
+
+      .statValue {
+        font-size: 32px;
+        font-weight: 600;
+        color: #1e293b;
+        font-feature-settings: "tnum";
+      }
+    }
+  }
+
+  .chartSection {
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px;
+    margin-bottom: 32px;
+    border: 1px solid #f1f5f9;
+
+    .chartHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+
+      .title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1e293b;
+      }
+
+      .datePicker {
+        :global {
+          .ant-picker {
+            border-radius: 12px;
+            border-color: #e2e8f0;
+            padding: 8px 12px;
+
+            &:hover {
+              border-color: #3b82f6;
+            }
+
+            .ant-picker-input > input {
+              color: #1e293b;
+              font-size: 14px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .visitList {
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px;
+    border: 1px solid #f1f5f9;
+
+    .listHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+
+      .title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1e293b;
+      }
+    }
+
+    .dailyStats {
+      padding: 20px;
+      border-radius: 16px;
+      transition: all 0.3s ease;
+      border-bottom: 1px solid #f1f5f9;
+
+      &:hover {
+        background: #f8fafc;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      > div {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+
+        :global(.ant-typography) {
+          margin: 0;
+          font-size: 14px;
+
+          &.ant-typography-strong {
+            color: #1e293b;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+
+    .recentVisits {
+      margin-top: 32px;
+      padding-top: 32px;
+      border-top: 1px solid #f1f5f9;
+
+      :global(.ant-typography) {
+        margin-bottom: 24px;
+        color: #1e293b;
+        font-size: 18px;
+      }
+
+      .visitItem {
+        padding: 20px;
+        border-radius: 16px;
+        transition: all 0.3s ease;
+        background: #fafafa;
+        margin-bottom: 16px;
+
+        &:hover {
+          background: #f1f5f9;
+        }
+
+        > div {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          color: #64748b;
+
+          :global(.ant-typography) {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.5;
+            word-break: break-all;
+
+            &.ant-typography-strong {
+              color: #1e293b;
+              font-weight: 500;
+              font-size: 15px;
+            }
+          }
+
+          .visitInfo {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 8px 16px;
+            align-items: center;
+
+            .label {
+              color: #94a3b8;
+              font-size: 13px;
+              white-space: nowrap;
+            }
+
+            .value {
+              color: #64748b;
+              word-break: break-all;
+            }
+          }
+        }
+
+        .visitMeta {
+          display: flex;
+          justify-content: flex-end;
+          margin-top: 16px;
+          padding-top: 12px;
+          border-top: 1px solid #e2e8f0;
+          font-size: 13px;
+          color: #94a3b8;
+        }
+      }
+    }
+  }
 }
 
 :global(.echarts-for-react) {
-  height: 300px !important;
+  height: 400px !important;
+  margin: 0 -16px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    .statsGrid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .chartSection,
+    .visitList {
+      padding: 20px;
+
+      .chartHeader {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+      }
+    }
+
+    :global(.echarts-for-react) {
+      height: 300px !important;
+    }
+
+    .visitItem {
+      > div {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .visitMeta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+    }
+  }
 }

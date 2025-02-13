@@ -112,16 +112,16 @@ export const DynamicRoutes: RouteObject[] = [
       requiresAuth: true,
     },
   },
-  {
-    path: "visit-stats",
-    element: componentKey.VisitStats,
-    handle: {
-      key: "visit-stats",
-      label: "访问统计",
-      Icon: iconKey.FiActivity,
-      requiresAuth: true,
-    },
-  },
+  // {
+  //   path: "visit-stats",
+  //   element: componentKey.VisitStats,
+  //   handle: {
+  //     key: "visit-stats",
+  //     label: "访问统计",
+  //     Icon: iconKey.FiActivity,
+  //     requiresAuth: true,
+  //   },
+  // },
   {
     path: "setting",
     element: componentKey.SettingManager,
@@ -195,18 +195,6 @@ export const StaticMainSiteRoutesMap: RouteObject[] = [
       Icon: iconKey.FaMeteor, // 用字符串表示图标
       requiresAuth: false,
     },
-  },
-
-  {
-    path: "admin/*", // 需要使用 * 处理子路由
-    element: componentKey.Admin, // 默认渲染的 admin 页面组件
-    handle: {
-      key: "Admin",
-      label: "管理",
-      Icon: iconKey.FaMeteor,
-      requiresAuth: true,
-    },
-    children: [], // 动态加载后会被填充
   },
   {
     path: "*",

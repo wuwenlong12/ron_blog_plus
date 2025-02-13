@@ -1,272 +1,347 @@
-.dashboard {
+.container {
   padding: 24px;
+  background: #f5f7fa;
 
-  .statCard {
-    height: 100%;
+  .card {
     border-radius: 12px;
-    transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    border: none;
+    width: 100%;
+  }
+
+  .visitItem {
+    width: 100%;
+
+    > div {
+      margin: 6px 0;
+      display: flex;
+      gap: 12px;
+      color: #4b5563;
+
+      :global(.ant-typography-strong) {
+        color: #374151;
+        // min-width: 70px;
+      }
+    }
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  .recentVisits {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #f1f5f9;
+
+    :global(.ant-typography) {
+      margin-bottom: 16px;
+      color: #1e293b;
+    }
+  }
+
+  .dailyStats {
+    padding: 16px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid #f1f5f9;
 
     &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      background: #f8fafc;
     }
 
-    .iconWrapper {
-      position: absolute;
-      right: -10px;
-      top: -10px;
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
+    &:last-child {
+      border-bottom: none;
+    }
+
+    > div {
       display: flex;
       align-items: center;
-      justify-content: center;
-      opacity: 0.2;
-      font-size: 40px;
-      transform: rotate(-30deg);
-    }
+      flex-wrap: wrap;
+      gap: 12px;
 
-    .statTrend {
-      margin-top: 8px;
-      font-size: 13px;
-      color: #666;
-    }
-
-    :global {
-      .ant-card-body {
-        padding: 20px;
-      }
-
-      .ant-statistic-title {
-        color: #666;
-        font-size: 14px;
-        margin-bottom: 12px;
-      }
-
-      .ant-statistic-content {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .ant-statistic-content-value {
-        font-size: 28px;
-        font-weight: 600;
+      :global(.ant-typography) {
+        margin: 0;
       }
     }
   }
 
-  // 不同卡片的样式
-  .visitCard {
-    background: linear-gradient(135deg, #e6f4ff 0%, #ffffff 100%);
-    .iconWrapper {
-      color: #1677ff;
-    }
-  }
-
-  .totalCard {
-    background: linear-gradient(135deg, #f6ffed 0%, #ffffff 100%);
-    .iconWrapper {
-      color: #52c41a;
-    }
-  }
-
-  .articleCard {
-    background: linear-gradient(135deg, #f9f0ff 0%, #ffffff 100%);
-    .iconWrapper {
-      color: #722ed1;
-    }
-  }
-
-  .diaryCard {
-    background: linear-gradient(135deg, #fff0f6 0%, #ffffff 100%);
-    .iconWrapper {
-      color: #eb2f96;
-    }
-  }
-
-  .tagCard {
-    height: 100%;
-    border-radius: 12px;
-    overflow: hidden;
-
-    &.gradientBg {
-      background: linear-gradient(135deg, #e6f4ff 0%, #ffffff 100%);
+  .datePicker {
+    :global(.ant-picker-input > input) {
+      color: #4b5563;
     }
 
-    .tagHeader {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #1f1f1f;
-      font-size: 15px;
-      font-weight: 500;
-      margin-bottom: 16px;
+    :global(.ant-picker) {
+      border-color: #e5e7eb;
 
-      .anticon {
-        color: #1677ff;
-        font-size: 18px;
+      &:hover {
+        border-color: #3b82f6;
       }
     }
+  }
 
-    .tagContent {
-      text-align: center;
-      padding: 16px 0;
+  .statsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+
+    .statCard {
+      background: #fff;
+      border-radius: 20px;
+      padding: 28px;
+      transition: all 0.3s ease;
+      border: 1px solid #f1f5f9;
       position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
 
       &::before {
         content: "";
         position: absolute;
-        top: -40px;
-        right: -40px;
-        width: 80px;
-        height: 80px;
-        background: #1677ff;
+        top: 0;
+        right: 0;
+        width: 140px;
+        height: 140px;
+        background: linear-gradient(
+          45deg,
+          transparent,
+          rgba(59, 130, 246, 0.02)
+        );
         border-radius: 50%;
-        opacity: 0.1;
+        transform: translate(30%, -30%);
       }
 
-      .tagCount {
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+      }
+
+      .icon {
+        font-size: 24px;
+        color: #3b82f6;
+        margin-bottom: 16px;
+      }
+
+      .statTitle {
+        font-size: 15px;
+        color: #64748b;
+        margin-bottom: 12px;
+      }
+
+      .statValue {
         font-size: 32px;
         font-weight: 600;
-        color: #1677ff;
-        line-height: 1;
-        margin-bottom: 8px;
-      }
-
-      .tagDesc {
-        color: #666;
-        font-size: 13px;
+        color: #1e293b;
+        font-feature-settings: "tnum";
       }
     }
   }
 
-  .systemCard {
-    height: 100%;
-    border-radius: 12px;
-    background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+  .chartSection {
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px;
+    margin-bottom: 32px;
+    border: 1px solid #f1f5f9;
 
-    .systemHeader {
+    .chartHeader {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 8px;
-      color: #1f1f1f;
-      font-size: 16px;
+      margin-bottom: 24px;
 
-      .anticon {
-        color: #1677ff;
-        font-size: 20px;
+      .title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1e293b;
       }
-    }
 
-    .osInfo {
-      padding: 16px;
-      background: rgba(255, 255, 255, 0.8);
-      border-radius: 8px;
-      border: 1px solid #f0f0f0;
+      .datePicker {
+        :global {
+          .ant-picker {
+            border-radius: 12px;
+            border-color: #e2e8f0;
+            padding: 8px 12px;
 
-      .osItem {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
+            &:hover {
+              border-color: #3b82f6;
+            }
 
-        .osLabel {
-          color: #666;
-          font-size: 14px;
-        }
-
-        .osValue {
-          color: #1f1f1f;
-          font-size: 15px;
-          font-weight: 500;
+            .ant-picker-input > input {
+              color: #1e293b;
+              font-size: 14px;
+            }
+          }
         }
       }
     }
+  }
 
-    .resourceItem {
-      margin-bottom: 16px;
-      padding: 16px;
-      background: rgba(255, 255, 255, 0.8);
-      border-radius: 8px;
-      border: 1px solid #f0f0f0;
+  .visitList {
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px;
+    border: 1px solid #f1f5f9;
 
-      .resourceLabel {
+    .listHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+
+      .title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1e293b;
+      }
+    }
+
+    .dailyStats {
+      padding: 20px;
+      border-radius: 16px;
+      transition: all 0.3s ease;
+      border-bottom: 1px solid #f1f5f9;
+
+      &:hover {
+        background: #f8fafc;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      > div {
         display: flex;
         align-items: center;
-        gap: 8px;
-        margin-bottom: 12px;
-        color: #666;
+        flex-wrap: wrap;
+        gap: 16px;
 
-        .anticon {
-          color: #1677ff;
-          font-size: 18px;
-        }
-      }
+        :global(.ant-typography) {
+          margin: 0;
+          font-size: 14px;
 
-      :global {
-        .ant-progress {
-          line-height: 1;
-        }
-        .ant-progress-text {
-          font-size: 13px;
+          &.ant-typography-strong {
+            color: #1e293b;
+            font-weight: 600;
+          }
         }
       }
     }
-  }
 
-  .secondRow {
-    margin-top: 24px;
+    .recentVisits {
+      margin-top: 32px;
+      padding-top: 32px;
+      border-top: 1px solid #f1f5f9;
+
+      :global(.ant-typography) {
+        margin-bottom: 24px;
+        color: #1e293b;
+        font-size: 18px;
+      }
+
+      .visitItem {
+        padding: 20px;
+        border-radius: 16px;
+        transition: all 0.3s ease;
+        background: #fafafa;
+        margin-bottom: 16px;
+
+        &:hover {
+          background: #f1f5f9;
+        }
+
+        > div {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          color: #64748b;
+
+          :global(.ant-typography) {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.5;
+            word-break: break-all;
+
+            &.ant-typography-strong {
+              color: #1e293b;
+              font-weight: 500;
+              font-size: 15px;
+            }
+          }
+
+          .visitInfo {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 8px 16px;
+            align-items: center;
+
+            .label {
+              color: #94a3b8;
+              font-size: 13px;
+              white-space: nowrap;
+            }
+
+            .value {
+              color: #64748b;
+              word-break: break-all;
+            }
+          }
+        }
+
+        .visitMeta {
+          display: flex;
+          justify-content: flex-end;
+          margin-top: 16px;
+          padding-top: 12px;
+          border-top: 1px solid #e2e8f0;
+          font-size: 13px;
+          color: #94a3b8;
+        }
+      }
+    }
   }
 }
 
-// 响应式设计
+:global(.echarts-for-react) {
+  height: 400px !important;
+  margin: 0 -16px;
+}
+
 @media (max-width: 768px) {
-  .dashboard {
-    padding: 16px;
-
-    .secondRow {
-      margin-top: 8px;
+  .container {
+    .statsGrid {
+      grid-template-columns: 1fr;
+      gap: 16px;
     }
 
-    .statCard {
-      .iconWrapper {
-        width: 60px;
-        height: 60px;
-        font-size: 30px;
-      }
+    .chartSection,
+    .visitList {
+      padding: 20px;
 
-      :global {
-        .ant-statistic-content-value {
-          font-size: 24px;
-        }
+      .chartHeader {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
       }
     }
 
-    .tagContent {
-      padding: 12px 0 !important;
-
-      .tagCount {
-        font-size: 28px !important;
-      }
-
-      .tagDesc {
-        font-size: 12px;
-      }
+    :global(.echarts-for-react) {
+      height: 300px !important;
     }
 
-    .resourceItem {
-      padding: 12px !important;
-    }
+    .visitItem {
+      > div {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
 
-    .osInfo {
-      padding: 12px !important;
-
-      .osItem {
-        .osValue {
-          font-size: 14px;
-        }
+      .visitMeta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
       }
     }
   }

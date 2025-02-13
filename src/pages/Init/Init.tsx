@@ -80,12 +80,13 @@ const InitPage: React.FC = () => {
     setCheckingSubdomain(true);
     try {
       const res = await checkSubdomain(subdomain);
-      if (res.code === 0) {
-        message.success("域名可用！");
-        setIsDomainAvailable(true);
-      } else {
-        message.error("域名已被占用，请更换！");
-        setIsDomainAvailable(false);
+      if (subdomain) {
+        if (res.code === 0) {
+          setIsDomainAvailable(true);
+        } else {
+          message.error("域名已被占用，请更换！");
+          setIsDomainAvailable(false);
+        }
       }
     } catch (error) {
       message.error("检测失败，请稍后再试！");
