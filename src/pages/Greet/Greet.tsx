@@ -13,20 +13,35 @@ const { Title, Paragraph } = Typography;
 
 const newsData = [
   {
-    title: "Ant Design X 1.0 发布🚀",
-    date: "2024-11-22",
-    description: "Ant Design X 是遵循 Ant Design 设计体系的一个 React UI 库...",
+    title: "个人知识库平台 V1.0 正式发布 🚀",
+    date: "2025-02-13",
+    description:
+      "我们的个人知识库平台正式上线啦！你现在可以轻松创建、管理属于自己的知识库，并与他人分享交流！",
     tag: "HOT",
   },
   {
-    title: "PeterCat 🐱 外滩发布",
-    date: "2024-09-06",
-    description: "PeterCat 是专为社区开发者打造的智能客服机器人解决方案...",
+    title: "分站功能上线 🎉",
+    date: "2025-02-10",
+    description:
+      "用户可以自选二级域名注册自己的分站，每个分站拥有独立的权限控制，用户体验大幅提升！",
   },
   {
-    title: "Mako 正式开源！",
-    date: "2024-06-28",
-    description: "Mako 是基于 Rust 的「极快」和「生产级」的前端智能构建工具...",
+    title: "支持深色模式 🌙",
+    date: "2025-02-08",
+    description:
+      "全新上线的深色模式让你在夜间使用时更加舒适，赶快去设置体验吧！",
+  },
+  {
+    title: "动态路由功能改进 🔄",
+    date: "2025-02-05",
+    description:
+      "路由系统进行了优化，支持动态创建和删除文章的路由，提升了系统的灵活性和响应速度。",
+  },
+  {
+    title: "日记功能更新 📝",
+    date: "2025-02-02",
+    description:
+      "日记功能迎来了大更新，支持时间轴、拖拽排序和自动保存，让你记录每一天更加便捷。",
   },
 ];
 
@@ -76,7 +91,12 @@ const Greet: React.FC = () => {
             <Button type="primary" size="large" onClick={createKubeo}>
               创建专属知识库
             </Button>
-            <Button size="large">预览成品知识库</Button>
+            <Button
+              size="large"
+              onClick={() => window.open("http://vip.sxkjxy.cc")}
+            >
+              预览成品知识库
+            </Button>
           </div>
         </motion.div>
       </Content>
