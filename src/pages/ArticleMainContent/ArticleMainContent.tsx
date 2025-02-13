@@ -51,6 +51,7 @@ import {
   parsePath,
 } from "../../router/utils/findRouterMatches";
 import { debounce } from "lodash";
+import { de } from "@blocknote/core/types/src/i18n/locales";
 
 type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
 
@@ -300,13 +301,13 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
     navigate("/Article/" + path || "");
   };
 
-  const EditorChange = (content: any) => {
+  const EditorChange = debounce((content: any) => {
     if (isEditable) {
       setContent(content);
       localStorage.setItem(currentId, JSON.stringify({ content }));
       message.success("自动保存成功！");
     }
-  };
+  }, 1000);
 
   const deleteFolderOrArticle = () => {};
   const publishArticle = async () => {
