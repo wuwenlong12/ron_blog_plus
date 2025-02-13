@@ -102,7 +102,7 @@ const About: React.FC = () => {
             </div>
           </section>
         </div>
-        <div>
+        <div className={styles.right}>
           <ProfileCard></ProfileCard>
           <Button className={styles.rollBtn} onClick={scrollToContent}>
             <FaArrowDown className={styles.rollBtnIcon} />
