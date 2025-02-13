@@ -4,7 +4,7 @@ services:
   nginx:
     image: crpi-995uocus6og9mdf4.cn-beijing.personal.cr.aliyuncs.com/wuwenlong797/nginx:alpine
     ports:
-      - "80:80"  # 将容器的 80 端口映射到主机的 8080 端口
+      - "80:80"  
     volumes:
       - ./build:/usr/share/nginx/html  # 将构建后的文件挂载到容器中
       - ./nginx.conf:/etc/nginx/nginx.conf  # 将自定义的 Nginx 配置挂载到容器中

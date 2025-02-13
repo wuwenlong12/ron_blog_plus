@@ -367,7 +367,7 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
         <AppBreadcrumb isDarkMode={true}></AppBreadcrumb>
         <div className={styles.title}>
           <div style={{ display: "flex" }}>
-            {currentId !== "default-index" && (
+            {currentId !== "default-index" && isAuthenticated && (
               <Button
                 type="text"
                 className={styles.Btn}
@@ -446,7 +446,7 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
         <hr className={styles.hr} />
         {currentType === "folder" ? (
           <div className={styles.desc}>
-            {currentId !== "default-index" && (
+            {currentId !== "default-index" && isAuthenticated && (
               <Button
                 type="text"
                 className={styles.Btn}
