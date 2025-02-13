@@ -259,7 +259,7 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
 
   const saveFoldName = async () => {
     try {
-      const res = await patchFolderName(currentId, name);
+      const res = await patchFolderName(currentId, name, currentType);
       if (res.code === 0) {
         // 更新路由配置
         await dispatch(loadArticleRoutes);

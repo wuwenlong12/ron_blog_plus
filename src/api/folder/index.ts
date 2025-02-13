@@ -57,7 +57,11 @@ export const deleteDirectoryInfoById = (
   });
 
 //修改目录信息
-export const patchFolderName = (folderId: string, newName: string) =>
+export const patchFolderName = (
+  folderId: string,
+  newName: string,
+  type: "folder" | "article"
+) =>
   http.patch<any, ResponseBase>(API.ACTICAL_DIRECTORY_NAME, {
     folderId,
     newName,
