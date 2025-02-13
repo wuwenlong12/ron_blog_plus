@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { auth } from "../api/auth";
+import { auth, logout } from "../api/auth";
 import type { AppDispatch } from "../store";
 import { User } from "../api/auth/type";
 
 interface AuthState {
   siteIsOpen: boolean;
+  siteIsInit: boolean;
   isAuthenticated: boolean;
   user: User | null;
   status: "idle" | "loading" | "succeeded" | "failed";
@@ -12,6 +13,7 @@ interface AuthState {
 
 const initialState: AuthState = {
   siteIsOpen: true,
+  siteIsInit: true,
   isAuthenticated: false,
   user: null,
   status: "idle",
@@ -28,10 +30,12 @@ const authSlice = createSlice({
       state.user = action.payload;
       state.status = "succeeded";
     },
-    setUser: (state, action) => {
+    setSiteIsInit: (state, action) => {
+      state.siteIsInit = action.payload;
+    },
+    setNoLogin: (state) => {
       state.isAuthenticated = false;
-      state.siteIsOpen = true;
-      state.user = action.payload;
+      state.user = null;
       state.status = "succeeded";
     },
     setLoading: (state) => {
@@ -49,8 +53,7 @@ const authSlice = createSlice({
       state.user = null;
       state.status = "succeeded";
     },
-    logout: (state) => {
-      state.siteIsOpen = false;
+    clearUser: (state) => {
       state.user = null;
       state.status = "idle";
     },
@@ -59,11 +62,12 @@ const authSlice = createSlice({
 
 // Action Creators
 export const {
-  setUser,
+  setSiteIsInit,
   setAdmin,
   setLoading,
   setError,
-  logout,
+  setNoLogin,
+  clearUser,
   setSiteIsNotOpen,
 } = authSlice.actions;
 
@@ -75,14 +79,24 @@ export const checkLoginStatus = () => async (dispatch: AppDispatch) => {
     if (res.code === 0) {
       dispatch(setAdmin(res.data));
     } else if (res.code === 1) {
-      dispatch(setUser(res.data));
+      dispatch(setAdmin(res.data));
+      dispatch(setSiteIsInit(false));
     } else if (res.code === 2) {
       dispatch(setSiteIsNotOpen());
+    } else if (res.code === 3) {
+      dispatch(setNoLogin());
     } else {
       dispatch(setError());
     }
   } catch (error) {
     dispatch(setError());
+  }
+};
+
+export const logoutHandle = () => async (dispatch: AppDispatch) => {
+  const res = await logout();
+  if (res.code === 0) {
+    dispatch(clearUser());
   }
 };
 

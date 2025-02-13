@@ -104,7 +104,6 @@ export const StaticRoutesMap: RouteObject[] = [
 export const DynamicRoutes: RouteObject[] = [
   {
     index: true,
-    path: "dashboard",
     element: componentKey.Dashboard,
     handle: {
       key: "dashboard",

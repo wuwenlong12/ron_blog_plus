@@ -25,6 +25,7 @@ const Login = () => {
   );
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const user = useSelector((state: RootState) => state.auth.user);
   const { message } = App.useApp();
   useEffect(() => {
     if (isAuthenticated) {
@@ -50,8 +51,8 @@ const Login = () => {
     const res = await login(email, password);
     dispatch(checkLoginStatus());
     if (res.code === 0) {
-      message.success("登陆成功，跳转到个人设置页面");
-      navigate("/admin");
+      message.success("登陆成功");
+      navigate(-1);
     }
   };
 

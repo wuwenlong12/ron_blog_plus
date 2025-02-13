@@ -49,7 +49,17 @@ http.interceptors.response.use(
           message.error("未授权，请登录");
           break;
         case 403:
-          message.error("没有权限访问");
+          // if (error.response?.data?.code === 1) {
+          //   message.error(error.response?.data?.message);
+          //   const redirectUrl = error.response?.data?.data?.url;
+          //   if (redirectUrl) {
+          //     console.log(redirectUrl);
+          //     window.location.href = redirectUrl; // 在本窗口打开
+          //   } else {
+          //     console.warn("403 发生，但没有提供跳转 URL");
+          //   }
+          // }
+
           break;
         case 404:
           if (data?.code === 2) {
@@ -57,9 +67,6 @@ http.interceptors.response.use(
           } else {
             message.error("请求资源未找到");
           }
-          break;
-        case 420:
-          // window.location.href = "/404";
           break;
         case 500:
           message.error("服务器内部错误");

@@ -1,6 +1,7 @@
 import { PartialBlock } from "@blocknote/core";
 import { ResponseBase } from "../type";
 import { tag } from "../tag/type";
+import { SiteInfo } from "../site/type";
 
 export interface ResponseCheckSystemInit extends ResponseBase {
   data: CheckSystemInitData;
@@ -18,7 +19,7 @@ export type User = {
   username?: string;
   email?: string;
   role: Role;
-  managedSites: [];
+  managedSites: SiteInfo;
   password?: string;
   imgurl?: string;
   oldPassword?: string;

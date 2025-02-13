@@ -11,13 +11,11 @@ import {
 import styles from "./styles/Admin.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store";
-import { checkLoginStatus } from "../store/authSlice";
+import { checkLoginStatus, logoutHandle } from "../store/authSlice";
 import { Outlet, useNavigate } from "react-router-dom";
 import { loadAdminRoutes } from "../store/routersMapSlice";
 import { iconMap } from "../router/utils/iconMap";
 import { MenuItemType } from "antd/es/menu/interface";
-import { logout as clearUser } from "../store/authSlice";
-import { logout } from "../api/auth";
 import { toggleTheme } from "../store/themeSlice";
 type MenuItem = Required<MenuProps>["items"][number];
 const { Header, Sider, Content } = Layout;
@@ -30,7 +28,7 @@ const Admin: React.FC = () => {
   // const [isShowCreateSizemodal, SetIsShowCreateSizemodal] = useState(false);
   const navigator = useNavigate();
   const { adminRoutesMap } = useSelector((state: RootState) => state.routesMap);
-  const { user, isAuthenticated, status } = useSelector(
+  const { user, isAuthenticated, status, siteIsInit } = useSelector(
     (state: RootState) => state.auth
   );
   const navigate = useNavigate();
@@ -42,7 +40,6 @@ const Admin: React.FC = () => {
     if (localStorage.getItem("isDarkMode") === "true") {
       dispatch(toggleTheme());
     }
-
     const savedSelectedKey = localStorage.getItem("selectedMenuKey");
     if (savedSelectedKey) {
       setSelectedKey(savedSelectedKey);
@@ -52,7 +49,7 @@ const Admin: React.FC = () => {
   useEffect(() => {
     if (status !== "succeeded") return;
     if (isAuthenticated) {
-      if (!user.role || !user.managedSites) {
+      if (!user.role || !user.managedSites || !siteIsInit) {
         navigator("/init");
         return;
       }
@@ -84,11 +81,8 @@ const Admin: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      const res = await logout();
-      if (res.code === 0) {
-        dispatch(clearUser());
-        navigate("/login");
-      }
+      dispatch(logoutHandle());
+      navigate("/login");
     } catch (error) {
       console.error("登出失败:", error);
     }
@@ -149,9 +143,9 @@ const Admin: React.FC = () => {
             </div>
           </div>
           <div className={styles.headerRight}>
-            <Badge count={3} className={styles.notification}>
+            {/* <Badge count={3} className={styles.notification}>
               <BellOutlined className={styles.icon} />
-            </Badge>
+            </Badge> */}
             <Button
               type="text"
               icon={<LogoutOutlined />}

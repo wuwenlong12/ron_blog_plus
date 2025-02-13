@@ -17,27 +17,30 @@ export interface RegisterSiteParams {
 
 // 站点信息响应类型
 export interface SiteInfoResponse extends ResponseBase {
-  data: {
-    site_sub_url: string;
-    site_name: string;
-    is_core: boolean;
-    is_pass: boolean;
-    is_off: boolean;
-    name: string;
-    avatar: string;
-    signatures: string[];
-    homepage_signature: string[];
-    tech_stack: string[];
-    profession: string;
-    github: string;
-    email: string;
-    wechat: string;
-    card_signature: string;
-    card_message: string;
-    AboutContent: PartialBlock[];
-  };
+  data: SiteInfo;
 }
 
+export type SiteInfo = {
+  site_sub_url: string;
+  site_name: string;
+  is_core: boolean;
+  is_pass: boolean;
+  is_off: boolean;
+  name: string;
+  avatar: string;
+  signatures: string[];
+  homepage_signature: string[];
+  tech_stack: string[];
+  profession: string;
+  github: string;
+  email: string;
+  wechat: string;
+  card_signature: string;
+  card_message: string;
+  AboutContent: PartialBlock[];
+  site_url?: string;
+  site_admin_url?: string;
+};
 // 更新站点信息参数类型
 export interface UpdateSiteParams {
   name?: string;

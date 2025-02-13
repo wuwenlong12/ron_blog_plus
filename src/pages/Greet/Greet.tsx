@@ -1,12 +1,27 @@
 import React from "react";
-import { Layout, Menu, Input, Button, Card, Typography } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import {
+  Layout,
+  Menu,
+  Input,
+  Button,
+  Card,
+  Typography,
+  Avatar,
+  Dropdown,
+} from "antd";
+import {
+  SearchOutlined,
+  UserOutlined,
+  LogoutOutlined,
+} from "@ant-design/icons";
 import { motion } from "framer-motion";
 import styles from "./Greet.module.scss";
 import ParticlesBg from "particles-bg";
 import Typist from "react-typist";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../api/auth";
+import { useSelector, useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "../../store";
+import { logoutHandle } from "../../store/authSlice";
 
 const { Content } = Layout;
 const { Title, Paragraph } = Typography;
@@ -47,12 +62,103 @@ const newsData = [
 
 const Greet: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+  const { isAuthenticated, user } = useSelector(
+    (state: RootState) => state.auth
+  );
 
-  const createKubeo = () => {
+  const handleLogin = () => {
     navigate("/login");
   };
+
+  const handleLogout = () => {
+    dispatch(logoutHandle());
+  };
+
+  const renderButtons = () => {
+    if (!isAuthenticated) {
+      return (
+        <>
+          <Button type="primary" size="large" onClick={handleLogin}>
+            创建专属知识库
+          </Button>
+          <Button
+            size="large"
+            onClick={() => window.open("http://vip.sxkjxy.cc")}
+          >
+            预览成品知识库
+          </Button>
+        </>
+      );
+    }
+
+    if (!user?.role || !user?.managedSites) {
+      return (
+        <Button type="primary" size="large" onClick={() => navigate("/init")}>
+          初始化站点
+        </Button>
+      );
+    }
+
+    return (
+      <>
+        <Button
+          type="primary"
+          size="large"
+          onClick={() => window.open(user?.managedSites.site_url)}
+        >
+          访问我的前台
+        </Button>
+        <Button
+          size="large"
+          onClick={() => window.open(user?.managedSites.site_admin_url)}
+        >
+          访问我的后台
+        </Button>
+      </>
+    );
+  };
+
+  const userMenuItems = [
+    ...(user?.role && user?.managedSites
+      ? [
+          {
+            key: "admin",
+            label: "管理后台",
+            onClick: () => window.open(user?.managedSites.site_admin_url),
+          },
+        ]
+      : []),
+    {
+      key: "logout",
+      label: "退出登录",
+      icon: <LogoutOutlined />,
+      onClick: handleLogout,
+    },
+  ];
+
   return (
     <Layout className={styles.container}>
+      <div className={styles.header}>
+        <div className={styles.headerRight}>
+          {isAuthenticated ? (
+            <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
+              <div className={styles.userInfo}>
+                <Avatar
+                  src={user?.imgurl}
+                  icon={<UserOutlined />}
+                  className={styles.avatar}
+                />
+                <span className={styles.userName}>{user?.username}</span>
+              </div>
+            </Dropdown>
+          ) : (
+            <Button type="link" onClick={handleLogin}>
+              登录
+            </Button>
+          )}
+        </div>
+      </div>
       <div className={styles.bg}>
         {/* <img className={styles.bgImg} src={bg} alt="" /> */}
         <div className={styles.bgPar}>
@@ -87,17 +193,7 @@ const Greet: React.FC = () => {
             </div>
           </Typist>
 
-          <div className={styles.buttons}>
-            <Button type="primary" size="large" onClick={createKubeo}>
-              创建专属知识库
-            </Button>
-            <Button
-              size="large"
-              onClick={() => window.open("http://vip.sxkjxy.cc")}
-            >
-              预览成品知识库
-            </Button>
-          </div>
+          <div className={styles.buttons}>{renderButtons()}</div>
         </motion.div>
       </Content>
 

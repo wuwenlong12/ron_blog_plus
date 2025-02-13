@@ -228,7 +228,13 @@ const InitPage: React.FC = () => {
                 >
                   <Input
                     placeholder="输入二级域名"
-                    suffix={"." + process.env.REACT_APP_ENV_HOSTNAME}
+                    suffix={
+                      "." +
+                      process.env.REACT_APP_ENV_HOSTNAME +
+                      (process.env.NODE_ENV === "development"
+                        ? ":" + process.env.REACT_APP_ENV_PORT
+                        : "")
+                    }
                     className={styles.input}
                     onChange={handleSubdomainChange}
                     disabled={checkingSubdomain}
