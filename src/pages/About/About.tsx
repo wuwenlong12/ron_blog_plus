@@ -110,11 +110,13 @@ const About: React.FC = () => {
         </div>
       </div>
       <div ref={mainContentRef} className={styles.bottomInfo}>
-        <Editor
-          initialContent={siteInfo && siteInfo.AboutContent}
-          editable={false}
-          isSummary={true}
-        ></Editor>
+        {siteInfo && siteInfo.AboutContent.length > 0 && (
+          <Editor
+            initialContent={siteInfo && siteInfo.AboutContent}
+            editable={false}
+            isSummary={true}
+          ></Editor>
+        )}
       </div>
     </div>
   );
