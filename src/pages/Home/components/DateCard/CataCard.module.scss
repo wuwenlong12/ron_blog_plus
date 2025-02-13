@@ -69,6 +69,7 @@
         rgba($color: #fbc2eb, $alpha: 0.8)
       );
       .title {
+        color: #000;
         position: relative;
         font-size: 30px;
         font-weight: bold;
@@ -76,6 +77,7 @@
         margin-bottom: 20px;
       }
       .subTitle {
+        color: #000;
         position: relative;
         font-size: 20px;
         font-weight: 600;
@@ -86,24 +88,30 @@
         color: #0b1926d8;
         z-index: 1;
         max-width: calc(100% - 6rem);
-        display: -webkit-box; /* 必须设置为 -webkit-box */
-        -webkit-box-orient: vertical; /* 设置盒子排列方向为垂直 */
+        display: -webkit-box; /* 必须要使用 */
+        -webkit-box-orient: vertical; /* 盒子排列方向必须是垂直 */
         -webkit-line-clamp: 4; /* 限制显示的行数 */
-        overflow: hidden; /* 隐藏溢出内容 */
-        text-overflow: ellipsis; /* 省略号显示溢出部分 */
+        overflow: hidden; /* 隐藏溢出部分 */
+        text-overflow: ellipsis; /* 省略溢出部分 */
+        word-break: break-word; /* 避免长单词撑开 */
+        line-height: 1.5rem; /* 适配行高，确保计算行数 */
       }
       .bgImg {
         position: absolute;
-        // z-index: -1;
-        width: 10rem;
-        bottom: -40px;
-        right: -40px;
+        width: 100%;
+        height: 100%;
+        left: 0px;
+        top: 0px;
+        object-fit: cover;
       }
       .btns {
         position: absolute;
         bottom: 30px;
+        min-width: 300px;
         .Btn {
-          width: 150px;
+          width: 20vw;
+          min-width: 120px;
+          max-width: 150px;
           height: 50px;
           border-radius: 30px;
           margin-right: 20px;
