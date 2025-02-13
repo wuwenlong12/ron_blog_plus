@@ -7,6 +7,8 @@ function removeText(input: string, textToRemove: string): string {
   return input.replace(regex, ""); // 替换掉指定的文字
 }
 
+console.log(host, process.env.REACT_APP_ENV_HOSTNAME);
+
 // 获取 subdomain，返回空字符串或二级域名
 const getSubdomain = () => {
   return removeText(host, process.env.REACT_APP_ENV_HOSTNAME);

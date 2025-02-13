@@ -49,6 +49,7 @@
   },
   "scripts": {
     "dev": "react-scripts start",
+    "prod": "npm run build && npx serve -s build",
     "build": "DISABLE_ESLINT_PLUGIN=true SKIP_PREFLIGHT_CHECK=true react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
