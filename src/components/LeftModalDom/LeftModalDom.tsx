@@ -8,6 +8,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import Star from "./Star";
 import Timeline from "./Timeline";
 import Tag from "./Tag";
+import useTheme from "../../hook/useTheme";
+import { RootState } from "../../store";
+import { useSelector } from "react-redux";
 
 // 定义按钮数据结构
 interface ButtonData {
@@ -35,13 +38,20 @@ const buttonData: ButtonData[] = [
 
 const LeftModalDom: React.FC = () => {
   const [selectedButton, setSelectedButton] = useState<string>("star");
-
+  const isDarkMode = useSelector((state: RootState) => state.theme.isDarkMode);
   const handleButtonClick = (key: string) => {
     setSelectedButton(key); // 切换选中状态
   };
 
   return (
-    <div className={styles.container}>
+    <div
+      className={styles.container}
+      style={
+        isDarkMode
+          ? { backgroundColor: "#141414" }
+          : { backgroundColor: "#ffffff" }
+      }
+    >
       <div className={styles.menu}>
         {buttonData.map((btn) => (
           <Tooltip key={btn.key} placement="bottom" title={btn.title}>

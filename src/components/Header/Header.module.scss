@@ -14,30 +14,20 @@
   backdrop-filter: blur(10px); /* 背景模糊 */
   -webkit-backdrop-filter: blur(10px); /* 兼容 Safari */
   z-index: 10;
+  Button {
+    margin-right: 10px;
+  }
   .containerLeft {
     display: flex;
     align-items: center;
     margin-left: 8px;
-    .BtnLight {
-      background-color: transparent;
-      color: #000;
-      margin-right: 10px;
-      &:hover {
-        color: #4096ff !important;
-        //   border-color: #f59b4c !important;
-      }
+    .btnMore {
+      display: none;
     }
-    .BtnDark {
-      color: #fff;
-      background-color: transparent;
-      margin-right: 10px;
-      &:hover {
-        color: #4096ff !important;
-        //   border-color: #f59b4c !important;
-      }
-    }
+
     .navLogo {
       display: block;
+      margin-left: 20px;
       width: 36px;
       height: 36px;
       border-radius: 50%;
@@ -60,23 +50,8 @@
     display: flex;
     align-items: center;
     margin-right: 8px;
-    .BtnLight {
-      background-color: transparent;
-      color: #000;
-      margin-right: 10px;
-      &:hover {
-        color: #4096ff !important;
-        //   border-color: #f59b4c !important;
-      }
-    }
-    .BtnDark {
-      color: #fff;
-      background-color: transparent;
-      margin-right: 10px;
-      &:hover {
-        color: #4096ff !important;
-        //   border-color: #f59b4c !important;
-      }
+    .btnMenu {
+      display: none;
     }
   }
 }
@@ -96,23 +71,8 @@
     .containerLeft {
       display: flex;
       align-items: center;
-      .BtnLight {
-        background-color: transparent;
-        color: #000;
-        margin-right: 10px;
-        &:hover {
-          color: #4096ff !important;
-          //   border-color: #f59b4c !important;
-        }
-      }
-      .BtnDark {
-        color: #fff;
-        background-color: transparent;
-        margin-right: 10px;
-        &:hover {
-          color: #4096ff !important;
-          //   border-color: #f59b4c !important;
-        }
+      .btnMore {
+        display: block;
       }
       .navLogo {
         display: block;
@@ -120,6 +80,7 @@
         height: 36px;
         border-radius: 50%;
         margin-right: 10px; /* 调整移动端的间距 */
+        margin-left: 0;
       }
 
       .siteName {
@@ -134,9 +95,8 @@
     .containerRight {
       display: flex;
       font-size: 14px; /* 调整字体大小 */
-
-      .isDarkBtn {
-        display: none;
+      .btnMenu {
+        display: block;
       }
     }
   }

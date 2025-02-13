@@ -1,7 +1,6 @@
 @import "../../setting/variables.scss";
 .container {
   text-align: center;
-  background-color: rgba(255, 255, 255, 0.85);
   z-index: 999;
   height: 100%;
   width: 100%;
@@ -15,7 +14,7 @@
       display: flex;
       .btnItemIcon {
         font-size: 0.8rem;
-        color: #2d2d2d;
+        // color: #2d2d2d;
       }
     }
   }
@@ -34,7 +33,7 @@
     }
     .middleText {
       font-size: 1.2rem;
-      color: $gray-700;
+      // color: $gray-700;
     }
   }
   .main {

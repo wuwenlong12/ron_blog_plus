@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Article.module.scss";
-import { Button, Input } from "antd";
+import { Button, Input, Empty, App } from "antd";
 import Icon, {
   RightOutlined,
   LeftOutlined,
   FolderOutlined,
   ReadOutlined,
   DownOutlined,
+  FolderAddOutlined,
 } from "@ant-design/icons";
 import { Outlet, RouteObject, useNavigate } from "react-router-dom";
 import { findFullPathByKey } from "../../router/utils/findFullPathByKey";
@@ -21,6 +22,7 @@ import { FaAngleDown, FaChevronDown, FaFolderMinus } from "react-icons/fa";
 import { IoFolderOutline } from "react-icons/io5";
 import { RiBook2Line } from "react-icons/ri";
 import { AppDispatch } from "../../store";
+import { motion } from "framer-motion";
 type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
 
 const { DirectoryTree } = Tree;
@@ -55,6 +57,11 @@ const Actical = ({}) => {
     y: 0,
     node: null,
   });
+
+  const { modal } = App.useApp();
+
+  // 添加一个状态来追踪是否已经显示过弹窗
+  const [hasShownGuide, setHasShownGuide] = useState(false);
 
   useEffect(() => {
     const savedSelectedKey = localStorage.getItem("selectedMenuKey");
@@ -230,6 +237,144 @@ const Actical = ({}) => {
     });
   };
 
+  useEffect(() => {
+    // 在目录为空且有权限时显示引导，并且只显示一次
+    if (directory?.length === 0 && isAuthenticated && !hasShownGuide) {
+      setHasShownGuide(true); // 标记已经显示过弹窗
+      modal.info({
+        title: "开始创建你的第一篇文章",
+        content: (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            style={{ padding: "20px 0" }}
+          >
+            <div
+              style={{
+                background: "#f8fafc",
+                padding: "24px",
+                borderRadius: "16px",
+                border: "1px solid #e2e8f0",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  marginBottom: "16px",
+                }}
+              >
+                <DownOutlined
+                  style={{
+                    fontSize: "24px",
+                    color: "#3b82f6",
+                    background: "#eef2ff",
+                    padding: "8px",
+                    borderRadius: "12px",
+                  }}
+                />
+                <span
+                  style={{
+                    fontSize: "15px",
+                    color: "#1e293b",
+                    fontWeight: 500,
+                  }}
+                >
+                  右键点击空白处
+                </span>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                }}
+              >
+                <FolderAddOutlined
+                  style={{
+                    fontSize: "24px",
+                    color: "#3b82f6",
+                    background: "#eef2ff",
+                    padding: "8px",
+                    borderRadius: "12px",
+                  }}
+                />
+                <span
+                  style={{
+                    fontSize: "15px",
+                    color: "#1e293b",
+                    fontWeight: 500,
+                  }}
+                >
+                  选择"新建目录"或"新建文章"
+                </span>
+              </div>
+            </div>
+            <div
+              style={{
+                marginTop: "16px",
+                color: "#64748b",
+                fontSize: "14px",
+                lineHeight: "1.6",
+              }}
+            >
+              你可以通过目录来组织你的文章，创建一个清晰的内容结构。
+            </div>
+          </motion.div>
+        ),
+        width: 480,
+        icon: null,
+        maskClosable: true,
+        okText: "知道了",
+        okButtonProps: {
+          style: {
+            background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
+            border: "none",
+            height: "40px",
+            borderRadius: "10px",
+            boxShadow: "0 4px 12px rgba(59, 130, 246, 0.2)",
+            padding: "0 24px",
+          },
+        },
+        afterClose: () => {
+          // 可选：如果你想在弹窗关闭后重置状态，以便将来可能再次显示
+          // setHasShownGuide(false);
+        },
+      });
+    }
+  }, [directory, isAuthenticated, hasShownGuide]); // 添加 hasShownGuide 到依赖数组
+
+  // 当目录为空时显示的内容
+  const renderEmptyState = () => {
+    if (!directory?.length) {
+      return (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
+          style={{
+            padding: "48px 24px",
+            textAlign: "center",
+          }}
+        >
+          <Empty
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            description={
+              <div style={{ color: "#64748b" }}>
+                {isAuthenticated
+                  ? "右键点击目录空白处空白处，开始创建你的第一篇文章"
+                  : "暂无文章"}
+              </div>
+            }
+          />
+        </motion.div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className={styles.container}>
       <div
@@ -297,6 +442,7 @@ const Actical = ({}) => {
       <div className={styles.articleMainContent}>
         <Outlet />
       </div>
+      {renderEmptyState()}
     </div>
   );
 };

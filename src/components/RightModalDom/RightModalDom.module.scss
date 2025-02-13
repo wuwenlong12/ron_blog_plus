@@ -3,9 +3,6 @@
   text-align: center;
   border-radius: 20px;
   box-shadow: $box-shadow-light;
-  backdrop-filter: blur(20px); /* 背景模糊 */
-  -webkit-backdrop-filter: blur(20px); /* 兼容 Safari */
-  background-color: rgba($color: #ffffff, $alpha: 0.9);
   .theme {
     .text {
       margin-top: 20px;

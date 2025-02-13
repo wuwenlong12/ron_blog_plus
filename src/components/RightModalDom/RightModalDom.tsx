@@ -24,7 +24,14 @@ const RightModalDom: React.FC<RightModalDomProps> = ({
   };
 
   return (
-    <div className={styles.container}>
+    <div
+      className={styles.container}
+      style={
+        isDarkMode
+          ? { backgroundColor: "#141414" }
+          : { backgroundColor: "#ffffff" }
+      }
+    >
       <Menu
         style={{ background: "transparent", border: "none", textAlign: "left" }}
         className={styles.menu}

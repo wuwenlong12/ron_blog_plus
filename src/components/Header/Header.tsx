@@ -54,7 +54,7 @@ const Header: React.FC<HeaderProps> = ({
       <div className={styles.containerLeft}>
         <Button
           type="text"
-          className={isDarkMode ? styles.BtnDark : styles.BtnLight}
+          className={styles.btnMore}
           onClick={onClickLeftMenu}
           icon={
             isLeftMenuOpen ? (
@@ -84,12 +84,12 @@ const Header: React.FC<HeaderProps> = ({
         <Button
           type="text"
           onClick={() => window.open(siteInfo && siteInfo.github)}
-          className={isDarkMode ? styles.BtnDark : styles.BtnLight}
+          // className={isDarkMode ? styles.BtnDark : styles.BtnLight}
           icon={<GithubOutlined style={{ fontSize: "20px" }} />}
         />
         <Button
           type="text"
-          className={isDarkMode ? styles.BtnDark : styles.BtnLight}
+          className={styles.btnMenu}
           onClick={onClickRightMenu}
           icon={
             isRightMenuOpen ? (
