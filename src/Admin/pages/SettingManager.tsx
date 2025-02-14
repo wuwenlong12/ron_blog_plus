@@ -28,6 +28,7 @@ const SettingManager: React.FC = () => {
   const { message: appMessage } = App.useApp();
   const [loading, setLoading] = useState(false);
   const [avatarLoading, setAvatarLoading] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string>("");
 
   useEffect(() => {
     init();
@@ -38,6 +39,8 @@ const SettingManager: React.FC = () => {
     const res = await getSiteInfo();
     if (res.code === 0) {
       const { data } = res;
+      setAvatarUrl(data.avatar || "");
+
       form.setFieldsValue({
         name: data.name,
         profession: data.profession,
@@ -163,7 +166,8 @@ const SettingManager: React.FC = () => {
       const url = await uploadFileInChunks(file);
       setAvatarLoading(false);
 
-      // 只更新表单中的头像URL，不自动保存
+      // 更新头像 URL 状态和表单值
+      setAvatarUrl(url);
       form.setFieldValue("avatar", url);
     } catch (error) {
       setAvatarLoading(false);
@@ -199,24 +203,28 @@ const SettingManager: React.FC = () => {
                 <Form.Item label="头像" name="avatar">
                   <Upload
                     name="avatar"
-                    listType="picture-card"
+                    listType="picture-circle"
                     className="avatar-uploader"
                     showUploadList={false}
                     beforeUpload={beforeUpload}
                     onChange={handleAvatarChange}
                     customRequest={customRequest}
                   >
-                    {form.getFieldValue("avatar") ? (
-                      <motion.img
-                        src={form.getFieldValue("avatar")}
+                    {avatarUrl ? (
+                      <img
+                        src={avatarUrl}
                         alt="avatar"
-                        whileHover={{ scale: 1.05 }}
-                        transition={{ duration: 0.2 }}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                        }}
                       />
                     ) : (
-                      <div className={styles.uploadPlaceholder}>
+                      <div>
                         {avatarLoading ? <LoadingOutlined /> : <PlusOutlined />}
-                        <div>上传头像</div>
+                        <div style={{ marginTop: 8 }}>上传头像</div>
                       </div>
                     )}
                   </Upload>
