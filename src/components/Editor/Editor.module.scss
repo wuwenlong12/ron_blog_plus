@@ -2,10 +2,14 @@
   width: 100%;
   // max-height: 90vh;
   position: relative;
+
   .contentInPage {
     position: sticky;
     top: 10px;
     margin-bottom: 30px;
-    background-color: #fff;
+
+    * {
+      font-family: Courier, monospace !important;
+    }
   }
 }

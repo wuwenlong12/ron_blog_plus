@@ -15,19 +15,14 @@ import TreeDoc from "./TreeDoc/TreeDoc";
 import { upload } from "../../api/upload";
 import { md5, Message } from "js-md5";
 import { uploadFileInChunks } from "../../utils/uploadFileInChunks";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 
 async function uploadFile(file: File) {
   const res = await uploadFileInChunks(file);
   console.log(res);
 
   return res as string;
-}
-
-interface HeadingNode {
-  tag: string; // h1, h2, h3
-  text: string; // 标题内容
-  id: string; // 对应的 ID
-  children: HeadingNode[]; // 子节点
 }
 
 interface EditorProps {
@@ -72,7 +67,7 @@ const Editor = forwardRef<EditorRef, EditorProps>(
     },
     ref
   ) => {
-    const { isDarkMode } = useTheme(); // 获取当前主题状态
+    const { isDarkMode } = useSelector((state: RootState) => state.theme); // 获取当前主题状态
     const [markdownFromBlocks, setMarkdownFromBlocks] = useState<
       string | undefined
     >(undefined);
@@ -125,7 +120,14 @@ const Editor = forwardRef<EditorRef, EditorProps>(
     return (
       <div className={styles.container}>
         {isSummary ? null : (
-          <div className={styles.contentInPage}>
+          <div
+            className={styles.contentInPage}
+            style={
+              isDarkMode
+                ? { backgroundColor: "#373737" }
+                : { backgroundColor: "#fff" }
+            }
+          >
             <TreeDoc html={html}></TreeDoc>
           </div>
         )}
