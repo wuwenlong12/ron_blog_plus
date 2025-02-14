@@ -1,0 +1,115 @@
+.treeContainer {
+  padding: 12px 0;
+
+  :global {
+    .ant-tree-node-content-wrapper {
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.04);
+      }
+    }
+
+    .ant-tree-node-selected {
+      background: rgba(24, 144, 255, 0.1) !important;
+    }
+  }
+}
+
+.nodeTitle {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+
+  span {
+    transition: color 0.2s ease;
+  }
+
+  &:hover span {
+    color: #1890ff;
+  }
+}
+
+.nodeContainer {
+  position: relative;
+
+  &:hover {
+    > .node {
+      background: rgba(0, 0, 0, 0.04);
+
+      .label {
+        color: #1890ff;
+      }
+    }
+  }
+}
+
+.node {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  margin: 2px 0;
+
+  &.leaf {
+    &:hover {
+      transform: translateX(4px);
+    }
+  }
+
+  .icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 12px;
+  }
+
+  .iconWrapper {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+    color: #666;
+    font-size: 16px;
+  }
+
+  .label {
+    font-size: 14px;
+    color: #333;
+    transition: color 0.2s ease;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.children {
+  overflow: hidden;
+  will-change: height;
+}
+
+// 暗色主题支持
+:global(.dark) {
+  .node {
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .icon,
+    .iconWrapper {
+      color: #999;
+    }
+
+    .label {
+      color: #e0e0e0;
+    }
+  }
+}

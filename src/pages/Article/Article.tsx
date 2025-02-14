@@ -26,10 +26,30 @@ import { motion } from "framer-motion";
 type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
 
 const { DirectoryTree } = Tree;
-
-const Actical = ({}) => {
+const Article = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(true);
   const [directory, setDirectory] = useState<TreeDataNode[] | undefined>([]);
-  const [isOpenMenu, setIsOpenMenu] = useState(true);
+  // 监听窗口大小变化
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        // 768px 是常用的移动端断点
+        setIsMenuOpen(false);
+      }
+    };
+
+    // 初始检查
+    handleResize();
+
+    // 添加监听器
+    window.addEventListener("resize", handleResize);
+
+    // 清理监听器
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const [isOpenAddFolder, setIsOpenAddFolder] = useState(false);
   const [folderName, setFolderName] = useState("");
   const dispatch = useDispatch<AppDispatch>();
@@ -132,10 +152,10 @@ const Actical = ({}) => {
     setExpandedKeys([]); // 传入空数组，关闭所有节点
   };
   useEffect(() => {
-    if (isOpenMenu === false) {
+    if (isMenuOpen === false) {
       handleCloseAll();
     }
-  }, [isOpenMenu]);
+  }, [isMenuOpen]);
 
   const onExpand: DirectoryTreeProps["onExpand"] = (keys, info) => {
     setExpandedKeys(keys);
@@ -232,7 +252,7 @@ const Actical = ({}) => {
     setContextMenu({
       visible: true,
       x: event.pageX, // 使用全局坐标
-      y: event.pageY - 60,
+      y: event.pageY,
       node: null,
     });
   };
@@ -346,105 +366,60 @@ const Actical = ({}) => {
     }
   }, [directory, isAuthenticated, hasShownGuide]); // 添加 hasShownGuide 到依赖数组
 
-  // 当目录为空时显示的内容
-  const renderEmptyState = () => {
-    if (!directory?.length) {
-      return (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3 }}
-          style={{
-            padding: "48px 24px",
-            textAlign: "center",
-          }}
-        >
-          <Empty
-            image={Empty.PRESENTED_IMAGE_SIMPLE}
-            description={
-              <div style={{ color: "#64748b" }}>
-                {isAuthenticated
-                  ? "右键点击目录空白处空白处，开始创建你的第一篇文章"
-                  : "暂无文章"}
-              </div>
-            }
-          />
-        </motion.div>
-      );
-    }
-    return null;
-  };
-
   return (
     <div className={styles.container}>
-      <div
-        className={
-          isOpenMenu ? styles.menuContainerOpen : styles.menuContainerClose
-        }
-        onContextMenu={onContextMenu}
-      >
-        {isOpenMenu ? (
-          <Button
-            type="text"
-            className={styles.menuControlBtn}
-            onClick={() => setIsOpenMenu(!isOpenMenu)}
-            icon={<RightOutlined />}
-          />
-        ) : (
-          <Button
-            type="text"
-            className={styles.menuControlBtn}
-            onClick={() => setIsOpenMenu(!isOpenMenu)}
-            icon={<LeftOutlined />}
-          />
-        )}
-        {isOpenAddFolder ? (
-          <Input
-            value={folderName}
-            onChange={(e) => setFolderName(e.target.value)}
-            onBlur={handleAddFolder}
-            onPressEnter={handleAddFolder}
-          />
-        ) : null}
-        <DirectoryTree
-          className={styles.menu}
-          style={{
-            color: isDarkMode ? "#fff" : "#000",
-            opacity: isOpenMenu ? 1 : 0,
-          }}
-          multiple
-          defaultExpandAll={true}
-          onSelect={onSelect}
-          selectedKeys={[selectedKey]}
-          switcherIcon={
-            <Icon
-              component={FaChevronDown as React.ForwardRefExoticComponent<any>}
-            />
-          }
-          onExpand={onExpand}
-          showIcon={false}
-          onRightClick={isAuthenticated ? onRightClick : null}
-          expandedKeys={expandedKeys} // 受控展开的节点
-          draggable={{
-            icon: false, // 关闭拖拽图标
-            nodeDraggable: () => isAuthenticated, // 只有有权限的用户才能拖拽
-          }}
-          allowDrop={allowDrop}
-          treeData={directory}
-          onDrop={isAuthenticated ? onDrop : null}
+      <div className={isMenuOpen ? styles.sidebarOpen : styles.sidebarClosed}>
+        {/* 控制按钮 */}
+        <Button
+          type="text"
+          className={styles.toggleBtn}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          icon={isMenuOpen ? <LeftOutlined /> : <RightOutlined />}
         />
 
-        <RightMenu
-          contextMenu={contextMenu}
-          setContextMenu={setContextMenu}
-        ></RightMenu>
+        {/* 侧边栏内容 */}
+        <div className={styles.sidebarContent} onContextMenu={onContextMenu}>
+          <DirectoryTree
+            className={styles.menu}
+            style={{
+              color: isDarkMode ? "#fff" : "#000",
+              opacity: isMenuOpen ? 1 : 0,
+            }}
+            multiple
+            defaultExpandAll={true}
+            onSelect={onSelect}
+            selectedKeys={[selectedKey]}
+            switcherIcon={
+              <Icon
+                component={
+                  FaChevronDown as React.ForwardRefExoticComponent<any>
+                }
+              />
+            }
+            onExpand={onExpand}
+            showIcon={false}
+            onRightClick={isAuthenticated ? onRightClick : null}
+            expandedKeys={expandedKeys} // 受控展开的节点
+            draggable={{
+              icon: false, // 关闭拖拽图标
+              nodeDraggable: () => isAuthenticated, // 只有有权限的用户才能拖拽
+            }}
+            allowDrop={allowDrop}
+            treeData={directory}
+            onDrop={isAuthenticated ? onDrop : null}
+          />
+        </div>
       </div>
-      <div className={styles.articleMainContent}>
+      <RightMenu
+        contextMenu={contextMenu}
+        setContextMenu={setContextMenu}
+      ></RightMenu>
+      {/* 主内容区 */}
+      <div className={styles.mainContent}>
         <Outlet />
       </div>
-      {renderEmptyState()}
     </div>
   );
 };
 
-export default Actical;
+export default Article;
