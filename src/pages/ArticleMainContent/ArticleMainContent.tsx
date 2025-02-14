@@ -1,4 +1,4 @@
-import { Input, Button, App, Tooltip, Modal, QRCode } from "antd";
+import { Input, Button, App, Tooltip, Modal, QRCode, FloatButton } from "antd";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   RouteObject,
@@ -52,6 +52,13 @@ import {
 } from "../../router/utils/findRouterMatches";
 import { debounce } from "lodash";
 import { de } from "@blocknote/core/types/src/i18n/locales";
+import {
+  FaDownload,
+  FaShareAlt,
+  FaEdit,
+  FaPaperPlane,
+  FaEllipsisV, // 替换 MoreOutlined
+} from "react-icons/fa";
 
 type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
 
@@ -99,6 +106,8 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
   );
   // const [folderTree,setFolderTree] = useState<TreeDataNode[]>([])
   const navigate = useNavigate();
+  const [isButtonsVisible, setIsButtonsVisible] = useState(false);
+
   useEffect(() => {
     const pathArray = parsePath(location.pathname).slice(1);
     if (pathArray.length === 0) {
@@ -373,7 +382,7 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
     <AnimatePresence>
       <motion.div
         className={styles.container}
-        key={currentId} // 使用 motionKey 来确保动态变化时触发组件重新渲染
+        key={currentId}
         layout
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -410,48 +419,53 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
               <span>{name ? name : "未命名"}</span>
             )}
           </div>
-          <div className={styles.buttonGroup}>
-            {currentType === "article" && (
-              <Button
-                className={styles.downloadBtn}
-                icon={<FaMarkdown size={14} />}
-                onClick={blocksToMarkdown}
-                size="middle"
-              >
-                下载
-              </Button>
-            )}
-            <Button
-              type="primary"
-              icon={<FaMarkdown size={14} />}
-              onClick={handleShare}
-              size="middle"
-            >
-              分享
-            </Button>
-            {currentType === "article" &&
-              isAuthenticated &&
-              (isEditable ? (
-                <Button
-                  onClick={publishArticle}
-                  type="primary"
-                  icon={<RiSendPlaneFill size={14} />}
-                  size="middle"
-                >
-                  发布
-                </Button>
-              ) : (
-                <Button
-                  onClick={() => setIsEditable(true)}
-                  className={styles.editBtn}
-                  icon={<BiSolidMessageSquareEdit size={14} />}
-                  size="middle"
-                >
-                  编辑
-                </Button>
-              ))}
-          </div>
         </div>
+
+        <FloatButton.Group
+          trigger="hover"
+          type="default"
+          style={{ insetInlineEnd: 24, insetBlockEnd: 24 }}
+          icon={<FaEllipsisV />}
+          open={isButtonsVisible}
+          onOpenChange={setIsButtonsVisible}
+        >
+          {currentType === "article" && (
+            <FloatButton
+              className={styles.downloadBtn}
+              style={{ backgroundColor: "#52c41a" }}
+              icon={<FaDownload />}
+              onClick={blocksToMarkdown}
+              tooltip="下载 Markdown"
+            />
+          )}
+          <FloatButton
+            className={styles.shareBtn}
+            style={{ backgroundColor: "#722ed1" }}
+            icon={<FaShareAlt />}
+            onClick={handleShare}
+            tooltip="分享文章"
+          />
+          {currentType === "article" &&
+            isAuthenticated &&
+            (isEditable ? (
+              <FloatButton
+                className={styles.publishBtn}
+                style={{ backgroundColor: "#1890ff" }}
+                onClick={publishArticle}
+                icon={<FaPaperPlane />}
+                tooltip="发布文章"
+              />
+            ) : (
+              <FloatButton
+                className={styles.editBtn}
+                style={{ backgroundColor: "#fa8c16" }}
+                onClick={() => setIsEditable(true)}
+                icon={<FaEdit />}
+                tooltip="编辑文章"
+              />
+            ))}
+        </FloatButton.Group>
+
         <DesField
           key={Math.random()}
           updatedAt={updatedAt}

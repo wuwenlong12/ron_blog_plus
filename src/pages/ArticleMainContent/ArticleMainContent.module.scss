@@ -40,24 +40,6 @@
         background: rgba(245, 245, 245, 0.3);
       }
     }
-
-    .buttonGroup {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-
-      Button {
-        font-size: 14px !important;
-
-        span {
-          font-size: 14px !important;
-        }
-
-        .anticon {
-          font-size: 14px !important;
-        }
-      }
-    }
   }
 
   .desc {
@@ -94,84 +76,67 @@
     margin: 1rem 0;
   }
 
-  // 目录树样式优化
-  :global {
-    .ant-tree {
-      background: transparent;
-      font-size: 15px;
+  .floatingButtons {
+    position: fixed;
+    bottom: 80px;
+    right: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 1000;
 
-      .ant-tree-node-content-wrapper {
-        padding: 8px 12px;
-        border-radius: 6px;
-        transition: all 0.2s ease;
-        margin: 2px 0;
-        height: auto;
+    .floatingBtn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      padding: 0;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      background: #fff;
+      transition: all 0.3s ease;
 
-        &:hover {
-          background: rgba(255, 255, 255, 0.1);
-        }
-
-        &.ant-tree-node-selected {
-          background: rgba(24, 144, 255, 0.15);
-          color: rgba(24, 144, 255, 0.95);
-        }
+      // 调整图标大小和颜色
+      svg {
+        width: 18px;
+        height: 18px;
+        color: inherit;
       }
 
-      .ant-tree-title {
-        div {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-
-          svg {
-            font-size: 16px;
-            opacity: 0.8;
-          }
-        }
+      &:hover {
+        transform: rotate(12deg) scale(1.1);
       }
 
-      .ant-tree-switcher {
-        width: 24px;
-        height: 24px;
-        line-height: 24px;
-        opacity: 0.6;
-
-        .ant-tree-switcher-icon {
-          font-size: 12px;
-          transition: transform 0.2s ease;
-        }
+      &.editBtn {
+        background: #1890ff;
+        color: #fff;
       }
 
-      .ant-tree-switcher_open {
-        .ant-tree-switcher-icon {
-          transform: rotate(0deg);
-        }
-      }
-
-      .ant-tree-switcher_close {
-        .ant-tree-switcher-icon {
-          transform: rotate(-90deg);
-        }
-      }
-
-      .ant-tree-node-content-wrapper.ant-tree-node-content-wrapper-dragging {
-        background: rgba(24, 144, 255, 0.1);
-        border: 1px dashed rgba(24, 144, 255, 0.5);
-      }
-
-      .ant-tree-drop-indicator {
-        background-color: rgba(24, 144, 255, 0.8);
-        height: 2px;
+      // 隐藏按钮文字
+      span:not(.anticon) {
+        display: none;
       }
     }
+  }
 
-    // 编辑器容器样式
-    .editor-container {
-      margin-top: 1.5rem;
-      border-radius: 8px;
-      overflow: hidden;
-      background: rgba(255, 255, 255, 0.95);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  .mainActionButton {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    z-index: 1000;
+
+    &:hover {
+      transform: rotate(90deg);
     }
   }
 }
