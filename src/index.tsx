@@ -24,8 +24,6 @@ const root = ReactDOM.createRoot(
 root.render(
   <Provider store={store}>
     <BrowserRouter>
-      {" "}
-      {/* ✅ 确保 App 在 Router 里面 */}
       <Root />
     </BrowserRouter>
   </Provider>

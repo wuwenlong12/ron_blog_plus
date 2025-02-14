@@ -24,6 +24,7 @@ import MouseParticles from "react-mouse-particles";
 import { checkLoginStatus } from "./store/authSlice";
 import { AppDispatch, RootState } from "./store";
 import { recordVisit } from "./api/site";
+import useTitle from "./hook/useTitle";
 const App: React.FC = () => {
   const { isDarkMode } = useTheme(); // 确保在 Provider 内部
   const [currentTheme, setCurrentTheme] = useState<ThemeConfig>();
@@ -32,6 +33,7 @@ const App: React.FC = () => {
   const { siteIsOpen } = useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
   const Routes: RouteObject[] = useSelector(selectRoutes);
+  useTitle();
   // todo ROuter 为空
   useEffect(() => {
     if (isDarkMode) {
