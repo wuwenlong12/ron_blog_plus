@@ -7,13 +7,9 @@ import React, {
 import styles from "./Editor.module.scss";
 import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/mantine";
-import useTheme from "../../hook/useTheme";
 import { PartialBlock, locales } from "@blocknote/core";
-import { debounce } from "../../utils/debounce";
 import { downloadMarkdown } from "../../utils/downloadMarkdown";
 import TreeDoc from "./TreeDoc/TreeDoc";
-import { upload } from "../../api/upload";
-import { md5, Message } from "js-md5";
 import { uploadFileInChunks } from "../../utils/uploadFileInChunks";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
@@ -132,27 +128,20 @@ const Editor = forwardRef<EditorRef, EditorProps>(
           </div>
         )}
 
-        {editable && onChange ? (
-          <BlockNoteView
-            style={{ fontSize: "1rem" }}
-            editor={editor}
-            editable={true}
-            onChange={() => onChange(editor.document)}
-            theme={isDarkMode ? "dark" : "light"}
-            formattingToolbar
-            linkToolbar
-            sideMenu
-            slashMenu
-            emojiPicker
-            filePanel
-            tableHandles
-          />
-        ) : (
-          <div
-            dangerouslySetInnerHTML={{ __html: addIdsToHeadings(html) }}
-            className={styles.htmlContent}
-          />
-        )}
+        <BlockNoteView
+          style={{ fontSize: "1rem" }}
+          editor={editor}
+          editable={editable}
+          onChange={() => onChange && onChange(editor.document)}
+          theme={isDarkMode ? "dark" : "light"}
+          formattingToolbar
+          linkToolbar
+          sideMenu
+          slashMenu
+          emojiPicker
+          filePanel
+          tableHandles
+        />
       </div>
     );
   }
