@@ -31,6 +31,7 @@ const BlogCard: React.FC<InfoListProps> = ({ title, desc, style }) => {
   const [favorites, setFavorites] = useState<FavoriteArticle[]>([]);
   const [pagination, setPagination] = useState<PaginationType>();
   const [currentPage, setCurrentPage] = useState(1);
+  const isDarkMode = useSelector((state: RootState) => state.theme.isDarkMode);
   const articleRoutesMap = useSelector(
     (state: RootState) => state.routesMap.articleRoutesMap
   );
@@ -114,6 +115,11 @@ const BlogCard: React.FC<InfoListProps> = ({ title, desc, style }) => {
               <div
                 key={item._id}
                 className={styles.card}
+                style={
+                  isDarkMode
+                    ? { background: "#1e1e1e" }
+                    : { background: "#fff" }
+                }
                 onClick={() => navigateArticle(item._id)}
               >
                 <div className={styles.cardHeader}>
