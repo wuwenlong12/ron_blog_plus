@@ -125,12 +125,11 @@ const InfoList: React.FC<InfoListProps> = ({ style }) => {
         onCancel={() => setIsModalOpen(false)}
         footer={null}
         className={styles.detailModal}
-        width={700}
+        width={"100%"}
       >
         {selectedProject && (
-          <div>
+          <>
             <img
-              style={{ width: "100%" }}
               src={selectedProject.img_url}
               alt="项目图片"
               className={styles.modalImage}
@@ -140,13 +139,14 @@ const InfoList: React.FC<InfoListProps> = ({ style }) => {
                 <p>{selectedProject.category}</p>
                 <p>{dayjs(selectedProject.createdAt).format("YYYY-MM-DD")}</p>
               </div>
-              <p>
+              {selectedProject.content ? (
                 <Editor
                   isSummary={true}
                   editable={false}
                   initialContent={selectedProject.content}
                 ></Editor>
-              </p>
+              ) : null}
+
               <div className={styles.modalButtons}>
                 <Button
                   icon={<FcLike />}
@@ -168,7 +168,7 @@ const InfoList: React.FC<InfoListProps> = ({ style }) => {
                 </Button>
               </div>
             </div>
-          </div>
+          </>
         )}
       </Modal>
     </div>

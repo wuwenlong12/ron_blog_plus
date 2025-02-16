@@ -50,7 +50,12 @@ const BlogCard: React.FC<InfoListProps> = ({ title, desc, style }) => {
           <div className={styles.desc}>{desc}</div>
         </div>
         {articles.length > 0 && (
-          <Button className={styles.rightBtn}>更多</Button>
+          <Button
+            className={styles.rightBtn}
+            onClick={() => navigate("/article")}
+          >
+            更多
+          </Button>
         )}
       </div>
 
