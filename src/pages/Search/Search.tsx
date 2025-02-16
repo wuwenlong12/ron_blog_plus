@@ -5,7 +5,7 @@ import { searchArticleByTitle, searchArticleByTag } from "../../api/article";
 import ChooseTag from "../../components/ChooseTag";
 import { tag } from "../../api/tag/type";
 import styles from "./Search.module.scss";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Articles } from "../../api/article/type";
 import { findFullPathByKey } from "../../router/utils/findFullPathByKey";
 import { useSelector } from "react-redux";
@@ -24,6 +24,23 @@ const Search: React.FC = () => {
     (state: RootState) => state.routesMap.articleRoutesMap
   );
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    // 从 URL 参数中获取 tagId 和 tagName
+    const params = new URLSearchParams(location.search);
+    const tagId = params.get("tagId");
+    const tagName = params.get("tagName");
+
+    if (tagId && tagName) {
+      setSelectedTag([{ _id: tagId, name: tagName, color: "#2563eb" }]);
+      // 自动切换到标签搜索 tab
+      const tabElement = document.querySelector('[data-node-key="tag"]');
+      if (tabElement) {
+        (tabElement as HTMLElement).click();
+      }
+    }
+  }, [location.search]);
 
   const handleSearch = async (value: string) => {
     if (!value.trim()) return;

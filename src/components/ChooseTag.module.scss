@@ -39,3 +39,13 @@
     }
   }
 }
+
+.clickable {
+  cursor: pointer !important;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    opacity: 0.9;
+  }
+}

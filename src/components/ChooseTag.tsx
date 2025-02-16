@@ -3,6 +3,7 @@ import { Tag, Spin } from "antd";
 import { getTag } from "../api/tag";
 import { tag } from "../api/tag/type";
 import styles from "./ChooseTag.module.scss";
+import { useNavigate } from "react-router-dom";
 
 interface ChooseTagProps {
   initTags?: tag[];
@@ -20,6 +21,7 @@ const ChooseTag: React.FC<ChooseTagProps> = ({
   const [tags, setTags] = useState<tag[]>([]);
   const [selectedTags, setSelectedTags] = useState<tag[]>(initTags);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const fetchTags = async () => {
     if (mode === "display") return;
@@ -39,6 +41,12 @@ const ChooseTag: React.FC<ChooseTagProps> = ({
   useEffect(() => {
     fetchTags();
   }, []);
+
+  const handleDisplayTagClick = (tag: tag) => {
+    if (mode === "display") {
+      navigate(`/search?tagId=${tag._id}&tagName=${tag.name}`);
+    }
+  };
 
   const handleTagClick = (tag: tag) => {
     if (mode !== "select") return;
@@ -65,7 +73,12 @@ const ChooseTag: React.FC<ChooseTagProps> = ({
     return (
       <div className={styles.tagContainer}>
         {initTags.map((tag) => (
-          <Tag key={tag._id} color={tag.color} className={styles.tag}>
+          <Tag
+            key={tag._id}
+            color={tag.color}
+            className={`${styles.tag} ${styles.clickable}`}
+            onClick={() => handleDisplayTagClick(tag)}
+          >
             {tag.name}
           </Tag>
         ))}
