@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Typography, Space, Divider, Alert } from "antd";
-import styles from "./AboutManager.module.scss";
+import styles from "../styles/AboutManager.module.scss";
 
 const { Title, Paragraph, Text, Link } = Typography;
 

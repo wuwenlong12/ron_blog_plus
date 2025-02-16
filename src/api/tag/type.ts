@@ -5,7 +5,7 @@ export interface ResponseGetTag extends ResponseBase {
   data: tag[];
 }
 export type tag = {
-  // id: string;
+  _id: string;
   name: string;
   color: string;
 };

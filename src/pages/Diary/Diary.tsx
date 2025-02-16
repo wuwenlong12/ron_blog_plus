@@ -360,14 +360,14 @@ const MyTree: React.FC = () => {
                 <div className={styles.diaryDesc}>
                   <div style={{ display: "flex", alignItems: "center" }}>
                     <ChooseTag
+                      mode="select"
                       initTags={tags}
                       onChange={onTagsChange}
-                      auth={true}
                     ></ChooseTag>
 
-                    <div>
+                    {/* <div>
                       {formatTimestampToFullDateTime(diarty?.createdAt)}
-                    </div>
+                    </div> */}
                   </div>
                 </div>
                 <Editor
@@ -396,7 +396,6 @@ const MyTree: React.FC = () => {
                         <ChooseTag
                           initTags={diarty?.tags || null}
                           onChange={onTagsChange}
-                          auth={false}
                         ></ChooseTag>
 
                         <div>

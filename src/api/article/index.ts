@@ -4,6 +4,7 @@ import {
   ResponseGetAllArticleInfo,
   ResponseGetArticleContent,
   ResponseGetArticleSummary,
+  ResponseGetSearchArticle,
   ResponseUpdateArticleContent,
 } from "./type";
 
@@ -12,6 +13,8 @@ enum API {
   ARTICLE = "/article",
   ARTICLE_SUMMARY = "/article/summary",
   ARTICLE_TAGS = "/article/tags",
+  SEARCH_TITLE = "/article/search/title",
+  SEARCH_TAG = "/article/search/tag",
 }
 
 //根据目录id获取w文章内容
@@ -43,5 +46,19 @@ export const getArticleSummary = (
     params: {
       pageNumber,
       limitNumber,
+    },
+  });
+
+export const searchArticleByTitle = (keyword: string) =>
+  http.get<any, ResponseGetSearchArticle>(API.SEARCH_TITLE, {
+    params: {
+      keyword,
+    },
+  });
+
+export const searchArticleByTag = (tagId: string) =>
+  http.get<any, ResponseGetSearchArticle>(API.SEARCH_TAG, {
+    params: {
+      tagId,
     },
   });

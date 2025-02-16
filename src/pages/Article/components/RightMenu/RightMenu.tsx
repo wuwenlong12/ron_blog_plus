@@ -250,11 +250,13 @@ const RightMenu: React.FC<RightMenuProps> = ({
         />
         <div style={{ padding: 10 }}></div>
         <ChooseTag
+          mode="select"
           initTags={tags}
           onChange={(e) => {
+            console.log(e);
+
             setTags(e);
           }}
-          auth={true}
         ></ChooseTag>
       </Modal>
 

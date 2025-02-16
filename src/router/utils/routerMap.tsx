@@ -21,6 +21,8 @@ export const componentKey = {
   ProfileForm: "ProfileForm",
   VisitStats: "VisitStats",
   SettingManager: "SettingManager",
+  TagManager: "TagManager",
+  Search: "Search",
 };
 
 export const componentMap: Record<
@@ -59,6 +61,11 @@ export const componentMap: Record<
   ),
   Login: React.lazy(() =>
     import("../../pages/Login/Login").then((mod) => ({
+      default: withPageTransition(mod.default),
+    }))
+  ),
+  Search: React.lazy(() =>
+    import("../../pages/Search/Search").then((mod) => ({
       default: withPageTransition(mod.default),
     }))
   ),
@@ -110,6 +117,11 @@ export const componentMap: Record<
   ),
   AboutManager: React.lazy(() =>
     import("../../Admin/pages/AboutManager").then((mod) => ({
+      default: withPageTransition(mod.default),
+    }))
+  ),
+  TagManager: React.lazy(() =>
+    import("../../Admin/pages/TagManager").then((mod) => ({
       default: withPageTransition(mod.default),
     }))
   ),

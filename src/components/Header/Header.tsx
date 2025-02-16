@@ -6,6 +6,7 @@ import {
   GithubOutlined,
   MenuOutlined,
   MoonOutlined,
+  SearchOutlined,
   SunOutlined,
 } from "@ant-design/icons";
 import styles from "./Header.module.scss";
@@ -14,6 +15,7 @@ import Modal from "../Modal/Modal";
 import RightModalDom from "../RightModalDom/RightModalDom";
 import { RootState } from "../../store";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -45,6 +47,7 @@ const Header: React.FC<HeaderProps> = ({
   onClickRightMenu,
 }) => {
   const siteInfo = useSelector((state: RootState) => state.site.siteInfo);
+  const navigate = useNavigate();
   const handleMenuClick: MenuProps["onClick"] = (e) => {
     onNavigate(e.key); // 调用父组件传入的 onNavigate
   };
@@ -81,6 +84,12 @@ const Header: React.FC<HeaderProps> = ({
         items={menuItems}
       />
       <div className={styles.containerRight}>
+        <Button
+          type="text"
+          onClick={() => navigate("/search")}
+          // className={isDarkMode ? styles.BtnDark : styles.BtnLight}
+          icon={<SearchOutlined style={{ fontSize: "20px" }} />}
+        />
         <Button
           type="text"
           onClick={() => window.open(siteInfo && siteInfo.github)}

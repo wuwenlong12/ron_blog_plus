@@ -1,0 +1,41 @@
+.tagContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px 0;
+}
+
+.tag {
+  margin: 0 !important;
+  font-size: 12px !important;
+  padding: 1px 8px !important;
+  border-radius: 12px !important;
+  line-height: 18px !important;
+  transition: all 0.2s ease;
+  border: none !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  &.selectable {
+    cursor: pointer;
+    position: relative;
+    padding-right: 22px !important;
+
+    &:hover {
+      opacity: 0.85;
+      transform: translateY(-1px);
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  &.selected {
+    &::after {
+      content: "✓";
+      position: absolute;
+      right: 7px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 10px;
+      font-weight: bold;
+    }
+  }
+}

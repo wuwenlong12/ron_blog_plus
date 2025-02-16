@@ -68,6 +68,16 @@ export const StaticRoutesMap: RouteObject[] = [
     ],
   },
   {
+    path: "search",
+    element: componentKey.Search, // 用字符串表示组件
+    handle: {
+      key: "Search",
+      label: "搜索",
+      Icon: iconKey.FaMeteor, // 用字符串表示图标
+      requiresAuth: false,
+    },
+  },
+  {
     path: "login",
     element: componentKey.Login, // 用字符串表示组件
     handle: {
@@ -112,16 +122,16 @@ export const DynamicRoutes: RouteObject[] = [
       requiresAuth: true,
     },
   },
-  // {
-  //   path: "visit-stats",
-  //   element: componentKey.VisitStats,
-  //   handle: {
-  //     key: "visit-stats",
-  //     label: "访问统计",
-  //     Icon: iconKey.FiActivity,
-  //     requiresAuth: true,
-  //   },
-  // },
+  {
+    path: "tags",
+    element: componentKey.TagManager,
+    handle: {
+      key: "tags",
+      label: "标签管理",
+      Icon: iconKey.FiActivity,
+      requiresAuth: true,
+    },
+  },
   {
     path: "setting",
     element: componentKey.SettingManager,

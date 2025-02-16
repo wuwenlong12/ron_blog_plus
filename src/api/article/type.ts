@@ -50,3 +50,11 @@ type Pagination = {
   pageSize: number;
   total: number;
 };
+
+export interface ResponseGetSearchArticle extends ResponseBase {
+  data: ArticleListData;
+}
+type ArticleListData = {
+  list: Articles[];
+  pagination: Pagination;
+};

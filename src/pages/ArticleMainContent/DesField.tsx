@@ -58,7 +58,6 @@ const DesField: React.FC<DesFieldProps> = ({
           <Button type="link" icon={<FaTags color="#383a42" />}></Button>
 
           <ChooseTag
-            auth={isAuthenticated}
             initTags={initTags}
             onChange={(e) => {
               if (!onChange) return;

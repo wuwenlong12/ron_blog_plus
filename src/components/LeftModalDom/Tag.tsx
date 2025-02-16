@@ -24,11 +24,7 @@ export default function Tag() {
       </div>
       <div className={styles.main}>
         {tags.length > 0 ? (
-          <ChooseTag
-            initTags={tags}
-            onChange={(e) => setTags(e)}
-            auth={false}
-          ></ChooseTag>
+          <ChooseTag initTags={tags}></ChooseTag>
         ) : (
           "目前还没有标签..."
         )}
