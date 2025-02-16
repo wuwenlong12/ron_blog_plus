@@ -58,6 +58,7 @@ import {
   FaPaperPlane,
   FaEllipsisV, // 替换 MoreOutlined
 } from "react-icons/fa";
+import ChooseTag from "../../components/ChooseTag";
 
 type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
 
@@ -465,14 +466,18 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
             ))}
         </FloatButton.Group>
 
-        <DesField
-          key={Math.random()}
-          updatedAt={updatedAt}
-          createdAt={createdAt}
-          initTags={tags}
-          onChange={(e) => editTags(e)}
-        ></DesField>
+        {!isEditable ? (
+          <DesField
+            key={Math.random()}
+            updatedAt={updatedAt}
+            createdAt={createdAt}
+            initTags={tags}
+          ></DesField>
+        ) : null}
 
+        {isEditable ? (
+          <ChooseTag mode="select" onChange={(e) => editTags(e)}></ChooseTag>
+        ) : null}
         <hr className={styles.hr} />
         {currentType === "folder" ? (
           <div className={styles.desc}>
