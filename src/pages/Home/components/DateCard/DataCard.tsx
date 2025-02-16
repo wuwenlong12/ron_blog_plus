@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styles from "./CataCard.module.scss";
+import styles from "./DataCard.module.scss";
 import { Button, Carousel, Empty } from "antd";
 import test from "../../../../assets/test.png";
 import { getCarousel } from "../../../../api/carousel";

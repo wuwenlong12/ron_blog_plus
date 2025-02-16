@@ -73,6 +73,13 @@
         position: relative;
         font-size: 30px;
         font-weight: bold;
+        display: -webkit-box;
+        -webkit-box-orient: vertical; /* 盒子排列方向必须是垂直 */
+        -webkit-line-clamp: 1; /* 限制显示的行数 */
+        line-clamp: 1;
+        overflow: hidden; /* 隐藏溢出部分 */
+        text-overflow: ellipsis; /* 省略溢出部分 */
+        word-break: break-word; /* 避免长单词撑开 */
         margin-top: 20px;
         margin-bottom: 20px;
       }
