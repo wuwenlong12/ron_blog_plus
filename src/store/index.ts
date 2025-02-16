@@ -5,6 +5,7 @@ import themeReducer from "./themeSlice";
 import routesReducer from "./routersMapSlice";
 import authReducer from "./authSlice";
 import siteReducer from "./siteSlice";
+import modalReducer from "./modalSlice";
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     routesMap: routesReducer,
     auth: authReducer,
     site: siteReducer,
+    modal: modalReducer,
   },
 });
 

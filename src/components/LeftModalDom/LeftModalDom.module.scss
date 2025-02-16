@@ -1,10 +1,19 @@
 @import "../../setting/variables.scss";
-.container {
-  text-align: center;
-  z-index: 999;
-  height: 100%;
-  width: 100%;
 
+// 添加文本省略 mixin
+@mixin text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.container {
+  position: relative;
+  z-index: 999; // 确保在遮罩层之上
+  text-align: center;
+  height: 100vh;
+  width: 50vw;
+  overflow: hidden;
   .menu {
     display: flex;
     justify-content: space-around;
@@ -38,5 +47,114 @@
   }
   .main {
     padding: 1rem;
+  }
+}
+
+.starContainer {
+  padding: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .starHeader {
+    margin-bottom: 24px;
+
+    .middleInfo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .middleIcon {
+        font-size: 24px;
+        color: #faad14;
+      }
+
+      .middleNum {
+        font-size: 20px;
+        font-weight: 500;
+      }
+
+      .middleText {
+        font-size: 16px;
+        color: #666;
+      }
+    }
+  }
+
+  .starList {
+    flex: 1;
+    overflow-y: auto;
+
+    .starItem {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: #fff;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.02);
+        transform: translateX(4px);
+
+        .removeBtn {
+          opacity: 1;
+        }
+      }
+
+      .starItemTitle {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        .articleIcon {
+          font-size: 16px;
+          color: #666;
+          flex-shrink: 0;
+        }
+
+        span {
+          font-size: 14px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+
+      .removeBtn {
+        opacity: 0;
+        color: #ff4d4f;
+        padding: 4px 8px;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: rgba(255, 77, 79, 0.1);
+        }
+      }
+    }
+  }
+
+  .emptyContainer {
+    padding: 40px 0;
+    text-align: center;
+  }
+
+  .emptyContent {
+    .emptyText {
+      color: #262626;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .emptySubText {
+      color: #8c8c8c;
+      font-size: 14px;
+    }
   }
 }

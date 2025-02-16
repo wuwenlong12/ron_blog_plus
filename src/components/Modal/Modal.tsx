@@ -1,14 +1,15 @@
 import { motion, AnimatePresence, Transition } from "framer-motion";
 import React, { CSSProperties, ReactNode, useEffect } from "react";
+import ReactDOM from "react-dom";
 import styles from "./Modal.module.scss";
-import ThemeView from "../../themeComponent/themeView";
-import { IoIosCloseCircle } from "react-icons/io";
-import { Button } from "antd";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store";
+import { closeModal } from "../../store/modalSlice";
 
 interface ModalProps {
   isShowModal: boolean;
   children: ReactNode; // 父组件传入的内容
-  direction: "top" | "bottom" | "left" | "right" | "center"; // 弹窗滑动的方向
+  direction: "top" | "bottom" | "left" | "right"; // 弹窗滑动的方向
   onClose?: () => void; // 关闭弹窗的回调
   style?: CSSProperties;
   transition?: Transition | undefined;
@@ -19,9 +20,27 @@ const Modal: React.FC<ModalProps> = ({
   children,
   direction,
   onClose,
-  style,
   transition,
 }) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const modalContainer = document.getElementById("modal-root");
+
+  useEffect(() => {
+    if (isShowModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+  }, [isShowModal]);
+
+  if (!modalContainer) {
+    return null;
+  }
+
+  const dispatchEvent = () => {
+    dispatch(closeModal());
+  };
+
   // 定义不同方向的动画效果
   const directionVariants = {
     top: {
@@ -51,73 +70,34 @@ const Modal: React.FC<ModalProps> = ({
     },
   };
 
-  // 关闭时恢复页面滚动
-  useEffect(() => {
-    if (isShowModal) {
-      document.body.style.overflow = "hidden"; // 禁止滚动
-    } else {
-      document.body.style.overflow = ""; // 恢复滚动
-    }
-  }, [isShowModal]);
-
-  return (
+  return ReactDOM.createPortal(
     <AnimatePresence>
       {isShowModal && (
-        <motion.div
-          className={styles.container}
-          style={
-            direction === "center"
-              ? {
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  position: "fixed",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  zIndex: 9999,
-                }
-              : {}
-          }
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          variants={directionVariants[direction]} // 根据传入的 direction 使用不同的动画
-          transition={transition}
-        >
-          <div className={styles.content} style={{ ...style }}>
-            {direction === "center" ? (
-              <>
-                <ThemeView
-                  style={{
-                    height: 32,
-                    position: "relative",
-                    borderRadius: "10px 10px 0 0",
-                  }}
-                  lightStyle={{
-                    backgroundColor: "#eee",
-                  }}
-                  darkStyle={{
-                    backgroundColor: "#1f1f1f",
-                  }}
-                >
-                  <Button
-                    onClick={onClose}
-                    style={{ position: "absolute", right: 0, zIndex: 10 }}
-                    shape="circle"
-                  >
-                    <IoIosCloseCircle color="red" size={30} />
-                  </Button>
-                </ThemeView>
-              </>
-            ) : null}
+        <>
+          {/* 遮罩层移到外面，确保不受动画影响 */}
+          <motion.div
+            className={styles.overlay}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={dispatchEvent}
+          />
 
-            {children}
-          </div>
-        </motion.div>
+          {/* 内容区域 */}
+          <motion.div
+            className={styles.container}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={directionVariants[direction]}
+            transition={transition}
+          >
+            <div className={styles.content}>{children}</div>
+          </motion.div>
+        </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    modalContainer
   );
 };
 

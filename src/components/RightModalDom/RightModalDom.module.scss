@@ -1,8 +1,9 @@
 @import "../../setting/variables.scss";
 .container {
   text-align: center;
-  border-radius: 20px;
+  border-radius: 0 0 20px 20px;
   box-shadow: $box-shadow-light;
+  width: 100vw;
   .theme {
     .text {
       margin-top: 20px;

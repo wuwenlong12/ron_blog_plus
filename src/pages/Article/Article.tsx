@@ -23,18 +23,21 @@ import { IoFolderOutline } from "react-icons/io5";
 import { RiBook2Line } from "react-icons/ri";
 import { AppDispatch } from "../../store";
 import { motion } from "framer-motion";
+import { closeModal, toggleModal } from "../../store/modalSlice";
 type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
 
 const { DirectoryTree } = Tree;
 const Article = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(true);
+  const { isArticleLeftModalOpen } = useSelector(
+    (state: RootState) => state.modal
+  );
   const [directory, setDirectory] = useState<TreeDataNode[] | undefined>([]);
   // 监听窗口大小变化
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 768) {
         // 768px 是常用的移动端断点
-        setIsMenuOpen(false);
+        // dispatch(closeModal());
       }
     };
 
@@ -152,10 +155,10 @@ const Article = () => {
     setExpandedKeys([]); // 传入空数组，关闭所有节点
   };
   useEffect(() => {
-    if (isMenuOpen === false) {
+    if (isArticleLeftModalOpen === false) {
       handleCloseAll();
     }
-  }, [isMenuOpen]);
+  }, [isArticleLeftModalOpen]);
 
   const onExpand: DirectoryTreeProps["onExpand"] = (keys, info) => {
     setExpandedKeys(keys);
@@ -368,22 +371,30 @@ const Article = () => {
 
   return (
     <div className={styles.container}>
-      <div className={isMenuOpen ? styles.sidebarOpen : styles.sidebarClosed}>
+      <div
+        className={
+          isArticleLeftModalOpen ? styles.sidebarOpen : styles.sidebarClosed
+        }
+      >
         {/* 控制按钮 */}
         <Button
           type="text"
           className={styles.toggleBtn}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          icon={isMenuOpen ? <LeftOutlined /> : <RightOutlined />}
+          onClick={() => dispatch(toggleModal("articleLeft"))}
+          icon={isArticleLeftModalOpen ? <LeftOutlined /> : <RightOutlined />}
         />
 
         {/* 侧边栏内容 */}
-        <div className={styles.sidebarContent} onContextMenu={onContextMenu}>
+        <div
+          className={styles.sidebarContent}
+          onContextMenu={onContextMenu}
+          style={{ background: isDarkMode ? "#111827" : "#fff" }}
+        >
           <DirectoryTree
             className={styles.menu}
             style={{
               color: isDarkMode ? "#fff" : "#000",
-              opacity: isMenuOpen ? 1 : 0,
+              opacity: isArticleLeftModalOpen ? 1 : 0,
             }}
             multiple
             defaultExpandAll={true}

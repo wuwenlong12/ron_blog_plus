@@ -1,14 +1,27 @@
 .container {
-  //   padding-top: 60px;
-  // width: 100vw;
-  // height: 100vh;
-  position: absolute;
-  // z-index: 10;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2000;
+  pointer-events: none;
 }
+
 .content {
-  // height: 100%;
-  position: relative;
-  // background-color: antiquewhite;
-  backdrop-filter: blur(10px); /* 背景模糊 */
-  -webkit-backdrop-filter: blur(10px); /* 兼容 Safari */
+  // position: fixed;
+  z-index: 1000;
+  pointer-events: auto;
+  display: inline-block;
+}
+
+.overlay {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 998;
 }

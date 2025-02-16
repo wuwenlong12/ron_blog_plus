@@ -1,4 +1,14 @@
 @import "../../../../setting/variables.scss";
+
+// 添加文本省略 mixin
+@mixin text-ellipsis {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .container {
   margin-top: 20px;
   padding: 0 4vw;
@@ -11,85 +21,109 @@
       align-items: center;
       .title {
         font-size: clamp(22px, 2.2vw, 35px);
-        white-space: nowrap;
         font-weight: 600;
         margin-right: 20px;
       }
       .desc {
         font-size: clamp(12px, 1.6vw, 16px);
-        display: -webkit-box; /* 必须设置为 -webkit-box */
-        -webkit-box-orient: vertical; /* 设置盒子排列方向为垂直 */
-        -webkit-line-clamp: 1; /* 限制显示的行数 */
-        overflow: hidden; /* 隐藏溢出内容 */
-        text-overflow: ellipsis; /* 省略号显示溢出部分 */
+        opacity: 0.8;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
     .rightBtn {
-      // border-radius: 10px;
       border: none;
-      background-color: rgba($color: #000000, $alpha: 0.1);
-      // background: linear-gradient(120deg, #828207, #b7d00f);
+      background: rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      &:hover {
+        background: rgba(0, 0, 0, 0.1);
+      }
     }
   }
 
   .cardList {
-    display: flex;
-    overflow: auto;
-    flex-wrap: nowrap;
-    scrollbar-width: none; /* 对 Firefox 隐藏滚动条 */
-    padding-bottom: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 24px;
+    padding: 24px 0;
     .card {
-      margin-top: 20px;
-      max-width: 600px;
-      min-width: 400px;
-      backdrop-filter: blur(50px); /* 背景模糊 */
-      -webkit-backdrop-filter: blur(10px); /* 兼容 Safari */
-      margin-right: 20px;
-      box-shadow: $box-shadow-md;
-      padding: 20px;
-      // padding: 20px;
-      border-radius: 10px;
-      position: relative;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      transition: all 0.3s ease;
       overflow: hidden;
-      top: 0;
-      transition: all 0.3s ease-in-out;
       cursor: pointer;
       &:hover {
-        top: 4px;
+        transform: translateY(-4px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      }
+      .cardHeader {
+        padding: 20px 24px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
         .cardTitle {
-          color: #27b3df;
+          font-size: 22px;
+          font-weight: 600;
+          margin-bottom: 12px;
+          color: #1a1a1a;
+          transition: color 0.2s ease;
+        }
+        .cardMeta {
+          opacity: 0.8;
         }
       }
-      .cardTopImage {
-        background: linear-gradient(60deg, #f9d423, #ff4e50, #fe7a3e);
-        width: 100%;
-        height: 6px;
-        position: absolute;
-        top: 0;
-        left: 0;
-        border-radius: 10px 10px 0 0;
+      .cardContent {
+        padding: 20px 24px;
+        height: 120px;
+        overflow: hidden;
+        position: relative;
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 40px;
+          background: linear-gradient(transparent, #fff);
+        }
       }
-      .cardTitle {
-        font-size: 30px;
-        font-weight: 600;
-      }
-      .bottomBtn {
+      .cardFooter {
+        padding: 16px 24px;
         display: flex;
-        margin-top: 20px;
-        .leftBtn {
-          background-color: rgba($color: #f5f5f5, $alpha: 0.6);
-          padding: 20px 40px;
-          border-radius: 10px;
+        align-items: center;
+        gap: 12px;
+        border-top: 1px solid rgba(0, 0, 0, 0.06);
+        .actionBtn {
+          padding: 8px 16px;
           border: none;
-          margin-right: 10px;
+          background: rgba(0, 0, 0, 0.05);
+          border-radius: 8px;
+          transition: all 0.2s ease;
+          &:hover {
+            background: rgba(0, 0, 0, 0.08);
+          }
+          &.favorited {
+            background: rgba(24, 144, 255, 0.1);
+            color: #1890ff;
+
+            &:hover {
+              background: rgba(24, 144, 255, 0.2);
+            }
+          }
         }
-        .rightBtn {
+        .readBtn {
           flex: 1;
-          background-color: #0e1821;
-          padding: 20px 40px;
-          border-radius: 10px;
+          padding: 8px 24px;
+          background: #1a1a1a;
           border: none;
           color: #fff;
+          border-radius: 8px;
+          transition: all 0.2s ease;
+          &:hover {
+            background: #333;
+          }
         }
       }
     }
@@ -100,29 +134,20 @@
   padding: 60px 0;
   width: 100%;
   background: #fff;
-  border-radius: 8px;
+  border-radius: 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-
-  :global {
-    .ant-empty {
-      margin: 0;
-    }
-  }
-}
-
-.emptyContent {
   text-align: center;
 }
 
-.emptyText {
-  color: #262626;
-  font-size: 16px;
-  margin: 0;
-  margin-bottom: 4px;
-}
+.emptyContent {
+  .emptyText {
+    color: #262626;
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
 
-.emptySubText {
-  color: #8c8c8c;
-  font-size: 14px;
-  margin: 0;
+  .emptySubText {
+    color: #8c8c8c;
+    font-size: 14px;
+  }
 }

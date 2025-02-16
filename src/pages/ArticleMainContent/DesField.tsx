@@ -27,7 +27,7 @@ const DesField: React.FC<DesFieldProps> = ({
 }) => {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   return (
-    <div style={{ display: "flex", alignItems: "center" }}>
+    <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap" }}>
       {/* 创建时间 */}
       {createdAt && (
         <div style={{ display: "flex", alignItems: "center" }}>

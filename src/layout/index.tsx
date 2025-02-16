@@ -17,6 +17,7 @@ import { checkSystemInit } from "../api/auth";
 import { AppDispatch, RootState } from "../store";
 import { checkLoginStatus } from "../store/authSlice";
 import { fetchSiteInfo } from "../store/siteSlice";
+import { toggleModal } from "../store/modalSlice";
 
 const IndexLayout = () => {
   const { isDarkMode, handleToggleTheme } = useTheme();
@@ -33,6 +34,9 @@ const IndexLayout = () => {
   const { isAuthenticated, user, status } = useSelector(
     (state: RootState) => state.auth
   );
+  const { isLeftModalOpen, isTopModalOpen, isArticleLeftModalOpen } =
+    useSelector((state: RootState) => state.modal);
+
   const { siteIsOpen } = useSelector((state: RootState) => state.auth);
   useEffect(() => {
     console.log(siteIsOpen);
@@ -46,17 +50,6 @@ const IndexLayout = () => {
   useEffect(() => {
     dispatch(fetchSiteInfo());
   }, []);
-
-  // const init = async () => {
-  //   const res = await checkSystemInit();
-  //   if (!res.data.initialized) {
-  //     navigate("Init");
-  //     return;
-  //   } else {
-  //     setSystemIsInit(true);
-  //     // navigate("/");
-  //   }
-  // };
 
   useEffect(() => {
     if (systemIsInit === true && status === "succeeded") {
@@ -104,17 +97,11 @@ const IndexLayout = () => {
   };
 
   const handleLeftMenu = () => {
-    if (isRightMenuOpen) {
-      setIsRightMenuOpen(false);
-    }
-    setIsLeftMenuOpen(!isLeftMenuOpen);
+    dispatch(toggleModal("left"));
   };
 
   const handleRightMenu = () => {
-    if (isLeftMenuOpen) {
-      setIsLeftMenuOpen(false);
-    }
-    setIsRightMenuOpen(!isRightMenuOpen);
+    dispatch(toggleModal("top"));
   };
 
   return (
@@ -124,8 +111,8 @@ const IndexLayout = () => {
         siteName={siteInfo?.site_name || "个人知识库"}
         menuItems={items}
         isDarkMode={isDarkMode}
-        isLeftMenuOpen={isLeftMenuOpen}
-        isRightMenuOpen={isRightMenuOpen}
+        isLeftMenuOpen={isLeftModalOpen}
+        isRightMenuOpen={isTopModalOpen}
         onToggleTheme={handleToggleTheme}
         onNavigate={handleNavigate}
         onClickLeftMenu={handleLeftMenu}

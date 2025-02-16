@@ -122,7 +122,6 @@ const Header: React.FC<HeaderProps> = ({
         }}
         isShowModal={isRightMenuOpen}
         direction="top"
-        style={{ width: "100vw" }}
       >
         <RightModalDom
           menuItems={menuItems}
@@ -140,7 +139,6 @@ const Header: React.FC<HeaderProps> = ({
         }}
         isShowModal={isLeftMenuOpen}
         direction="left"
-        style={{ width: "50vw", height: "100vh" }}
       >
         <LeftModalDom></LeftModalDom>
       </Modal>
