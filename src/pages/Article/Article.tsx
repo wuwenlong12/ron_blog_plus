@@ -31,7 +31,9 @@ const Article = () => {
   const { isArticleLeftModalOpen } = useSelector(
     (state: RootState) => state.modal
   );
-  const [directory, setDirectory] = useState<TreeDataNode[] | undefined>([]);
+  const [directory, setDirectory] = useState<TreeDataNode[] | undefined>(
+    undefined
+  );
   // 监听窗口大小变化
   useEffect(() => {
     const handleResize = () => {
@@ -379,6 +381,7 @@ const Article = () => {
         {/* 控制按钮 */}
         <Button
           type="text"
+          style={{ background: isDarkMode ? "#141414" : "#fff" }}
           className={styles.toggleBtn}
           onClick={() => dispatch(toggleModal("articleLeft"))}
           icon={isArticleLeftModalOpen ? <LeftOutlined /> : <RightOutlined />}
@@ -388,7 +391,7 @@ const Article = () => {
         <div
           className={styles.sidebarContent}
           onContextMenu={onContextMenu}
-          style={{ background: isDarkMode ? "#111827" : "#fff" }}
+          style={{ background: isDarkMode ? "#141414" : "#fff" }}
         >
           <DirectoryTree
             className={styles.menu}
