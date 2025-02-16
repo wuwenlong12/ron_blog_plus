@@ -67,12 +67,7 @@ const Header: React.FC<HeaderProps> = ({
             )
           }
         />
-        <img
-          onClick={() => onNavigate("Login")}
-          className={styles.navLogo}
-          src={logoUrl}
-          alt="Logo"
-        />
+        <img className={styles.navLogo} src={logoUrl} alt="Logo" />
         <div className={styles.siteName}>{siteName}</div>
       </div>
       <Menu
