@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import styles from "./LeftModalDom.module.scss";
 import { Button, Tooltip } from "antd";
-import { FaGrinStars, FaTags } from "react-icons/fa";
+import { FaTags } from "react-icons/fa";
 import { TiStarFullOutline } from "react-icons/ti";
 import { MdOutlineAccessTimeFilled } from "react-icons/md";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Star from "./Star";
 import Timeline from "./Timeline";
 import Tag from "./Tag";
-import useTheme from "../../hook/useTheme";
 import { RootState } from "../../store";
 import { useSelector } from "react-redux";
 

@@ -7,7 +7,6 @@ import { UIMatch } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { RootState } from "../../store";
 import { useSelector } from "react-redux";
-import { log } from "console";
 import {
   findRouterMatches,
   parsePath,

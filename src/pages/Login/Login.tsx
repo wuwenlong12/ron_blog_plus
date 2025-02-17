@@ -25,7 +25,6 @@ const Login = () => {
   );
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const user = useSelector((state: RootState) => state.auth.user);
   const { message } = App.useApp();
   useEffect(() => {
     if (isAuthenticated) {
@@ -172,7 +171,8 @@ const Login = () => {
             </form>
             <div className={styles.footer}>
               <p>
-                已有账号？<a onClick={() => setIsRegistering(false)}>登录</a>
+                已有账号？
+                <div onClick={() => setIsRegistering(false)}>登录</div>
               </p>
             </div>
           </div>

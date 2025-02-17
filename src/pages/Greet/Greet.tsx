@@ -1,19 +1,6 @@
 import React from "react";
-import {
-  Layout,
-  Menu,
-  Input,
-  Button,
-  Card,
-  Typography,
-  Avatar,
-  Dropdown,
-} from "antd";
-import {
-  SearchOutlined,
-  UserOutlined,
-  LogoutOutlined,
-} from "@ant-design/icons";
+import { Layout, Button, Card, Typography, Avatar, Dropdown } from "antd";
+import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import { motion } from "framer-motion";
 import styles from "./Greet.module.scss";
 import ParticlesBg from "particles-bg";

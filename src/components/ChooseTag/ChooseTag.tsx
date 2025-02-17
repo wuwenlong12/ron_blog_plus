@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Tag, Spin } from "antd";
-import { getTag } from "../api/tag";
-import { tag } from "../api/tag/type";
+import { getTag } from "../../api/tag";
+import { tag } from "../../api/tag/type";
 import styles from "./ChooseTag.module.scss";
 import { useNavigate } from "react-router-dom";
 

@@ -1,4 +1,4 @@
-import { Input, Button, App, Tooltip, Modal, QRCode, FloatButton } from "antd";
+import { Input, Button, App, Modal, QRCode, FloatButton } from "antd";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   RouteObject,
@@ -7,9 +7,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { BiSolidMessageSquareEdit } from "react-icons/bi";
-import { MdDelete, MdUpdate } from "react-icons/md";
-import { RiBook2Line, RiSendPlaneFill } from "react-icons/ri";
+import { RiBook2Line } from "react-icons/ri";
 import styles from "./ArticleMainContent.module.scss";
 import {
   deleteDirectoryInfoById,
@@ -18,12 +16,7 @@ import {
   patchFolderName,
 } from "../../api/folder";
 import AppBreadcrumb from "../../components/Breadcrumb/Breadcrumb";
-import {
-  EditFilled,
-  FolderOutlined,
-  HomeOutlined,
-  ReadOutlined,
-} from "@ant-design/icons";
+import { EditFilled, HomeOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
 import { findFullPathByKey } from "../../router/utils/findFullPathByKey";
 import { useDispatch, useSelector } from "react-redux";
@@ -39,9 +32,6 @@ import {
 } from "../../api/article";
 import Editor, { EditorRef } from "../../components/Editor/Editor";
 import { PartialBlock } from "@blocknote/core";
-import { FaClock, FaMarkdown, FaTags } from "react-icons/fa";
-import { downloadMarkdown } from "../../utils/downloadMarkdown";
-import { formatTimestampToDay, formatTimestampToTime } from "../../utils/date";
 import { IoFolderOutline } from "react-icons/io5";
 import { tag } from "../../api/tag/type";
 import DesField from "./DesField";
@@ -50,7 +40,6 @@ import {
   parsePath,
 } from "../../router/utils/findRouterMatches";
 import { debounce } from "lodash";
-import { de } from "@blocknote/core/types/src/i18n/locales";
 import {
   FaDownload,
   FaShareAlt,
@@ -58,7 +47,7 @@ import {
   FaPaperPlane,
   FaEllipsisV, // 替换 MoreOutlined
 } from "react-icons/fa";
-import ChooseTag from "../../components/ChooseTag";
+import ChooseTag from "../../components/ChooseTag/ChooseTag";
 
 type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
 
@@ -101,9 +90,7 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
   const articleRoutesMap = useSelector(
     (state: RootState) => state.routesMap.articleRoutesMap
   );
-  const routesMap = useSelector(
-    (state: RootState) => state.routesMap.routesMap
-  );
+
   // const [folderTree,setFolderTree] = useState<TreeDataNode[]>([])
   const navigate = useNavigate();
   const [isButtonsVisible, setIsButtonsVisible] = useState(false);

@@ -1,6 +1,5 @@
 import React from "react";
 import { withPageTransition } from "../../components/withPageTransition";
-import Init from "../../pages/Init/Init";
 
 export const componentKey = {
   Layout: "Layout",

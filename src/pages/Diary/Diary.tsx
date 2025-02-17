@@ -2,52 +2,32 @@ import React, { useEffect, useState } from "react";
 import {
   App,
   Button,
-  Calendar,
   DatePicker,
-  FloatButton,
   Input,
-  Pagination,
-  PaginationProps,
   Tag,
   theme,
   Timeline,
-  Tree,
   Empty,
 } from "antd";
 import ParticlesBg from "particles-bg";
 import styles from "./Diary.module.scss";
-import { IoIosAdd } from "react-icons/io";
-import Modal from "../../components/Modal/Modal";
 import Editor from "../../components/Editor/Editor";
 import { PartialBlock } from "@blocknote/core";
-import { FaCircleCheck } from "react-icons/fa6";
 import { LuCalendar1 } from "react-icons/lu";
-import type { CalendarProps, DatePickerProps } from "antd";
+import type { DatePickerProps } from "antd";
 import type { Dayjs } from "dayjs";
 import {
-  getAllDiary,
   getDiaryByDate,
-  getDiaryById,
   getDiaryDates,
   getDiaryTimeLine,
   postDiary,
   updateDiary,
 } from "../../api/diary";
-import type {
-  Diary,
-  Pagination as PaginationType,
-  TimelineData,
-} from "../../api/diary/type";
-import favicon from "../../assets/logo.png";
-import {
-  formatTimestampToDay,
-  formatTimestampToFullDateTime,
-  formatTimestampToTime,
-} from "../../utils/date";
+import type { Diary, TimelineData } from "../../api/diary/type";
+import { formatTimestampToFullDateTime } from "../../utils/date";
 import ThemeView from "../../themeComponent/themeView";
-import ChooseTag from "../../components/ChooseTag";
+import ChooseTag from "../../components/ChooseTag/ChooseTag";
 import { tag } from "../../api/tag/type";
-import Masonry from "react-masonry-css";
 import { BiSolidMessageSquareEdit } from "react-icons/bi";
 import { debounce } from "../../utils/debounce";
 import { motion, AnimatePresence } from "framer-motion";
@@ -153,25 +133,6 @@ const MyTree: React.FC = () => {
     } else {
       message.error("标题和内容是必须字段");
     }
-  };
-  const diaryItemClick = async (id: string) => {
-    const res = await getDiaryById(id);
-
-    setDiarty(res.data);
-  };
-  const addBtnClick = () => {
-    let curJson = localStorage.getItem("newDiary");
-    if (curJson) {
-      message.success("已自动恢复上次编辑！");
-      const obj = JSON.parse(curJson);
-      setContent(obj.content);
-    } else {
-      setContent(undefined);
-      setTitle("");
-      setTags([]);
-    }
-
-    setIsEdit(false);
   };
 
   useEffect(() => {

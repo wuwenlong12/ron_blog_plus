@@ -1,23 +1,12 @@
 // src/App.tsx
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.scss";
-import {
-  RouteObject,
-  RouterProvider,
-  createBrowserRouter,
-  useNavigate,
-  useRoutes,
-} from "react-router-dom";
+import { RouteObject, useNavigate, useRoutes } from "react-router-dom";
 import { ConfigProvider, theme, ThemeConfig } from "antd";
 import useTheme from "./hook/useTheme";
 import Loading from "./components/loading/loading";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  loadArticleRoutes,
-  loadMainSiteRoutes,
-  setRoutesMap,
-} from "./store/routersMapSlice";
-import { StaticRoutesMap } from "./router";
+import { loadArticleRoutes, loadMainSiteRoutes } from "./store/routersMapSlice";
 import { selectRoutes } from "./store/routersMapSlice";
 import { App as AntdApp } from "antd"; // 引入 Ant Design 的 App
 import MouseParticles from "react-mouse-particles";

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Input, Tabs, Empty, Spin, Card } from "antd";
 import { SearchOutlined, CloseOutlined } from "@ant-design/icons";
 import { searchArticleByTitle, searchArticleByTag } from "../../api/article";
-import ChooseTag from "../../components/ChooseTag";
+import ChooseTag from "../../components/ChooseTag/ChooseTag";
 import { tag } from "../../api/tag/type";
 import styles from "./Search.module.scss";
 import { useNavigate, useLocation } from "react-router-dom";

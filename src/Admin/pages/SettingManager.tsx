@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Form, Input, Button, Upload, Tabs, App, Space, message } from "antd";
+import { Form, Input, Button, Upload, Tabs, App, message } from "antd";
 import {
-  UploadOutlined,
   PlusOutlined,
   MinusCircleOutlined,
   LoadingOutlined,
@@ -18,8 +17,7 @@ import styles from "../styles/AboutManager.module.scss";
 import Editor from "../../components/Editor/Editor";
 import { PartialBlock } from "@blocknote/core";
 import { getSiteInfo, updateSite } from "../../api/site";
-import { SiteInfoResponse, UpdateSiteParams } from "../../api/site/type";
-import { debounce } from "lodash";
+import { UpdateSiteParams } from "../../api/site/type";
 import { motion } from "framer-motion";
 
 const SettingManager: React.FC = () => {

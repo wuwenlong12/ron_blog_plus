@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./DataCard.module.scss";
 import { Button, Carousel, Empty } from "antd";
-import test from "../../../../assets/test.png";
 import { getCarousel } from "../../../../api/carousel";
-import { useScroll } from "framer-motion";
 import { CarouselItem } from "../../../../api/carousel/type";
 import { getPageStats } from "../../../../api/site";
 import { PageStats } from "../../../../api/site/type";

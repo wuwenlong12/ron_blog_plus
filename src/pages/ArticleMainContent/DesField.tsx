@@ -2,8 +2,7 @@ import React from "react";
 import { Button, Tooltip } from "antd";
 import { FaClock, FaTags } from "react-icons/fa";
 import { MdUpdate } from "react-icons/md";
-import { formatTimestampToDay, formatTimestampToTime } from "../../utils/date";
-import ChooseTag from "../../components/ChooseTag";
+import ChooseTag from "../../components/ChooseTag/ChooseTag";
 import { tag } from "../../api/tag/type";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/zh-cn";
@@ -25,7 +24,6 @@ const DesField: React.FC<DesFieldProps> = ({
   initTags,
   onChange,
 }) => {
-  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   return (
     <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap" }}>
       {/* 创建时间 */}

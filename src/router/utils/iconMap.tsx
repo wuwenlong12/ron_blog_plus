@@ -1,13 +1,7 @@
-import {
-  HomeOutlined,
-  MailOutlined,
-  SettingOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
 import React from "react";
 import { TbBrandProducthunt } from "react-icons/tb";
 import { BiSolidInfoCircle } from "react-icons/bi";
-import { FaHome, FaMeteor, FaRegSun, FaSun } from "react-icons/fa";
+import { FaHome, FaMeteor, FaSun } from "react-icons/fa";
 import { MdArticle, MdOutlineSatelliteAlt } from "react-icons/md";
 import { RiDashboard3Line } from "react-icons/ri";
 import { IoLogoPolymer } from "react-icons/io";

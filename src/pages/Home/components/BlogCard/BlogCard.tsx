@@ -1,6 +1,6 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./BlogCard.module.scss";
-import { Button, Pagination, PaginationProps, Empty } from "antd";
+import { Button, Empty } from "antd";
 import { Articles } from "../../../../api/article/type";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
@@ -51,10 +51,6 @@ const BlogCard: React.FC<InfoListProps> = ({ title, desc, style }) => {
   const navigateArticle = (id: string) => {
     const path = "/article/" + findFullPathByKey(articleRoutesMap, id);
     navigate(path || "");
-  };
-  const paginationChange: PaginationProps["onChange"] = (page) => {
-    setCurrentPage(page);
-    init();
   };
 
   // 处理收藏/取消收藏

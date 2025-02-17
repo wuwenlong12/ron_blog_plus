@@ -1,4 +1,3 @@
-import { PartialBlock } from "@blocknote/core";
 import { ResponseBase } from "../type";
 
 export interface ResponseGetTag extends ResponseBase {

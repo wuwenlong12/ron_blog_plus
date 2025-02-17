@@ -1,7 +1,6 @@
 import React from "react";
 import styles from "./RightModalDom.module.scss";
 import { Button, Menu, MenuProps } from "antd";
-import ThemeView from "../../themeComponent/themeView";
 import { MoonOutlined, SunOutlined } from "@ant-design/icons";
 type MenuItem = Required<MenuProps>["items"][number];
 interface RightModalDomProps {

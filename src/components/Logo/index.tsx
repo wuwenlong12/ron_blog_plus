@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import styles from "./index.module.scss";
 const paths = [
   `M1103 1230q4 1 6 4.5t2 7.5q0 1 -1 2l-24 62q-17 45 -35 90q-29 76 -71 148q-20 37 -56 69q-19 16 -45 24q-22 6 -46 8h-9q-45 0 -87 -17q-45 -20 -79 -52q-67 -64 -105 -142q-38 -77 -58 -158q-16 -68 -28 -136q-2 -13 -5 -26q-7 -40 -16 -79v-2q-7 -40 -27 -72v-1

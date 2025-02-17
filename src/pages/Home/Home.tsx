@@ -1,21 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import styles from "./Home.module.scss";
-import favicon from "../../assets/logo.png";
 import bg from "../../assets/bg.png";
 import ParticlesBg from "particles-bg";
-import { Button, Card, Pagination, PaginationProps } from "antd";
-import LeftModalDom from "../../components/LeftModalDom/LeftModalDom";
-import { getArticleSummary } from "../../api/article";
-import { PartialBlock } from "@blocknote/core";
-import { Articles } from "../../api/article/type";
-import Editor from "../../components/Editor/Editor";
-import ChooseTag from "../../components/ChooseTag";
-import DesField from "../ArticleMainContent/DesField";
-import SelfInfoCard from "../../components/SelfInfoCard/SelfInfoCard";
-import { Pagination as PaginationType } from "../../api/diary/type";
-import { AnimatePresence, motion } from "framer-motion";
-import { findFullPathByKey } from "../../router/utils/findFullPathByKey";
-import { useNavigate } from "react-router-dom";
+import { Button } from "antd";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import Logo from "../../components/Logo";
@@ -29,7 +16,6 @@ import BlogCard from "./components/BlogCard/BlogCard";
 
 const Main = () => {
   const mainContentRef = useRef<HTMLDivElement>(null);
-  const { user } = useSelector((state: RootState) => state.auth);
   const siteInfo = useSelector((state: RootState) => state.site.siteInfo);
   const scrollToContent = () => {
     mainContentRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -43,10 +29,7 @@ const Main = () => {
           <ParticlesBg color="#fff" num={5} type="polygon" bg={false} />
         </div>
       </div>
-      {/* <div className={styles.bg}></div> */}
-
       <div className={styles.mainInfo}>
-        {/* <img className={styles.icon} src={favicon} alt="" /> */}
         <div className={styles.title}>
           <Logo></Logo>
         </div>

@@ -11,7 +11,7 @@ import {
   deleteDirectoryInfoById,
   postDirectoryInfoById,
 } from "../../../../api/folder";
-import ChooseTag from "../../../../components/ChooseTag";
+import ChooseTag from "../../../../components/ChooseTag/ChooseTag";
 import { tag } from "../../../../api/tag/type";
 import { loadArticleRoutes } from "../../../../store/routersMapSlice";
 import { AppDispatch } from "../../../../store";

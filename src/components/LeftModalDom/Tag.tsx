@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./LeftModalDom.module.scss";
 import { FaTags } from "react-icons/fa";
 import { getTag } from "../../api/tag";
-import ChooseTag from "../ChooseTag";
+import ChooseTag from "../ChooseTag/ChooseTag";
 import { tag } from "../../api/tag/type";
 export default function Tag() {
   const [tags, setTags] = useState<tag[]>([]);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, DatePicker, Typography, Tooltip, Spin } from "antd";
+import { DatePicker, Typography, Spin } from "antd";
 import { motion } from "framer-motion";
 import ReactECharts from "echarts-for-react";
 import dayjs, { Dayjs } from "dayjs";
@@ -9,8 +9,6 @@ import {
   FileTextOutlined,
   TagsOutlined,
   BookOutlined,
-  ArrowUpOutlined,
-  ArrowDownOutlined,
 } from "@ant-design/icons";
 import styles from "../styles/VisitStats.module.scss";
 import { getPageStats, getVisitStats, getRealtimeVisit } from "../../api/site";

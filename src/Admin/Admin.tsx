@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Layout, Menu, Button, theme, Avatar, Tooltip } from "antd";
+import { Layout, Menu, Button, Avatar, Tooltip } from "antd";
 import { motion } from "framer-motion";
 import {
   DashboardOutlined,
@@ -30,8 +30,6 @@ const Admin: React.FC = () => {
   const { user, isAuthenticated, status, siteIsInit } = useSelector(
     (state: RootState) => state.auth
   );
-  const { isDarkMode } = useSelector((state: RootState) => state.theme);
-  const { token } = theme.useToken();
 
   useEffect(() => {
     dispatch(checkLoginStatus);
