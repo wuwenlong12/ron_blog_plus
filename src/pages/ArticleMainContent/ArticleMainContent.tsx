@@ -307,7 +307,7 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
     dispatch(setSelectedKey(info.node.key));
     localStorage.setItem("selectedMenuKey", info.node.key as string);
     const path = findFullPathByKey(articleRoutesMap, info.node.key as string);
-    navigate("/Article/" + path || "");
+    navigate("/article/" + path || "");
   };
 
   const EditorChange = debounce((content: any) => {
@@ -342,17 +342,6 @@ const ArticleMainContent: React.FC<ArticleMainContentProps> = ({ id }) => {
 
   const handleShare = () => {
     setIsShareModalOpen(true); // 打开分享弹出框
-  };
-  const handleDeleteOk = async () => {
-    const res = await deleteDirectoryInfoById(currentId, currentType);
-    if (res.code === 0) {
-      navigate("/Article");
-      setIsDeleteModalOpen(false);
-      message.success("删除成功");
-      dispatch(loadArticleRoutes);
-    } else {
-      message.error("删除失败");
-    }
   };
 
   const handleShareOk = () => {
